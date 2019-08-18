@@ -24,9 +24,9 @@ class _LoginPageState extends State<LoginPage>
   TextEditingController loginEmailController = new TextEditingController();
   TextEditingController loginPasswordController = new TextEditingController();
 
-  // bool _obscureTextLogin = true;
-  // bool _obscureTextSignup = true;
-  // bool _obscureTextSignupConfirm = true;
+  bool _obscureTextLogin = true;
+  bool _obscureTextSignup = true;
+  bool _obscureTextSignupConfirm = true;
 
   TextEditingController signupEmailController = new TextEditingController();
   TextEditingController signupNameController = new TextEditingController();
@@ -36,7 +36,6 @@ class _LoginPageState extends State<LoginPage>
 
   PageController _pageController;
 
-  // 
   Color left = Colors.black;
   Color right = Colors.white;
 
@@ -119,14 +118,23 @@ class _LoginPageState extends State<LoginPage>
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    myFocusNodePassword.dispose();
+    myFocusNodeEmail.dispose();
+    myFocusNodeName.dispose();
+    _pageController?.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
+    _pageController = PageController();
   }
 
   Widget _buildMenuBar(BuildContext context) {
@@ -138,6 +146,7 @@ class _LoginPageState extends State<LoginPage>
         borderRadius: BorderRadius.all(Radius.circular(25.0)),
       ),
       child: CustomPaint(
+        // TODO: fix lattererererererr!!!!!!
         painter: TabIndicationPainter(pageController: _pageController),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -186,23 +195,31 @@ class _LoginPageState extends State<LoginPage>
   }
 
   void _onSignInButtonPress() {
-
+    _pageController.animateToPage(0,
+        duration: Duration(milliseconds: 500), curve: Curves.decelerate);
   }
 
   void _onSignUpButtonPress() {
-
+    _pageController?.animateToPage(1,
+        duration: Duration(milliseconds: 500), curve: Curves.decelerate);
   }
 
   void _toggleLogin() {
-
+    setState(() {
+      _obscureTextLogin = !_obscureTextLogin;
+    });
   }
 
   void _toggleSignup() {
-
+    setState(() {
+      _obscureTextSignup = !_obscureTextSignup;
+    });
   }
 
   void _toggleSignupConfirm() {
-
+    setState(() {
+      _obscureTextSignupConfirm = !_obscureTextSignupConfirm;
+    });
   }
 }
 

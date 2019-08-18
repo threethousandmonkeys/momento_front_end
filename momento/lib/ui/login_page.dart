@@ -138,7 +138,52 @@ class _LoginPageState extends State<LoginPage>
   }
 
   Widget _buildMenuBar(BuildContext context) {
-    return null;
+    return Container(
+      width: 300.0,
+      height: 50.0,
+      decoration: BoxDecoration(
+        color: Color(0x552B2B2B),
+        borderRadius: BorderRadius.all(Radius.circular(25.0)),
+      ),
+      child: CustomPaint(
+        // TODO: fix lattererererererr!!!!!!
+        painter: TabIndicationPainter(pageController: _pageController),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Expanded(
+              child: FlatButton(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onPressed: _onSignInButtonPress,
+                child: Text(
+                  "Existing",
+                  style: TextStyle(
+                      color: left,
+                      fontSize: 16.0,
+                      fontFamily: "WorkSansSemiBold"),
+                ),
+              ),
+            ),
+            //Container(height: 33.0, width: 1.0, color: Colors.white),
+            Expanded(
+              child: FlatButton(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onPressed: _onSignUpButtonPress,
+                child: Text(
+                  "New",
+                  style: TextStyle(
+                      color: right,
+                      fontSize: 16.0,
+                      fontFamily: "WorkSansSemiBold"),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildSignIn(BuildContext context){

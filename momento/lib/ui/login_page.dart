@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:momento/style/theme.dart' as Theme;
 import 'package:momento/utils/bubble_indication_painter.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -70,10 +71,11 @@ class _LoginPageState extends State<LoginPage>
                 Padding(
                   padding: EdgeInsets.only(top: 75.0),
                   child: new Image(
-                      width: 250.0,
+                    width: 250.0,
 //                      height: 191.0,
-                      fit: BoxFit.fitWidth,
-                      image: new AssetImage('assets/img/login_logo.png')),
+                    fit: BoxFit.fitWidth,
+                    image: new AssetImage('assets/images/login_logo.png'),
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 20.0),

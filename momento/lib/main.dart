@@ -9,7 +9,6 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
       title: 'MomentoLogin',
       theme: new ThemeData(
-
         primarySwatch: Colors.blue,
       ),
       home: new LoginPage(),

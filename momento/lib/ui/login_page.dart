@@ -3,16 +3,17 @@ import 'package:flutter/services.dart';
 import 'package:momento/style/theme.dart' as Theme;
 import 'package:momento/utils/bubble_indication_painter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key}) : super(key: key);
-
   @override
   _LoginPageState createState() => new _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
+  final _auth = FirebaseAuth.instance;
+
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final FocusNode myFocusNodeEmailLogin = FocusNode();
@@ -22,18 +23,16 @@ class _LoginPageState extends State<LoginPage>
   final FocusNode myFocusNodeEmail = FocusNode();
   final FocusNode myFocusNodeName = FocusNode();
 
-  TextEditingController loginEmailController = new TextEditingController();
-  TextEditingController loginPasswordController = new TextEditingController();
+  String loginEmail;
+  String loginPassword;
+
+  String signupEmail;
+  String signupPassword;
+  String signupConfirmPassword;
 
   bool _obscureTextLogin = true;
   bool _obscureTextSignup = true;
   bool _obscureTextSignupConfirm = true;
-
-  TextEditingController signupEmailController = new TextEditingController();
-  TextEditingController signupNameController = new TextEditingController();
-  TextEditingController signupPasswordController = new TextEditingController();
-  TextEditingController signupConfirmPasswordController =
-      new TextEditingController();
 
   PageController _pageController;
 
@@ -44,74 +43,70 @@ class _LoginPageState extends State<LoginPage>
   Widget build(BuildContext context) {
     return new Scaffold(
       key: _scaffoldKey,
-      body: NotificationListener<OverscrollIndicatorNotification>(
-        onNotification: (overscroll) {
-          overscroll.disallowGlow();
-        },
-        child: SingleChildScrollView(
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height >= 775.0
-                ? MediaQuery.of(context).size.height
-                : 775.0,
-            decoration: new BoxDecoration(
-              gradient: new LinearGradient(
-                  colors: [
-                    Theme.Colors.loginGradientStart,
-                    Theme.Colors.loginGradientEnd
-                  ],
-                  begin: const FractionalOffset(0.0, 0.0),
-                  end: const FractionalOffset(1.0, 1.0),
-                  stops: [0.0, 1.0],
-                  tileMode: TileMode.clamp),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 75.0),
-                  child: new Image(
-                    width: 250.0,
-//                      height: 191.0,
-                    fit: BoxFit.fitWidth,
-                    image: new AssetImage('assets/images/login_logo.png'),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 20.0),
-                  child: _buildMenuBar(context),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: PageView(
-                    controller: _pageController,
-                    onPageChanged: (i) {
-                      if (i == 0) {
-                        setState(() {
-                          right = Colors.white;
-                          left = Colors.black;
-                        });
-                      } else if (i == 1) {
-                        setState(() {
-                          right = Colors.black;
-                          left = Colors.white;
-                        });
-                      }
-                    },
-                    children: <Widget>[
-                      new ConstrainedBox(
-                        constraints: const BoxConstraints.expand(),
-                        child: _buildSignIn(context),
-                      ),
-                      new ConstrainedBox(
-                        constraints: const BoxConstraints.expand(),
-                        child: _buildSignUp(context),
-                      ),
-                    ],
-                  ),
-                ),
+      body: SingleChildScrollView(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height >= 775.0
+              ? MediaQuery.of(context).size.height
+              : 775.0,
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+              colors: [
+                Theme.Colors.loginGradientStart,
+                Theme.Colors.loginGradientEnd,
               ],
+              begin: const FractionalOffset(0.0, 0.0),
+              end: const FractionalOffset(1.0, 1.0),
+              stops: [0.0, 1.0],
+              tileMode: TileMode.clamp,
             ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(top: 75.0),
+                child: new Image(
+                  width: 250.0,
+                  // height: 191.0,
+                  fit: BoxFit.fitWidth,
+                  image: new AssetImage('assets/images/login_logo.png'),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 20.0),
+                child: _buildMenuBar(context),
+              ),
+              Expanded(
+                flex: 2,
+                child: PageView(
+                  controller: _pageController,
+                  onPageChanged: (i) {
+                    if (i == 0) {
+                      setState(() {
+                        right = Colors.white;
+                        left = Colors.black;
+                      });
+                    } else if (i == 1) {
+                      setState(() {
+                        right = Colors.black;
+                        left = Colors.white;
+                      });
+                    }
+                  },
+                  children: <Widget>[
+                    new ConstrainedBox(
+                      constraints: const BoxConstraints.expand(),
+                      child: _buildSignIn(context),
+                    ),
+                    new ConstrainedBox(
+                      constraints: const BoxConstraints.expand(),
+                      child: _buildSignUp(context),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -177,9 +172,10 @@ class _LoginPageState extends State<LoginPage>
                 child: Text(
                   "Existing",
                   style: TextStyle(
-                      color: left,
-                      fontSize: 16.0,
-                      fontFamily: "WorkSansSemiBold"),
+                    color: left,
+                    fontSize: 16.0,
+                    fontFamily: "WorkSansSemiBold",
+                  ),
                 ),
               ),
             ),
@@ -228,8 +224,10 @@ class _LoginPageState extends State<LoginPage>
                         padding: EdgeInsets.only(
                             top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
                         child: TextField(
+                          onChanged: (value) {
+                            loginEmail = value;
+                          },
                           focusNode: myFocusNodeEmailLogin,
-                          controller: loginEmailController,
                           keyboardType: TextInputType.emailAddress,
                           style: TextStyle(
                               fontFamily: "WorkSansSemiBold",
@@ -257,8 +255,10 @@ class _LoginPageState extends State<LoginPage>
                         padding: EdgeInsets.only(
                             top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
                         child: TextField(
+                          onChanged: (value) {
+                            loginPassword = value;
+                          },
                           focusNode: myFocusNodePasswordLogin,
-                          controller: loginPasswordController,
                           obscureText: _obscureTextLogin,
                           style: TextStyle(
                               fontFamily: "WorkSansSemiBold",
@@ -318,20 +318,24 @@ class _LoginPageState extends State<LoginPage>
                       tileMode: TileMode.clamp),
                 ),
                 child: MaterialButton(
-                    color: Color(0xFF9E8C81),
-                    //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 42.0),
-                      child: Text(
-                        "LOGIN",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 25.0,
-                            fontFamily: "WorkSansBold"),
-                      ),
+                  color: Color(0xFF9E8C81),
+                  //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 42.0),
+                    child: Text(
+                      "LOGIN",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 25.0,
+                          fontFamily: "WorkSansBold"),
                     ),
-                    onPressed: () => showInSnackBar("Login button pressed")),
+                  ),
+                  onPressed: () async {
+                    showInSnackBar("Logging in");
+                    _login();
+                  },
+                ),
               ),
             ],
           ),
@@ -465,7 +469,6 @@ class _LoginPageState extends State<LoginPage>
                             top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
                         child: TextField(
                           focusNode: myFocusNodeName,
-                          controller: signupNameController,
                           keyboardType: TextInputType.text,
                           textCapitalization: TextCapitalization.words,
                           style: TextStyle(
@@ -493,8 +496,10 @@ class _LoginPageState extends State<LoginPage>
                         padding: EdgeInsets.only(
                             top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
                         child: TextField(
+                          onChanged: (value) {
+                            signupEmail = value;
+                          },
                           focusNode: myFocusNodeEmail,
-                          controller: signupEmailController,
                           keyboardType: TextInputType.emailAddress,
                           style: TextStyle(
                               fontFamily: "WorkSansSemiBold",
@@ -521,8 +526,10 @@ class _LoginPageState extends State<LoginPage>
                         padding: EdgeInsets.only(
                             top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
                         child: TextField(
+                          onChanged: (value) {
+                            signupPassword = value;
+                          },
                           focusNode: myFocusNodePassword,
-                          controller: signupPasswordController,
                           obscureText: _obscureTextSignup,
                           style: TextStyle(
                               fontFamily: "WorkSansSemiBold",
@@ -559,7 +566,9 @@ class _LoginPageState extends State<LoginPage>
                         padding: EdgeInsets.only(
                             top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
                         child: TextField(
-                          controller: signupConfirmPasswordController,
+                          onChanged: (value) {
+                            signupConfirmPassword = value;
+                          },
                           obscureText: _obscureTextSignupConfirm,
                           style: TextStyle(
                               fontFamily: "WorkSansSemiBold",
@@ -618,20 +627,31 @@ class _LoginPageState extends State<LoginPage>
                       tileMode: TileMode.clamp),
                 ),
                 child: MaterialButton(
-                    color: Color(0xFF9E8C81),
-                    //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 42.0),
-                      child: Text(
-                        "SIGN UP",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 25.0,
-                            fontFamily: "WorkSansBold"),
+                  color: Color(0xFF9E8C81),
+                  //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 42.0,
+                    ),
+                    child: Text(
+                      "SIGN UP",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 25.0,
+                        fontFamily: "WorkSansBold",
                       ),
                     ),
-                    onPressed: () => showInSnackBar("SignUp button pressed")),
+                  ),
+                  onPressed: () {
+                    if (signupPassword != signupConfirmPassword) {
+                      showInSnackBar("passwords do not match");
+                    } else {
+                      showInSnackBar("signing up");
+                      _signup();
+                    }
+                  },
+                ),
               ),
             ],
           ),
@@ -666,5 +686,34 @@ class _LoginPageState extends State<LoginPage>
     setState(() {
       _obscureTextSignupConfirm = !_obscureTextSignupConfirm;
     });
+  }
+
+  void _login() async {
+    try {
+      final user = await _auth.signInWithEmailAndPassword(
+        email: loginEmail,
+        password: loginPassword,
+      );
+      if (user != null) {
+        showInSnackBar("Login successful");
+      }
+    } catch (e) {
+      print(e);
+      showInSnackBar("wrong email/password");
+    }
+  }
+
+  void _signup() async {
+    try {
+      final newUser = await _auth.createUserWithEmailAndPassword(
+        email: signupEmail,
+        password: signupPassword,
+      );
+      if (newUser != null) {
+        showInSnackBar("signup successful");
+      }
+    } catch (e) {
+      showInSnackBar("something wrong");
+    }
   }
 }

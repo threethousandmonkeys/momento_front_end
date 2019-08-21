@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>152929041219-n3bnm40j41f34nh6d452tif2dajpkfpc.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.152929041219-n3bnm40j41f34nh6d452tif2dajpkfpc</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAwyTbpbqp1qaDup4eAqOnsvd56sEMa6AQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>152929041219</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>bugmakers.momento</string>
+	<key>PROJECT_ID</key>
+	<string>momento-bugmakers</string>
+	<key>STORAGE_BUCKET</key>
+	<string>momento-bugmakers.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:152929041219:ios:3429a230009bc742</string>
+	<key>DATABASE_URL</key>
+	<string>https://momento-bugmakers.firebaseio.com</string>
+</dict>
+</plist>

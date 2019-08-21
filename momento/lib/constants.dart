@@ -13,6 +13,8 @@ const kHintTextStyle = TextStyle(
 
 const kButtonTextStyle = TextStyle(
   color: Colors.white,
-  fontSize: 25.0,
+  fontSize: 20.0,
   fontFamily: "WorkSansBold",
 );
+
+const kWidthRatio = 0.7;

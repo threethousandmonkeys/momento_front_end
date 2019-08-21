@@ -57,20 +57,22 @@ class _LoginPageState extends State<LoginPage>
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 50.0),
-              child: Image(
-                width: 250.0,
-                fit: BoxFit.fitWidth,
-                image: AssetImage('assets/images/login_logo.png'),
+            Expanded(
+              flex: 5,
+              child: Padding(
+                padding: EdgeInsets.only(top: 50.0),
+                child: Image(
+                  fit: BoxFit.fitHeight,
+                  image: AssetImage('assets/images/login_logo.png'),
+                ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(top: 20.0),
-              child: _buildMenuBar(),
+            Expanded(
+              flex: 1,
+              child: _buildMenuBar(context),
             ),
             Expanded(
-              flex: 2,
+              flex: 7,
               child: PageView(
                 controller: _pageController,
                 onPageChanged: (i) {
@@ -88,12 +90,12 @@ class _LoginPageState extends State<LoginPage>
                 },
                 children: <Widget>[
                   ConstrainedBox(
-                    constraints: const BoxConstraints.expand(),
-                    child: _buildSignIn(),
+                    constraints: BoxConstraints.expand(),
+                    child: _buildSignIn(context),
                   ),
                   ConstrainedBox(
-                    constraints: const BoxConstraints.expand(),
-                    child: _buildSignUp(),
+                    constraints: BoxConstraints.expand(),
+                    child: _buildSignUp(context),
                   ),
                 ],
               ),
@@ -145,10 +147,9 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  Widget _buildMenuBar() {
+  Widget _buildMenuBar(BuildContext context) {
     return Container(
-      width: 300.0,
-      height: 50.0,
+      width: MediaQuery.of(context).size.width * kWidthRatio,
       decoration: BoxDecoration(
         color: Color(0x552B2B2B),
         borderRadius: BorderRadius.all(Radius.circular(25.0)),
@@ -173,7 +174,6 @@ class _LoginPageState extends State<LoginPage>
                 ),
               ),
             ),
-            //Container(height: 33.0, width: 1.0, color: Colors.white),
             Expanded(
               child: FlatButton(
                 splashColor: Colors.transparent,
@@ -195,9 +195,10 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  Widget _buildSignIn() {
+  Widget _buildSignIn(BuildContext context) {
+    double width = MediaQuery.of(context).size.width * kWidthRatio;
     return Container(
-      padding: EdgeInsets.only(top: 23.0),
+      padding: EdgeInsets.only(top: 10.0),
       child: Column(
         children: <Widget>[
           Stack(
@@ -205,20 +206,19 @@ class _LoginPageState extends State<LoginPage>
             overflow: Overflow.visible,
             children: <Widget>[
               Card(
-                elevation: 2.0,
+                elevation: 10.0,
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Container(
-                  width: 300.0,
-                  height: 190.0,
+                  width: width,
                   child: Column(
                     children: <Widget>[
                       Padding(
                         padding: EdgeInsets.only(
-                          top: 20.0,
-                          bottom: 20.0,
+                          top: 10.0,
+                          bottom: 10.0,
                           left: 25.0,
                           right: 25.0,
                         ),
@@ -248,7 +248,7 @@ class _LoginPageState extends State<LoginPage>
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                          top: 20.0,
+                          top: 10.0,
                           bottom: 20.0,
                           left: 25.0,
                           right: 25.0,
@@ -287,26 +287,13 @@ class _LoginPageState extends State<LoginPage>
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(top: 170.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  gradient: LinearGradient(
-                    colors: [
-                      Theme.Colors.loginGradientEnd,
-                      Theme.Colors.loginGradientStart
-                    ],
-                    begin: const FractionalOffset(0.2, 0.2),
-                    end: const FractionalOffset(1.0, 1.0),
-                    stops: [0.0, 1.0],
-                    tileMode: TileMode.clamp,
-                  ),
-                ),
+                margin: EdgeInsets.only(top: 125.0),
                 child: MaterialButton(
                   color: Color(0xFF9E8C81),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
+                    padding: EdgeInsets.symmetric(
                       vertical: 10.0,
-                      horizontal: 42.0,
+                      horizontal: 20.0,
                     ),
                     child: Text(
                       "LOGIN",
@@ -324,9 +311,11 @@ class _LoginPageState extends State<LoginPage>
             ],
           ),
           Padding(
-            padding: EdgeInsets.only(top: 10.0),
+            padding: EdgeInsets.only(top: 5.0),
             child: FlatButton(
-                onPressed: () {},
+                onPressed: () {
+                  _auth.sendPasswordResetEmail(email: loginEmail);
+                },
                 child: Text(
                   "Forgot Password?",
                   style: TextStyle(
@@ -337,7 +326,7 @@ class _LoginPageState extends State<LoginPage>
                 )),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 10.0),
+            padding: EdgeInsets.only(top: 5.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -359,9 +348,10 @@ class _LoginPageState extends State<LoginPage>
                   child: Text(
                     "Or",
                     style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.0,
-                        fontFamily: "WorkSansMedium"),
+                      color: Colors.white,
+                      fontSize: 16.0,
+                      fontFamily: "WorkSansMedium",
+                    ),
                   ),
                 ),
                 Container(
@@ -386,7 +376,7 @@ class _LoginPageState extends State<LoginPage>
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(top: 10.0, right: 40.0),
+                padding: EdgeInsets.only(top: 5.0, right: 40.0),
                 child: GestureDetector(
                   onTap: () => showInSnackBar("Facebook button pressed"),
                   child: Container(
@@ -403,7 +393,7 @@ class _LoginPageState extends State<LoginPage>
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 10.0),
+                padding: EdgeInsets.only(top: 5.0),
                 child: GestureDetector(
                   onTap: () => showInSnackBar("Google button pressed"),
                   child: Container(
@@ -426,7 +416,7 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  Widget _buildSignUp() {
+  Widget _buildSignUp(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(top: 23.0),
       child: Column(

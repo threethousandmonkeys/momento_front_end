@@ -4,28 +4,27 @@ import 'package:momento/style/theme.dart' as Theme;
 import 'package:momento/utils/bubble_indication_painter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:momento/constants.dart';
 
 class LoginPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => new _LoginPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
   final _auth = FirebaseAuth.instance;
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final FocusNode myFocusNodeEmailLogin = FocusNode();
   final FocusNode myFocusNodePasswordLogin = FocusNode();
-
   final FocusNode myFocusNodePassword = FocusNode();
   final FocusNode myFocusNodeEmail = FocusNode();
   final FocusNode myFocusNodeName = FocusNode();
 
   String loginEmail;
   String loginPassword;
-
   String signupEmail;
   String signupPassword;
   String signupConfirmPassword;
@@ -41,73 +40,65 @@ class _LoginPageState extends State<LoginPage>
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       key: _scaffoldKey,
-      body: SingleChildScrollView(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height >= 775.0
-              ? MediaQuery.of(context).size.height
-              : 775.0,
-          decoration: new BoxDecoration(
-            gradient: new LinearGradient(
-              colors: [
-                Theme.Colors.loginGradientStart,
-                Theme.Colors.loginGradientEnd,
-              ],
-              begin: const FractionalOffset(0.0, 0.0),
-              end: const FractionalOffset(1.0, 1.0),
-              stops: [0.0, 1.0],
-              tileMode: TileMode.clamp,
-            ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 75.0),
-                child: new Image(
-                  width: 250.0,
-                  // height: 191.0,
-                  fit: BoxFit.fitWidth,
-                  image: new AssetImage('assets/images/login_logo.png'),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 20.0),
-                child: _buildMenuBar(context),
-              ),
-              Expanded(
-                flex: 2,
-                child: PageView(
-                  controller: _pageController,
-                  onPageChanged: (i) {
-                    if (i == 0) {
-                      setState(() {
-                        right = Colors.white;
-                        left = Colors.black;
-                      });
-                    } else if (i == 1) {
-                      setState(() {
-                        right = Colors.black;
-                        left = Colors.white;
-                      });
-                    }
-                  },
-                  children: <Widget>[
-                    new ConstrainedBox(
-                      constraints: const BoxConstraints.expand(),
-                      child: _buildSignIn(context),
-                    ),
-                    new ConstrainedBox(
-                      constraints: const BoxConstraints.expand(),
-                      child: _buildSignUp(context),
-                    ),
-                  ],
-                ),
-              ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Theme.Colors.loginGradientStart,
+              Theme.Colors.loginGradientEnd,
             ],
+            begin: FractionalOffset(0.0, 0.0),
+            end: FractionalOffset(1.0, 1.0),
+            tileMode: TileMode.clamp,
           ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: 50.0),
+              child: Image(
+                width: 250.0,
+                fit: BoxFit.fitWidth,
+                image: AssetImage('assets/images/login_logo.png'),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 20.0),
+              child: _buildMenuBar(),
+            ),
+            Expanded(
+              flex: 2,
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (i) {
+                  if (i == 0) {
+                    setState(() {
+                      right = Colors.white;
+                      left = Colors.black;
+                    });
+                  } else if (i == 1) {
+                    setState(() {
+                      right = Colors.black;
+                      left = Colors.white;
+                    });
+                  }
+                },
+                children: <Widget>[
+                  ConstrainedBox(
+                    constraints: const BoxConstraints.expand(),
+                    child: _buildSignIn(),
+                  ),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints.expand(),
+                    child: _buildSignUp(),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -135,23 +126,26 @@ class _LoginPageState extends State<LoginPage>
   }
 
   void showInSnackBar(String value) {
-    FocusScope.of(context).requestFocus(new FocusNode());
+    FocusScope.of(context).requestFocus(FocusNode());
     _scaffoldKey.currentState?.removeCurrentSnackBar();
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(
-      content: new Text(
-        value,
-        textAlign: TextAlign.center,
-        style: TextStyle(
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: Text(
+          value,
+          textAlign: TextAlign.center,
+          style: TextStyle(
             color: Colors.white,
             fontSize: 16.0,
-            fontFamily: "WorkSansSemiBold"),
+            fontFamily: "WorkSansSemiBold",
+          ),
+        ),
+        backgroundColor: Color(0xFF9E8C81),
+        duration: Duration(seconds: 3),
       ),
-      backgroundColor: Colors.blue,
-      duration: Duration(seconds: 3),
-    ));
+    );
   }
 
-  Widget _buildMenuBar(BuildContext context) {
+  Widget _buildMenuBar() {
     return Container(
       width: 300.0,
       height: 50.0,
@@ -188,9 +182,10 @@ class _LoginPageState extends State<LoginPage>
                 child: Text(
                   "New",
                   style: TextStyle(
-                      color: right,
-                      fontSize: 16.0,
-                      fontFamily: "WorkSansSemiBold"),
+                    color: right,
+                    fontSize: 16.0,
+                    fontFamily: "WorkSansSemiBold",
+                  ),
                 ),
               ),
             ),
@@ -200,7 +195,7 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  Widget _buildSignIn(BuildContext context) {
+  Widget _buildSignIn() {
     return Container(
       padding: EdgeInsets.only(top: 23.0),
       child: Column(
@@ -222,17 +217,18 @@ class _LoginPageState extends State<LoginPage>
                     children: <Widget>[
                       Padding(
                         padding: EdgeInsets.only(
-                            top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
+                          top: 20.0,
+                          bottom: 20.0,
+                          left: 25.0,
+                          right: 25.0,
+                        ),
                         child: TextField(
                           onChanged: (value) {
                             loginEmail = value;
                           },
                           focusNode: myFocusNodeEmailLogin,
                           keyboardType: TextInputType.emailAddress,
-                          style: TextStyle(
-                              fontFamily: "WorkSansSemiBold",
-                              fontSize: 16.0,
-                              color: Colors.black),
+                          style: kTextFieldTextStyle,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -241,8 +237,7 @@ class _LoginPageState extends State<LoginPage>
                               size: 22.0,
                             ),
                             hintText: "Email Address",
-                            hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold", fontSize: 17.0),
+                            hintStyle: kHintTextStyle,
                           ),
                         ),
                       ),
@@ -253,17 +248,18 @@ class _LoginPageState extends State<LoginPage>
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                            top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
+                          top: 20.0,
+                          bottom: 20.0,
+                          left: 25.0,
+                          right: 25.0,
+                        ),
                         child: TextField(
                           onChanged: (value) {
                             loginPassword = value;
                           },
                           focusNode: myFocusNodePasswordLogin,
                           obscureText: _obscureTextLogin,
-                          style: TextStyle(
-                              fontFamily: "WorkSansSemiBold",
-                              fontSize: 16.0,
-                              color: Colors.black),
+                          style: kTextFieldTextStyle,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -272,8 +268,7 @@ class _LoginPageState extends State<LoginPage>
                               color: Colors.black,
                             ),
                             hintText: "Password",
-                            hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold", fontSize: 17.0),
+                            hintStyle: kHintTextStyle,
                             suffixIcon: GestureDetector(
                               onTap: _toggleLogin,
                               child: Icon(
@@ -293,48 +288,37 @@ class _LoginPageState extends State<LoginPage>
               ),
               Container(
                 margin: EdgeInsets.only(top: 170.0),
-                decoration: new BoxDecoration(
+                decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  boxShadow: <BoxShadow>[
-//                    BoxShadow(
-//                      color: Color(0x552B2B2B),
-//                      offset: Offset(1.0, 6.0),
-//                      blurRadius: 20.0,
-//                    ),
-//                    BoxShadow(
-//                      color: Color(0x552B2B2B),
-//                      offset: Offset(1.0, 6.0),
-//                      blurRadius: 20.0,
-//                    ),
-                  ],
-                  gradient: new LinearGradient(
-                      colors: [
-                        Theme.Colors.loginGradientEnd,
-                        Theme.Colors.loginGradientStart
-                      ],
-                      begin: const FractionalOffset(0.2, 0.2),
-                      end: const FractionalOffset(1.0, 1.0),
-                      stops: [0.0, 1.0],
-                      tileMode: TileMode.clamp),
+                  gradient: LinearGradient(
+                    colors: [
+                      Theme.Colors.loginGradientEnd,
+                      Theme.Colors.loginGradientStart
+                    ],
+                    begin: const FractionalOffset(0.2, 0.2),
+                    end: const FractionalOffset(1.0, 1.0),
+                    stops: [0.0, 1.0],
+                    tileMode: TileMode.clamp,
+                  ),
                 ),
                 child: MaterialButton(
                   color: Color(0xFF9E8C81),
-                  //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 42.0),
+                      vertical: 10.0,
+                      horizontal: 42.0,
+                    ),
                     child: Text(
                       "LOGIN",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25.0,
-                          fontFamily: "WorkSansBold"),
+                      style: kButtonTextStyle,
                     ),
                   ),
-                  onPressed: () async {
-                    showInSnackBar("Logging in");
-                    _login();
-                  },
+                  onPressed: loginEmail != "" && loginPassword != ""
+                      ? () async {
+                          showInSnackBar("logging in");
+                          _login();
+                        }
+                      : null,
                 ),
               ),
             ],
@@ -359,15 +343,13 @@ class _LoginPageState extends State<LoginPage>
               children: <Widget>[
                 Container(
                   decoration: BoxDecoration(
-                    gradient: new LinearGradient(
-                        colors: [
-                          Colors.white10,
-                          Colors.white,
-                        ],
-                        begin: const FractionalOffset(0.0, 0.0),
-                        end: const FractionalOffset(1.0, 1.0),
-                        stops: [0.0, 1.0],
-                        tileMode: TileMode.clamp),
+                    gradient: LinearGradient(
+                      colors: [Colors.white10, Colors.white],
+                      begin: const FractionalOffset(0.0, 0.0),
+                      end: const FractionalOffset(1.0, 1.0),
+                      stops: [0.0, 1.0],
+                      tileMode: TileMode.clamp,
+                    ),
                   ),
                   width: 100.0,
                   height: 1.0,
@@ -384,7 +366,7 @@ class _LoginPageState extends State<LoginPage>
                 ),
                 Container(
                   decoration: BoxDecoration(
-                    gradient: new LinearGradient(
+                    gradient: LinearGradient(
                         colors: [
                           Colors.white,
                           Colors.white10,
@@ -409,11 +391,11 @@ class _LoginPageState extends State<LoginPage>
                   onTap: () => showInSnackBar("Facebook button pressed"),
                   child: Container(
                     padding: const EdgeInsets.all(15.0),
-                    decoration: new BoxDecoration(
+                    decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
                     ),
-                    child: new Icon(
+                    child: Icon(
                       FontAwesomeIcons.facebookF,
                       color: Colors.black,
                     ),
@@ -426,11 +408,11 @@ class _LoginPageState extends State<LoginPage>
                   onTap: () => showInSnackBar("Google button pressed"),
                   child: Container(
                     padding: const EdgeInsets.all(15.0),
-                    decoration: new BoxDecoration(
+                    decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
                     ),
-                    child: new Icon(
+                    child: Icon(
                       FontAwesomeIcons.google,
                       color: Colors.black,
                     ),
@@ -444,7 +426,7 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  Widget _buildSignUp(BuildContext context) {
+  Widget _buildSignUp() {
     return Container(
       padding: EdgeInsets.only(top: 23.0),
       child: Column(
@@ -466,15 +448,16 @@ class _LoginPageState extends State<LoginPage>
                     children: <Widget>[
                       Padding(
                         padding: EdgeInsets.only(
-                            top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
+                          top: 20.0,
+                          bottom: 20.0,
+                          left: 25.0,
+                          right: 25.0,
+                        ),
                         child: TextField(
                           focusNode: myFocusNodeName,
                           keyboardType: TextInputType.text,
                           textCapitalization: TextCapitalization.words,
-                          style: TextStyle(
-                              fontFamily: "WorkSansSemiBold",
-                              fontSize: 16.0,
-                              color: Colors.black),
+                          style: kTextFieldTextStyle,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -482,8 +465,7 @@ class _LoginPageState extends State<LoginPage>
                               color: Colors.black,
                             ),
                             hintText: "Name",
-                            hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold", fontSize: 16.0),
+                            hintStyle: kHintTextStyle,
                           ),
                         ),
                       ),
@@ -501,10 +483,7 @@ class _LoginPageState extends State<LoginPage>
                           },
                           focusNode: myFocusNodeEmail,
                           keyboardType: TextInputType.emailAddress,
-                          style: TextStyle(
-                              fontFamily: "WorkSansSemiBold",
-                              fontSize: 16.0,
-                              color: Colors.black),
+                          style: kTextFieldTextStyle,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -512,8 +491,7 @@ class _LoginPageState extends State<LoginPage>
                               color: Colors.black,
                             ),
                             hintText: "Email Address",
-                            hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold", fontSize: 16.0),
+                            hintStyle: kHintTextStyle,
                           ),
                         ),
                       ),
@@ -531,10 +509,7 @@ class _LoginPageState extends State<LoginPage>
                           },
                           focusNode: myFocusNodePassword,
                           obscureText: _obscureTextSignup,
-                          style: TextStyle(
-                              fontFamily: "WorkSansSemiBold",
-                              fontSize: 16.0,
-                              color: Colors.black),
+                          style: kTextFieldTextStyle,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -542,8 +517,7 @@ class _LoginPageState extends State<LoginPage>
                               color: Colors.black,
                             ),
                             hintText: "Password",
-                            hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold", fontSize: 16.0),
+                            hintStyle: kHintTextStyle,
                             suffixIcon: GestureDetector(
                               onTap: _toggleSignup,
                               child: Icon(
@@ -564,16 +538,17 @@ class _LoginPageState extends State<LoginPage>
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                            top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
+                          top: 20.0,
+                          bottom: 20.0,
+                          left: 25.0,
+                          right: 25.0,
+                        ),
                         child: TextField(
                           onChanged: (value) {
                             signupConfirmPassword = value;
                           },
                           obscureText: _obscureTextSignupConfirm,
-                          style: TextStyle(
-                              fontFamily: "WorkSansSemiBold",
-                              fontSize: 16.0,
-                              color: Colors.black),
+                          style: kTextFieldTextStyle,
                           decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(
@@ -581,8 +556,7 @@ class _LoginPageState extends State<LoginPage>
                               color: Colors.black,
                             ),
                             hintText: "Confirmation",
-                            hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold", fontSize: 16.0),
+                            hintStyle: kHintTextStyle,
                             suffixIcon: GestureDetector(
                               onTap: _toggleSignupConfirm,
                               child: Icon(
@@ -602,21 +576,9 @@ class _LoginPageState extends State<LoginPage>
               ),
               Container(
                 margin: EdgeInsets.only(top: 340.0),
-                decoration: new BoxDecoration(
+                decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  boxShadow: <BoxShadow>[
-//                    BoxShadow(
-//                      color: Theme.Colors.loginGradientStart,
-//                      offset: Offset(1.0, 6.0),
-//                      blurRadius: 20.0,
-//                    ),
-//                    BoxShadow(
-//                      color: Theme.Colors.loginGradientEnd,
-//                      offset: Offset(1.0, 6.0),
-//                      blurRadius: 20.0,
-//                    ),
-                  ],
-                  gradient: new LinearGradient(
+                  gradient: LinearGradient(
                       colors: [
                         Theme.Colors.loginGradientEnd,
                         Theme.Colors.loginGradientStart
@@ -628,7 +590,6 @@ class _LoginPageState extends State<LoginPage>
                 ),
                 child: MaterialButton(
                   color: Color(0xFF9E8C81),
-                  //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       vertical: 10.0,
@@ -713,6 +674,7 @@ class _LoginPageState extends State<LoginPage>
         showInSnackBar("signup successful");
       }
     } catch (e) {
+      print(e);
       showInSnackBar("something wrong");
     }
   }

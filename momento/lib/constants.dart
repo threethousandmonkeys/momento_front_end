@@ -18,3 +18,14 @@ const kButtonTextStyle = TextStyle(
 );
 
 const kWidthRatio = 0.7;
+
+const kTextFieldPadding = EdgeInsets.only(
+  top: 10.0,
+  bottom: 10.0,
+  left: 20.0,
+  right: 20.0,
+);
+
+const kLoginPageRatios = [1, 2, 1, 5];
+
+const kDividerRatio = 0.9;

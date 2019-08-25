@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:momento/ui/login_page.dart';
+import 'package:momento/ui/login_page/login_page.dart';
 
 void main() => runApp(new MyApp());
 

@@ -58,14 +58,14 @@ class _LoginPageState extends State<LoginPage>
               child: Container(),
             ),
             Expanded(
-              flex: 2,
+              flex: 3,
               child: Image(
                 image: AssetImage('assets/images/login_logo.png'),
               ),
             ),
             Expanded(
               flex: 1,
-              child: _buildMenuBar(contentWidth, contentHeight / 9),
+              child: _buildMenuBar(contentWidth, contentHeight / 10),
             ),
             Expanded(
               flex: 5,
@@ -87,11 +87,11 @@ class _LoginPageState extends State<LoginPage>
                 children: <Widget>[
                   ConstrainedBox(
                     constraints: BoxConstraints.expand(),
-                    child: _buildSignIn(contentWidth, contentHeight * 5 / 9),
+                    child: _buildSignIn(contentWidth, contentHeight * 5 / 10),
                   ),
                   ConstrainedBox(
                     constraints: BoxConstraints.expand(),
-                    child: _buildSignUp(contentWidth, contentHeight * 5 / 9),
+                    child: _buildSignUp(contentWidth, contentHeight * 5 / 10),
                   ),
                 ],
               ),
@@ -155,10 +155,10 @@ class _LoginPageState extends State<LoginPage>
         child: CustomPaint(
           painter: TabIndicationPainter(
             pageController: _pageController,
-            dxTarget: width / 2 - barRadius,
+            dxTarget: width / 2 - barRadius - offset,
             radius: barRadius,
             dy: barRadius + offset,
-            dxEntry: barRadius,
+            dxEntry: barRadius + offset,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -219,7 +219,7 @@ class _LoginPageState extends State<LoginPage>
                   width: width,
                   child: Column(
                     children: <Widget>[
-                      LoginPageInputField(
+                      InputTextField(
                         textFieldHeight: textFieldHeight,
                         onChange: (value) {
                           _loginEmail = value;
@@ -232,7 +232,7 @@ class _LoginPageState extends State<LoginPage>
                         height: 1.0,
                         color: Colors.grey[400],
                       ),
-                      LoginPageInputField(
+                      InputTextField(
                         textFieldHeight: textFieldHeight * 4 / 3,
                         onChange: (value) {
                           _loginPassword = value;
@@ -405,7 +405,7 @@ class _LoginPageState extends State<LoginPage>
                   width: width,
                   child: Column(
                     children: <Widget>[
-                      LoginPageInputField(
+                      InputTextField(
                         textFieldHeight: textFieldHeight,
                         onChange: (value) {
                           ;
@@ -414,7 +414,7 @@ class _LoginPageState extends State<LoginPage>
                         hintText: "Name",
                       ),
                       CardDivider(width: width * kDividerRatio),
-                      LoginPageInputField(
+                      InputTextField(
                         textFieldHeight: textFieldHeight,
                         onChange: (value) {
                           _signupEmail = value;
@@ -423,7 +423,7 @@ class _LoginPageState extends State<LoginPage>
                         hintText: "Email",
                       ),
                       CardDivider(width: width * kDividerRatio),
-                      LoginPageInputField(
+                      InputTextField(
                         textFieldHeight: textFieldHeight,
                         onChange: (value) {
                           _signupPassword = value;
@@ -442,7 +442,7 @@ class _LoginPageState extends State<LoginPage>
                         ),
                       ),
                       CardDivider(width: width * kDividerRatio),
-                      LoginPageInputField(
+                      InputTextField(
                         textFieldHeight: textFieldHeight * 4 / 3,
                         onChange: (value) {
                           _signupPassword = value;
@@ -585,8 +585,20 @@ class CardDivider extends StatelessWidget {
   }
 }
 
-class LoginPageInputField extends StatelessWidget {
-  const LoginPageInputField({
+class InputField extends StatefulWidget {
+  @override
+  _InputFieldState createState() => _InputFieldState();
+}
+
+class _InputFieldState extends State<InputField> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class InputTextField extends StatelessWidget {
+  const InputTextField({
     @required this.textFieldHeight,
     @required this.onChange,
     @required this.icon,

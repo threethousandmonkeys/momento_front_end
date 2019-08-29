@@ -5,6 +5,8 @@ import 'package:momento/utils/bubble_indication_painter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:momento/constants.dart';
+import 'input_field.dart';
+import 'card_divider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -570,71 +572,5 @@ class _LoginPageState extends State<LoginPage>
   }
 }
 
-class CardDivider extends StatelessWidget {
-  CardDivider({this.width});
 
-  final double width;
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: 1.0,
-      color: Colors.grey[400],
-    );
-  }
-}
-
-class InputField extends StatefulWidget {
-  @override
-  _InputFieldState createState() => _InputFieldState();
-}
-
-class _InputFieldState extends State<InputField> {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
-
-class InputTextField extends StatelessWidget {
-  const InputTextField({
-    @required this.textFieldHeight,
-    @required this.onChange,
-    @required this.icon,
-    @required this.hintText,
-    this.suffix,
-  });
-
-  final double textFieldHeight;
-  final Function onChange;
-  final IconData icon;
-  final String hintText;
-  final GestureDetector suffix;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: textFieldHeight,
-      child: Padding(
-        padding: EdgeInsets.only(left: 20.0),
-        child: TextField(
-          onChanged: onChange,
-          keyboardType: TextInputType.emailAddress,
-          style: kTextFieldTextStyle,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            icon: Icon(
-              icon,
-              color: Colors.black,
-              size: 22.0,
-            ),
-            hintText: hintText,
-            hintStyle: kHintTextStyle,
-            suffixIcon: suffix,
-          ),
-        ),
-      ),
-    );
-  }
-}

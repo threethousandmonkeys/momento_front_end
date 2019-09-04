@@ -23,29 +23,34 @@ class InputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: 20.0,
-          right: 20.0,
-          top: 5,
-          bottom: bottomPadding ?? 5,
-        ),
-        child: TextField(
-          onChanged: onChange,
-          keyboardType: inputType,
-          obscureText: obscureText ?? false,
-          style: kTextFieldTextStyle,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            icon: Icon(
-              icon,
-              color: Colors.black,
-              size: 22.0,
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
+      child: Center(
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 20.0,
+            right: 20.0,
+            top: 5,
+            bottom: bottomPadding ?? 5,
+          ),
+          child: TextField(
+            onChanged: onChange,
+            keyboardType: inputType,
+            obscureText: obscureText ?? false,
+            style: kTextFieldTextStyle,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              icon: Icon(
+                icon,
+                color: Colors.black,
+                size: 22.0,
+              ),
+              hintText: hintText,
+              hintStyle: kHintTextStyle,
+              suffixIcon: suffix,
             ),
-            hintText: hintText,
-            hintStyle: kHintTextStyle,
-            suffixIcon: suffix,
           ),
         ),
       ),

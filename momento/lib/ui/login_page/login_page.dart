@@ -421,7 +421,7 @@ class _LoginPageState extends State<LoginPage>
                   CardDivider(width: width * kDividerRatio),
                   InputField(
                     onChange: (value) {
-                      _signupPassword = value;
+                      _signupConfirmPassword = value;
                     },
                     icon: FontAwesomeIcons.lock,
                     hintText: "Confirmation",

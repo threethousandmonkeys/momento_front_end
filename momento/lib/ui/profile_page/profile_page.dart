@@ -97,11 +97,29 @@ class _ProfilePageState extends State<ProfilePage>
                 vertical: 5.0,
               ),
               child: Text(
-                "\"Who lives in a pineapple under the sea\nAbsorbent and yellow and porous is he\nIf nautical nonsense be something you wish\nThen drop on the deck and flop like a fish\"\n",
+                "\"Who lives in a pineapple under the sea\nAbsorbent and yellow and porous is he\nIf nautical nonsense be something you wish\nThen drop on the deck and flop like a fish\"",
                 style: TextStyle(
                   fontSize: 16.0,
                 ),
               ),
+            ),
+            MaterialButton(
+              color: Color(0xFF9E8C81),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 20.0,
+                ),
+                child: Text(
+                  "Edit Your Profile",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              onPressed: () {
+                print("aha");
+              },
             ),
             Container(
               color: Colors.white24,

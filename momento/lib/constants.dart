@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:momento/style/theme.dart' as Theme;
 
 const kTextFieldTextStyle = TextStyle(
   fontFamily: "WorkSansSemiBold",
@@ -29,3 +30,14 @@ const kTextFieldPadding = EdgeInsets.only(
 const kLoginPageRatios = [1, 2, 1, 5];
 
 const kDividerRatio = 0.9;
+
+const kBackgroundDecoration = BoxDecoration(
+    gradient: LinearGradient(
+  colors: [
+    Theme.Colors.loginGradientStart,
+    Theme.Colors.loginGradientEnd,
+  ],
+  begin: FractionalOffset(0.0, 0.0),
+  end: FractionalOffset(1.0, 1.0),
+  tileMode: TileMode.clamp,
+));

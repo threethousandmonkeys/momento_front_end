@@ -1,33 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:momento/constants.dart';
+import 'package:flutter/cupertino.dart';
 
-class InputField extends StatefulWidget {
-  @override
-  _InputFieldState createState() => _InputFieldState();
-}
-
-class _InputFieldState extends State<InputField> {
-  double textFieldHeight;
-  Function onChange;
-  IconData icon;
-  String hintText;
-  GestureDetector suffix;
-  _InputFieldState({
-    @required this.textFieldHeight,
-    @required this.onChange,
-    @required this.icon,
-    @required this.hintText,
+class InputField extends StatelessWidget {
+  InputField({
+    this.onChange,
+    this.icon,
+    this.hintText,
+    this.inputType,
     this.suffix,
+    this.bottomPadding,
+    this.obscureText,
   });
+
+  final Function onChange;
+  final IconData icon;
+  final String hintText;
+  final TextInputType inputType;
+  final GestureDetector suffix;
+  final double bottomPadding;
+  final bool obscureText;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: textFieldHeight,
+    return Center(
       child: Padding(
-        padding: EdgeInsets.only(left: 20.0),
+        padding: EdgeInsets.only(
+          left: 20.0,
+          right: 20.0,
+          top: 5,
+          bottom: bottomPadding ?? 5,
+        ),
         child: TextField(
           onChanged: onChange,
-          keyboardType: TextInputType.emailAddress,
+          keyboardType: inputType,
+          obscureText: obscureText ?? false,
           style: kTextFieldTextStyle,
           decoration: InputDecoration(
             border: InputBorder.none,
@@ -46,44 +53,8 @@ class _InputFieldState extends State<InputField> {
   }
 }
 
-class InputTextField extends StatelessWidget {
-  const InputTextField({
-    @required this.textFieldHeight,
-    @required this.onChange,
-    @required this.icon,
-    @required this.hintText,
-    this.suffix,
-  });
-
-  final double textFieldHeight;
-  final Function onChange;
-  final IconData icon;
-  final String hintText;
-  final GestureDetector suffix;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: textFieldHeight,
-      child: Padding(
-        padding: EdgeInsets.only(left: 20.0),
-        child: TextField(
-          onChanged: onChange,
-          keyboardType: TextInputType.emailAddress,
-          style: kTextFieldTextStyle,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            icon: Icon(
-              icon,
-              color: Colors.black,
-              size: 22.0,
-            ),
-            hintText: hintText,
-            hintStyle: kHintTextStyle,
-            suffixIcon: suffix,
-          ),
-        ),
-      ),
-    );
+class PasswordInputField extends InputField {
+  PasswordInputField() {
+    ;
   }
 }

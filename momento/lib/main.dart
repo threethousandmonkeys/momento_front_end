@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:momento/ui/login_page/login_page.dart';
+import 'package:momento/ui/profile_page/profile_page.dart';
 
 void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: 'MomentoLogin',
-      theme: new ThemeData(
+    return MaterialApp(
+      theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new LoginPage(),
+      home: ProfilePage(),
     );
   }
 }

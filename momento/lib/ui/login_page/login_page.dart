@@ -13,8 +13,7 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage>
-    with SingleTickerProviderStateMixin {
+class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
   final _auth = FirebaseAuth.instance;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -43,53 +42,51 @@ class _LoginPageState extends State<LoginPage>
       body: Container(
         decoration: kBackgroundDecoration,
         child: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: contentHeight / 10,
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: contentHeight / 10,
+              ),
+              Image(
+                height: contentHeight * 3 / 10,
+                image: AssetImage('assets/images/login_logo.png'),
+              ),
+              Container(
+                height: contentHeight / 10,
+                child: _buildMenuBar(contentWidth, contentHeight / 10),
+              ),
+              Container(
+                height: contentHeight * 5 / 10,
+                child: PageView(
+                  controller: _pageController,
+                  onPageChanged: (i) {
+                    if (i == 0) {
+                      setState(() {
+                        right = Colors.white;
+                        left = Colors.black;
+                      });
+                    } else if (i == 1) {
+                      setState(() {
+                        right = Colors.black;
+                        left = Colors.white;
+                      });
+                    }
+                  },
+                  children: <Widget>[
+                    ConstrainedBox(
+                      constraints: BoxConstraints.expand(),
+                      child:
+                          _buildSignIn(contentWidth, contentHeight * 5 / 10),
+                    ),
+                    ConstrainedBox(
+                      constraints: BoxConstraints.expand(),
+                      child:
+                          _buildSignUp(contentWidth, contentHeight * 5 / 10),
+                    ),
+                  ],
                 ),
-                Image(
-                  height: contentHeight * 3 / 10,
-                  image: AssetImage('assets/images/login_logo.png'),
-                ),
-                Container(
-                  height: contentHeight / 10,
-                  child: _buildMenuBar(contentWidth, contentHeight / 10),
-                ),
-                Container(
-                  height: contentHeight * 5 / 10,
-                  child: PageView(
-                    controller: _pageController,
-                    onPageChanged: (i) {
-                      if (i == 0) {
-                        setState(() {
-                          right = Colors.white;
-                          left = Colors.black;
-                        });
-                      } else if (i == 1) {
-                        setState(() {
-                          right = Colors.black;
-                          left = Colors.white;
-                        });
-                      }
-                    },
-                    children: <Widget>[
-                      ConstrainedBox(
-                        constraints: BoxConstraints.expand(),
-                        child:
-                            _buildSignIn(contentWidth, contentHeight * 5 / 10),
-                      ),
-                      ConstrainedBox(
-                        constraints: BoxConstraints.expand(),
-                        child:
-                            _buildSignUp(contentWidth, contentHeight * 5 / 10),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -511,6 +508,10 @@ class _LoginPageState extends State<LoginPage>
       );
       if (newUser != null) {
         showInSnackBar("signup successful");
+        _auth.signInWithEmailAndPassword(
+          email: _signupEmail,
+          password: _signupPassword,
+        );
       }
     } catch (e) {
       print(e);

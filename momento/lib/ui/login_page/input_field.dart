@@ -57,9 +57,3 @@ class InputField extends StatelessWidget {
     );
   }
 }
-
-class PasswordInputField extends InputField {
-  PasswordInputField() {
-    ;
-  }
-}

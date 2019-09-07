@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:momento/style/theme.dart' as Theme;
+import 'package:momento/theme/style.dart' as Theme;
 
 const kTextFieldTextStyle = TextStyle(
   fontFamily: "WorkSansSemiBold",

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:momento/utils/slide_down_route.dart';
+import 'package:momento/components/slide_down_route.dart';
 import 'package:momento/constants.dart';
-import 'package:momento/ui/login_page/login_page.dart';
+import 'package:momento/screens/login_page/login_page.dart';
 import 'family_tree.dart';
 import 'artefact_gallery.dart';
 

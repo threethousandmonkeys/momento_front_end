@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:momento/ui/profile_page/profile_page.dart';
+import 'package:momento/screens/profile_page/profile_page.dart';
 
 void main() => runApp(new MyApp());
 

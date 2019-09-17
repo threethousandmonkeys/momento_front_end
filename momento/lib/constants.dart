@@ -27,7 +27,7 @@ const kTextFieldPadding = EdgeInsets.only(
   right: 20.0,
 );
 
-const kLoginPageRatios = [1, 2, 1, 5];
+const kLoginPageRatios = [1, 3, 1, 5];
 
 const kDividerRatio = 0.9;
 

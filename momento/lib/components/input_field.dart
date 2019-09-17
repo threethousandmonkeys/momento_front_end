@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 
 class InputField extends StatelessWidget {
   InputField({
-    this.onChange,
+    this.controller,
     this.icon,
     this.hintText,
     this.inputType,
@@ -13,7 +13,7 @@ class InputField extends StatelessWidget {
     this.obscureText,
   });
 
-  final Function onChange;
+  final TextEditingController controller;
   final IconData icon;
   final String hintText;
   final TextInputType inputType;
@@ -36,7 +36,7 @@ class InputField extends StatelessWidget {
             bottom: bottomPadding ?? 5,
           ),
           child: TextField(
-            onChanged: onChange,
+            controller: controller,
             keyboardType: inputType,
             obscureText: obscureText ?? false,
             style: kTextFieldTextStyle,

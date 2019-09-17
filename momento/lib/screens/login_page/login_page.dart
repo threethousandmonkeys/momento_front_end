@@ -1,30 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:momento/constants.dart';
 import 'package:momento/components/input_field.dart';
 import 'package:momento/components/ugly_button.dart';
 import 'components/card_divider.dart';
 import 'components/bubble_indication_painter.dart';
+import 'package:momento/services/auth_service.dart';
+import 'package:provider/provider.dart';
 
-class LoginPage extends StatefulWidget {
+class SignInPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _SignInPageState createState() => _SignInPageState();
 }
 
-class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
-  final _auth = FirebaseAuth.instance;
-
+class _SignInPageState extends State<SignInPage>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  String _loginEmail;
-  String _loginPassword;
-  String _signupEmail;
-  String _signupPassword;
-  String _signupConfirmPassword;
+  AuthService _auth;
 
-  bool _obscureTextLogin = true;
+  TextEditingController _signInEmailController = TextEditingController();
+  TextEditingController _signInPasswordController = TextEditingController();
+  TextEditingController _signupEmailController = TextEditingController();
+  TextEditingController _signupPasswordController = TextEditingController();
+  TextEditingController _signupConfirmPasswordController =
+      TextEditingController();
+  TextEditingController _familyNameController = TextEditingController();
+
+  bool _obscureTextSignIn = true;
   bool _obscureTextSignup = true;
   bool _obscureTextSignupConfirm = true;
 
@@ -35,6 +39,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+    _auth = Provider.of<AuthService>(context);
     double contentWidth = MediaQuery.of(context).size.width * kWidthRatio;
     double contentHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -75,13 +80,11 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                   children: <Widget>[
                     ConstrainedBox(
                       constraints: BoxConstraints.expand(),
-                      child:
-                          _buildSignIn(contentWidth, contentHeight * 5 / 10),
+                      child: _buildSignIn(contentWidth, contentHeight * 5 / 10),
                     ),
                     ConstrainedBox(
                       constraints: BoxConstraints.expand(),
-                      child:
-                          _buildSignUp(contentWidth, contentHeight * 5 / 10),
+                      child: _buildSignUp(contentWidth, contentHeight * 5 / 10),
                     ),
                   ],
                 ),
@@ -95,6 +98,11 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
 
   @override
   void dispose() {
+    _signInEmailController.dispose();
+    _signInPasswordController.dispose();
+    _signupEmailController.dispose();
+    _signupPasswordController.dispose();
+    _signupConfirmPasswordController.dispose();
     _pageController?.dispose();
     super.dispose();
   }
@@ -206,9 +214,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
               child: Column(
                 children: <Widget>[
                   InputField(
-                    onChange: (value) {
-                      _loginEmail = value;
-                    },
+                    controller: _signInEmailController,
                     icon: FontAwesomeIcons.solidEnvelope,
                     hintText: "Email",
                     inputType: TextInputType.emailAddress,
@@ -217,22 +223,20 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                     width: width * kDividerRatio,
                   ),
                   InputField(
-                    onChange: (value) {
-                      _loginPassword = value;
-                    },
+                    controller: _signInPasswordController,
                     icon: FontAwesomeIcons.lock,
                     hintText: "Password",
                     suffix: GestureDetector(
-                      onTap: _toggleLogin,
+                      onTap: _toggleSignIn,
                       child: Icon(
-                        _obscureTextLogin
+                        _obscureTextSignIn
                             ? FontAwesomeIcons.eye
                             : FontAwesomeIcons.eyeSlash,
                         size: 15.0,
                         color: Colors.black,
                       ),
                     ),
-                    obscureText: _obscureTextLogin,
+                    obscureText: _obscureTextSignIn,
                     bottomPadding: buttonHeight * 0.5,
                   ),
                 ],
@@ -244,14 +248,17 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             height: buttonHeight,
             transform: Matrix4.translationValues(0.0, -buttonHeight * 0.5, 0.0),
             onPressed: () async {
-              if (_loginEmail == "" ||
-                  _loginEmail == null ||
-                  _loginPassword == "" ||
-                  _loginPassword == null) {
+              if (_signInEmailController.text == "" ||
+                  _signInEmailController.text == null ||
+                  _signInPasswordController.text == "" ||
+                  _signInPasswordController.text == null) {
                 showInSnackBar("please enter email/password");
               } else {
                 showInSnackBar("logging in");
-                _login();
+                await _auth.signIn(
+                  email: _signInEmailController.text,
+                  password: _signInPasswordController.text,
+                );
               }
             },
           ),
@@ -261,7 +268,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
               children: <Widget>[
                 FlatButton(
                   onPressed: () {
-                    // _auth.sendPasswordResetEmail(email: loginEmail);
+                    // _auth.sendPasswordResetEmail(email: signInEmail);
                   },
                   child: Text(
                     "Forgot Password?",
@@ -381,26 +388,20 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
               child: Column(
                 children: <Widget>[
                   InputField(
-                    onChange: (value) {
-                      ;
-                    },
+                    controller: _familyNameController,
                     icon: FontAwesomeIcons.user,
                     hintText: "Family Name",
                   ),
                   CardDivider(width: width * kDividerRatio),
                   InputField(
-                    onChange: (value) {
-                      _signupEmail = value;
-                    },
+                    controller: _signupEmailController,
                     icon: FontAwesomeIcons.solidEnvelope,
                     hintText: "Email",
                     inputType: TextInputType.emailAddress,
                   ),
                   CardDivider(width: width * kDividerRatio),
                   InputField(
-                    onChange: (value) {
-                      _signupPassword = value;
-                    },
+                    controller: _signupPasswordController,
                     icon: FontAwesomeIcons.lock,
                     hintText: "Password",
                     suffix: GestureDetector(
@@ -417,9 +418,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                   ),
                   CardDivider(width: width * kDividerRatio),
                   InputField(
-                    onChange: (value) {
-                      _signupConfirmPassword = value;
-                    },
+                    controller: _signupConfirmPasswordController,
                     icon: FontAwesomeIcons.lock,
                     hintText: "Confirmation",
                     suffix: GestureDetector(
@@ -444,11 +443,21 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             height: buttonHeight,
             transform: Matrix4.translationValues(0.0, -buttonHeight * 0.5, 0.0),
             onPressed: () {
-              if (_signupPassword != _signupConfirmPassword) {
+              if (_familyNameController.text == "" ||
+                  _signupEmailController.text == "" ||
+                  _signupPasswordController.text == "" ||
+                  _signupConfirmPasswordController.text == "")
+                showInSnackBar("Please fill all the fields");
+              else if (_signupPasswordController.text !=
+                  _signupConfirmPasswordController.text)
                 showInSnackBar("passwords do not match");
-              } else {
+              else {
                 showInSnackBar("signing up");
-                _signup();
+                _auth.signUp(
+                  name: _familyNameController.text,
+                  email: _signupEmailController.text,
+                  password: _signupPasswordController.text,
+                );
               }
             },
           ),
@@ -458,18 +467,24 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
   }
 
   void _onSignInButtonPress() {
-    _pageController.animateToPage(0,
-        duration: Duration(milliseconds: 500), curve: Curves.decelerate);
+    _pageController.animateToPage(
+      0,
+      duration: Duration(milliseconds: 500),
+      curve: Curves.linear,
+    );
   }
 
   void _onSignUpButtonPress() {
-    _pageController?.animateToPage(1,
-        duration: Duration(milliseconds: 500), curve: Curves.decelerate);
+    _pageController?.animateToPage(
+      1,
+      duration: Duration(milliseconds: 500),
+      curve: Curves.linear,
+    );
   }
 
-  void _toggleLogin() {
+  void _toggleSignIn() {
     setState(() {
-      _obscureTextLogin = !_obscureTextLogin;
+      _obscureTextSignIn = !_obscureTextSignIn;
     });
   }
 
@@ -483,39 +498,5 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     setState(() {
       _obscureTextSignupConfirm = !_obscureTextSignupConfirm;
     });
-  }
-
-  void _login() async {
-    try {
-      final user = await _auth.signInWithEmailAndPassword(
-        email: _loginEmail,
-        password: _loginPassword,
-      );
-      if (user != null) {
-        Navigator.pop(context);
-      }
-    } catch (e) {
-      print(e);
-      showInSnackBar("wrong email/password");
-    }
-  }
-
-  void _signup() async {
-    try {
-      final newUser = await _auth.createUserWithEmailAndPassword(
-        email: _signupEmail,
-        password: _signupPassword,
-      );
-      if (newUser != null) {
-        showInSnackBar("signup successful");
-        _auth.signInWithEmailAndPassword(
-          email: _signupEmail,
-          password: _signupPassword,
-        );
-      }
-    } catch (e) {
-      print(e);
-      showInSnackBar("something wrong");
-    }
   }
 }

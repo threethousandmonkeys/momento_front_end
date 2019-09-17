@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:momento/components/slide_down_route.dart';
 import 'package:momento/constants.dart';
-import 'package:momento/screens/login_page/login_page.dart';
 import 'family_tree.dart';
 import 'artefact_gallery.dart';
+import 'package:provider/provider.dart';
+import 'package:momento/services/auth_service.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -13,7 +12,6 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage>
     with TickerProviderStateMixin {
-  final _auth = FirebaseAuth.instance;
   TabController _tabController;
   List<Widget> _tabs = [
     FamilyTree(),
@@ -28,7 +26,6 @@ class _ProfilePageState extends State<ProfilePage>
     super.initState();
     _tabController = TabController(vsync: this, length: 3);
     _tabController.addListener(_handleTabChange);
-    authenticate();
   }
 
   // disposals
@@ -41,19 +38,6 @@ class _ProfilePageState extends State<ProfilePage>
   void _handleTabChange() {
     setState(() {
       _tabIndex = _tabController.index;
-    });
-  }
-
-  void authenticate() async {
-    final _user = await _auth.currentUser();
-    print(_user);
-    Future.delayed(Duration.zero, () {
-      Navigator.push(
-        context,
-        SlideUpRoute(
-          page: LoginPage(),
-        ),
-      );
     });
   }
 
@@ -118,7 +102,7 @@ class _ProfilePageState extends State<ProfilePage>
                 ),
               ),
               onPressed: () {
-                print("aha");
+                ;
               },
             ),
             Container(
@@ -141,6 +125,24 @@ class _ProfilePageState extends State<ProfilePage>
                 controller: _tabController,
                 children: _tabs,
               ),
+            ),
+            MaterialButton(
+              color: Color(0xFF9E8C81),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 20.0,
+                ),
+                child: Text(
+                  "LOG OUT",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              onPressed: () {
+                Provider.of<AuthService>(context).signOut();
+              },
             ),
           ],
         ),

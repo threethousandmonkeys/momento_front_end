@@ -1,41 +1,40 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class AuthService with ChangeNotifier {
-  var currentUser;
+class User {
+  const User({@required this.uid});
+  final String uid;
+}
 
-  AuthService() {
-    print("new AuthService");
+class AuthService {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // private method to create `User` from `FirebaseUser`
+  User _userFromFirebase(FirebaseUser user) {
+    return user == null ? null : User(uid: user.uid);
   }
 
-  Future getUser() {
-    return Future.value(currentUser);
+  Stream<User> get onAuthStateChanged {
+    return _auth.onAuthStateChanged.map(_userFromFirebase);
   }
 
-  // wrappinhg the firebase calls
-  Future logout() {
-    this.currentUser = null;
-    notifyListeners();
-    return Future.value(currentUser);
+  Future<User> signIn({String email, String password}) async {
+    final user = await _auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return _userFromFirebase(user.user);
   }
 
-  // wrapping the firebase calls
-  Future createUser({
-    String firstName,
-    String lastName,
-    String email,
-    String password,
-  }) async {}
+  Future<User> signUp({String name, String email, String password}) async {
+    final user = await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return _userFromFirebase(user.user);
+  }
 
-  // logs in the user if password matches
-  Future loginUser({String email, String password}) {
-    if (password == 'password123') {
-      this.currentUser = {'email': email};
-      notifyListeners();
-      return Future.value(currentUser);
-    } else {
-      this.currentUser = null;
-      return Future.value(null);
-    }
+  Future<void> signOut() async {
+    return _auth.signOut();
   }
 }

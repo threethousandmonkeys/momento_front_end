@@ -5,12 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aa8ecd93-a636-4a13-ba00-bf2fdcf45c39" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/momento/ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/momento/ios/Podfile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/momento/lib/components/input_field.dart" beforeDir="false" afterPath="$PROJECT_DIR$/momento/lib/components/input_field.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/momento/lib/components/slide_down_route.dart" beforeDir="false" afterPath="$PROJECT_DIR$/momento/lib/components/slide_down_route.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/momento/lib/components/ugly_button.dart" beforeDir="false" afterPath="$PROJECT_DIR$/momento/lib/components/ugly_button.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/momento/lib/screens/signin_page/signin_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/momento/lib/screens/signin_page/signin_page.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -78,7 +73,7 @@
         <entry file="file://$PROJECT_DIR$/momento/lib/components/ugly_button.dart">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="45">
-              <caret line="3" column="46" selection-start-line="3" selection-start-column="46" selection-end-line="3" selection-end-column="46" />
+              <caret line="3" column="47" selection-start-line="3" selection-start-column="47" selection-end-line="3" selection-end-column="47" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -329,7 +324,7 @@
     <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.22899354" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.22899354" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Build Variants" order="3" side_tool="true" />
       <window_info id="Image Layers" order="4" />
@@ -338,12 +333,12 @@
       <window_info id="Capture Tool" order="7" />
       <window_info id="Favorites" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Dart Analysis" order="0" weight="0.329927" />
-      <window_info anchor="bottom" id="Run" order="1" visible="true" weight="0.25255474" />
+      <window_info anchor="bottom" id="Run" order="1" weight="0.25255474" />
       <window_info anchor="bottom" id="Logcat" order="2" weight="0.329927" />
       <window_info anchor="bottom" id="TODO" order="3" />
       <window_info anchor="bottom" id="Android Profiler" order="4" show_stripe_button="false" />
       <window_info anchor="bottom" id="Debug" order="5" />
-      <window_info anchor="bottom" id="Terminal" order="6" weight="0.21605839" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="6" visible="true" weight="0.21605839" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Flutter Performance" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.329927" />
@@ -534,7 +529,7 @@
     <entry file="file://$PROJECT_DIR$/momento/lib/components/ugly_button.dart">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
-          <caret line="3" column="46" selection-start-line="3" selection-start-column="46" selection-end-line="3" selection-end-column="46" />
+          <caret line="3" column="47" selection-start-line="3" selection-start-column="47" selection-end-line="3" selection-end-column="47" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>

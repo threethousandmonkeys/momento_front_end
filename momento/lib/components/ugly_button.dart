@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:momento/constants.dart';
 
-/// Build for the button components used later
+/// Build for the button components used later.
 class UglyButton extends StatelessWidget {
   final String text;
   final double height;

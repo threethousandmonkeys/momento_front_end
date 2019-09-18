@@ -3,9 +3,16 @@ import 'package:momento/constants.dart';
 
 /// Build for the button components used later.
 class UglyButton extends StatelessWidget {
+  /// the text showing on the button
   final String text;
+
+  /// the height of this widget
   final double height;
+
+  /// effect if the button pressed once
   final Function onPressed;
+
+  /// applying rotation of the widget
   final Matrix4 transform;
   UglyButton({
     this.text,

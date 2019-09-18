@@ -1,3 +1,4 @@
+///This file contains all the widgets required to build the login page
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,13 +10,15 @@ import 'components/bubble_indication_painter.dart';
 import 'package:momento/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
-/// signin_page: for user to sign in the application
+/// SignInPage: for user to sign in the application
 class SignInPage extends StatefulWidget {
   @override
   _SignInPageState createState() => _SignInPageState();
 }
 
-class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateMixin {
+/// _SignInPageState: state control of SignInPage
+class _SignInPageState extends State<SignInPage>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   AuthService _auth;
@@ -25,7 +28,8 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
   TextEditingController _signInPasswordController = TextEditingController();
   TextEditingController _signupEmailController = TextEditingController();
   TextEditingController _signupPasswordController = TextEditingController();
-  TextEditingController _signupConfirmPasswordController = TextEditingController();
+  TextEditingController _signupConfirmPasswordController =
+      TextEditingController();
   TextEditingController _familyNameController = TextEditingController();
 
   bool _obscureTextSignIn = true;
@@ -235,7 +239,9 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
                     suffix: GestureDetector(
                       onTap: _toggleSignIn,
                       child: Icon(
-                        _obscureTextSignIn ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash,
+                        _obscureTextSignIn
+                            ? FontAwesomeIcons.eye
+                            : FontAwesomeIcons.eyeSlash,
                         size: 15.0,
                         color: Colors.black,
                       ),
@@ -260,7 +266,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
               } else {
                 showInSnackBar("logging in");
                 final user = await _auth.signIn(
-                  email: _signInEmailController.text,
+                  email: _signInEmailController.text.trim(),
                   password: _signInPasswordController.text,
                 );
               }
@@ -376,6 +382,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
     );
   }
 
+  /// customize the sign up page
   Widget _buildSignUp(double width, double height) {
     double buttonHeight = height / 6;
     return Container(
@@ -411,7 +418,9 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
                     suffix: GestureDetector(
                       onTap: _toggleSignup,
                       child: Icon(
-                        _obscureTextSignup ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash,
+                        _obscureTextSignup
+                            ? FontAwesomeIcons.eye
+                            : FontAwesomeIcons.eyeSlash,
                         size: 15.0,
                         color: Colors.black,
                       ),
@@ -450,7 +459,8 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
                   _signupPasswordController.text == "" ||
                   _signupConfirmPasswordController.text == "")
                 showInSnackBar("Please fill all the fields");
-              else if (_signupPasswordController.text != _signupConfirmPasswordController.text)
+              else if (_signupPasswordController.text !=
+                  _signupConfirmPasswordController.text)
                 showInSnackBar("passwords do not match");
               else {
                 showInSnackBar("signing up");
@@ -467,8 +477,9 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
     );
   }
 
-  /// once press the "Existing" button, it shift to the "New" button and
-  /// vise versa
+  /// _onSignInButtonPress and _onSignUpButtonPress() change the widget from
+  /// _buildSignUp to _buildSignIn once press the "Existing" button and
+  /// vice versa if "New" button is pressed
   void _onSignInButtonPress() {
     _pageController.animateToPage(
       0,
@@ -498,7 +509,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
       _obscureTextSignup = !_obscureTextSignup;
     });
   }
-  
+
   /// show / not show your passwords
   void _toggleSignupConfirm() {
     setState(() {

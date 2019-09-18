@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 class FormTextField extends StatelessWidget {
   final String title;
   final int maxLines;
+  final TextEditingController controller;
+  final bool enabled;
   FormTextField({
     @required this.title,
     this.maxLines = 1,
+    this.controller,
+    this.enabled = true,
   });
   @override
   Widget build(BuildContext context) {
@@ -22,6 +26,8 @@ class FormTextField extends StatelessWidget {
             ),
           ),
           TextField(
+            enabled: enabled,
+            controller: controller,
             keyboardType: TextInputType.multiline,
             maxLines: maxLines,
             style: TextStyle(fontSize: 12.0),

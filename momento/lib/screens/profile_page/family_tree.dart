@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:momento/screens/add_new_page/add_new_member_page.dart';
 
 class FamilyTree extends StatefulWidget {
   @override
@@ -11,7 +12,9 @@ class _FamilyTreeState extends State<FamilyTree> {
     return Container(
       height: MediaQuery.of(context).size.height,
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AddNewMemberPage()));
+        },
         child: Icon(
           Icons.people_outline,
           size: 100,

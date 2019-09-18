@@ -4,6 +4,7 @@ import 'package:momento/components/ugly_button.dart';
 import 'package:image_picker/image_picker.dart';
 import 'components/form_text_field.dart';
 import 'components/form_drop_down_field.dart';
+import 'components/form_date_field.dart';
 
 class AddNewArtefactPage extends StatelessWidget {
   @override
@@ -31,8 +32,9 @@ class AddNewArtefactPage extends StatelessWidget {
               FormTextField(
                 title: "Name",
               ),
-              FormTextField(
+              FormDateField(
                 title: "Date Created",
+                controller: TextEditingController(),
               ),
               FormDropDownField("Original Owner", ["123", "1234"]),
               FormDropDownField("Current Owner", ["123", "1235"]),

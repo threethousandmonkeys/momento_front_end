@@ -14,7 +14,8 @@ class SignInPage extends StatefulWidget {
   _SignInPageState createState() => _SignInPageState();
 }
 
-class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateMixin {
+class _SignInPageState extends State<SignInPage>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   AuthService _auth;
@@ -23,7 +24,8 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
   TextEditingController _signInPasswordController = TextEditingController();
   TextEditingController _signupEmailController = TextEditingController();
   TextEditingController _signupPasswordController = TextEditingController();
-  TextEditingController _signupConfirmPasswordController = TextEditingController();
+  TextEditingController _signupConfirmPasswordController =
+      TextEditingController();
   TextEditingController _familyNameController = TextEditingController();
 
   bool _obscureTextSignIn = true;
@@ -227,7 +229,9 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
                     suffix: GestureDetector(
                       onTap: _toggleSignIn,
                       child: Icon(
-                        _obscureTextSignIn ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash,
+                        _obscureTextSignIn
+                            ? FontAwesomeIcons.eye
+                            : FontAwesomeIcons.eyeSlash,
                         size: 15.0,
                         color: Colors.black,
                       ),
@@ -252,7 +256,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
               } else {
                 showInSnackBar("logging in");
                 final user = await _auth.signIn(
-                  email: _signInEmailController.text,
+                  email: _signInEmailController.text.trim(),
                   password: _signInPasswordController.text,
                 );
               }
@@ -403,7 +407,9 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
                     suffix: GestureDetector(
                       onTap: _toggleSignup,
                       child: Icon(
-                        _obscureTextSignup ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash,
+                        _obscureTextSignup
+                            ? FontAwesomeIcons.eye
+                            : FontAwesomeIcons.eyeSlash,
                         size: 15.0,
                         color: Colors.black,
                       ),
@@ -442,7 +448,8 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
                   _signupPasswordController.text == "" ||
                   _signupConfirmPasswordController.text == "")
                 showInSnackBar("Please fill all the fields");
-              else if (_signupPasswordController.text != _signupConfirmPasswordController.text)
+              else if (_signupPasswordController.text !=
+                  _signupConfirmPasswordController.text)
                 showInSnackBar("passwords do not match");
               else {
                 showInSnackBar("signing up");

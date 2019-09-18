@@ -1,3 +1,4 @@
+///This file contains all the widgets required to build the login page
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -9,12 +10,13 @@ import 'components/bubble_indication_painter.dart';
 import 'package:momento/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
-/// signin_page: for user to sign in the application
+/// SignInPage: for user to sign in the application
 class SignInPage extends StatefulWidget {
   @override
   _SignInPageState createState() => _SignInPageState();
 }
 
+/// _SignInPageState: state control of SignInPage
 class _SignInPageState extends State<SignInPage>
     with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -380,6 +382,7 @@ class _SignInPageState extends State<SignInPage>
     );
   }
 
+  /// customize the sign up page
   Widget _buildSignUp(double width, double height) {
     double buttonHeight = height / 6;
     return Container(
@@ -474,8 +477,9 @@ class _SignInPageState extends State<SignInPage>
     );
   }
 
-  /// once press the "Existing" button, it shift to the "New" button and
-  /// vise versa
+  /// _onSignInButtonPress and _onSignUpButtonPress() change the widget from
+  /// _buildSignUp to _buildSignIn once press the "Existing" button and
+  /// vice versa if "New" button is pressed
   void _onSignInButtonPress() {
     _pageController.animateToPage(
       0,
@@ -505,7 +509,7 @@ class _SignInPageState extends State<SignInPage>
       _obscureTextSignup = !_obscureTextSignup;
     });
   }
-  
+
   /// show / not show your passwords
   void _toggleSignupConfirm() {
     setState(() {

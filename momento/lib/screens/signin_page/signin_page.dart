@@ -251,7 +251,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
                 showInSnackBar("please enter email/password");
               } else {
                 showInSnackBar("logging in");
-                await _auth.signIn(
+                final user = await _auth.signIn(
                   email: _signInEmailController.text,
                   password: _signInPasswordController.text,
                 );

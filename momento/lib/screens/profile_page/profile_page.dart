@@ -14,7 +14,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
-  User user;
   Family family;
 
   TabController _tabController;
@@ -29,11 +28,6 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (user == null) {
-        Navigator.push(context, SlideUpRoute(page: SignInPage()));
-      }
-    });
     _tabController = TabController(vsync: this, length: 3);
     _tabController.addListener(_handleTabChange);
   }
@@ -54,32 +48,23 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     final AuthService auth = Provider.of<AuthService>(context);
+    final user = Provider.of<User>(context);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return family != null
         ? _buildProfile(family, width, height)
-        : FutureBuilder<User>(
-            future: auth.getCurrentUser(),
-            builder: (context, AsyncSnapshot<User> snapshotUser) {
-              if (snapshotUser.connectionState == ConnectionState.done) {
-                user = snapshotUser.data;
-                if (user == null) {
-                  return Scaffold();
-                } else {
-                  return FutureBuilder<Family>(
-                    future: parseFamily(user.uid),
-                    builder: (context, AsyncSnapshot<Family> snapshotFamily) {
-                      if (snapshotFamily.connectionState == ConnectionState.done) {
-                        family = snapshotFamily.data;
-                        return _buildProfile(family, width, height);
-                      } else {
-                        return Scaffold();
-                      }
-                    },
-                  );
-                }
+        : FutureBuilder(
+            future: parseFamily(user.uid),
+            builder: (BuildContext context, AsyncSnapshot<Family> snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                family = snapshot.data;
+                return _buildProfile(family, width, height);
               } else {
-                return Scaffold();
+                return Scaffold(
+                  body: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
               }
             },
           );
@@ -99,15 +84,17 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                 Container(
                   width: width,
                   height: width * 9 / 16,
-                  child: Image(
-                    fit: BoxFit.fitWidth,
-                    image: AssetImage('assets/images/test_family_profile.jpg'),
-                  ),
+                  child: family == null
+                      ? null
+                      : Image(
+                          fit: BoxFit.fitWidth,
+                          image: AssetImage('assets/images/test_family_profile.jpg'),
+                        ),
                 ),
                 Container(
                   margin: EdgeInsets.only(top: width * 9 / 16 - 20),
                   child: Text(
-                    "The ${family.name}s",
+                    family == null ? null : "The ${family.name}s",
                     style: TextStyle(
                       fontSize: 40,
                       fontFamily: "WorkSansSemiBold",

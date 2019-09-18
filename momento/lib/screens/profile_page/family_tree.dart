@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:photo_view/photo_view.dart';
+import 'package:momento/screens/create_page/create_page.dart';
 import 'package:momento/constants.dart';
 
 class FamilyTree extends StatefulWidget {
@@ -12,9 +12,30 @@ class _FamilyTreeState extends State<FamilyTree> {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height,
-      child: PhotoView(
-        backgroundDecoration: kBackgroundDecoration,
-        imageProvider: AssetImage("assets/images/test_family_tree.jpg"),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CreatePage(
+                title: "MEMBER",
+                children: <Widget>[
+                  FormTextField(
+                    title: "First Name",
+                  ),
+                  FormDropdownField(
+                    title: "Gender",
+                    items: [Text("Male"), Text("Female")],
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+        child: Icon(
+          Icons.people_outline,
+          size: 100,
+        ),
       ),
     );
   }

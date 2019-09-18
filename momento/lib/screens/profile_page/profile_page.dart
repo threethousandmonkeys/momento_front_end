@@ -5,8 +5,6 @@ import 'artefact_gallery.dart';
 import 'package:provider/provider.dart';
 import 'package:momento/services/auth_service.dart';
 import 'package:momento/models/family.dart';
-import 'package:momento/screens/signin_page/signin_page.dart';
-import 'package:momento/components/slide_down_route.dart';
 
 class ProfilePage extends StatefulWidget {
   @override

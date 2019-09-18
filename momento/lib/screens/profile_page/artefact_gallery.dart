@@ -1,10 +1,7 @@
 import "package:flutter/material.dart";
-import 'package:momento/screens/create_page/create_page.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:momento/screens/add_new_page/add_new_artefact_page.dart';
 
 class ArtefactGallery extends StatelessWidget {
-  List<Widget> thumbnails;
-
   @override
   Widget build(BuildContext context) {
     return GridView.count(
@@ -34,36 +31,11 @@ class ArtefactGallery extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CreatePage(
-                        title: "ARTEFACT",
-                        children: <Widget>[
-                          FormTextField(
-                            title: "Name",
-                          ),
-                          FormTextField(
-                            title: "Date Created",
-                          ),
-                          FormDropdownField(
-                            title: "Original Owner",
-                          ),
-                          FormDropdownField(
-                            title: "Current Owner",
-                          ),
-                          FormTextField(
-                            title: "Description",
-                            maxLines: 4,
-                          ),
-                          MaterialButton(
-                            child: Text("Upload Photo"),
-                            onPressed: () async {
-                              var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-                            },
-                          ),
-                        ],
-                      ),
-                    ));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddNewArtefactPage(),
+                  ),
+                );
               },
             ),
           ],

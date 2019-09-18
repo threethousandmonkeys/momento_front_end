@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// a model to represent family, which store the name and description and email
 class Family {
   String name;
   String description;

@@ -9,6 +9,7 @@ import 'components/bubble_indication_painter.dart';
 import 'package:momento/services/auth_service.dart';
 import 'package:provider/provider.dart';
 
+/// signin_page: for user to sign in the application
 class SignInPage extends StatefulWidget {
   @override
   _SignInPageState createState() => _SignInPageState();
@@ -19,6 +20,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
 
   AuthService _auth;
 
+  ///  For recording the inputs in the text field:
   TextEditingController _signInEmailController = TextEditingController();
   TextEditingController _signInPasswordController = TextEditingController();
   TextEditingController _signupEmailController = TextEditingController();
@@ -35,6 +37,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
   Color left = Colors.black;
   Color right = Colors.white;
 
+  /// Basic setting for the sign in page (Size, Image, theme etc.)
   @override
   Widget build(BuildContext context) {
     _auth = Provider.of<AuthService>(context);
@@ -94,6 +97,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
     );
   }
 
+  /// After build the widget, dispose it. <flutter lifecycle>
   @override
   void dispose() {
     _signInEmailController.dispose();
@@ -105,6 +109,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
     super.dispose();
   }
 
+  /// Before build the widget, init it. <flutter lifecycle>
   @override
   void initState() {
     super.initState();
@@ -117,6 +122,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
     _pageController = PageController();
   }
 
+  /// customize the bar appear at the bottom of the screen <pop-up message>
   void showInSnackBar(String value) {
     _scaffoldKey.currentState?.removeCurrentSnackBar();
     _scaffoldKey.currentState.showSnackBar(
@@ -136,6 +142,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
     );
   }
 
+  /// customize the menu bar appear
   Widget _buildMenuBar(double width, double height) {
     double barRadius = height / 3;
     return Padding(
@@ -196,6 +203,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
     );
   }
 
+  /// customize the sign in page
   Widget _buildSignIn(double width, double height) {
     double buttonHeight = height / 6;
     return Container(
@@ -459,6 +467,8 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
     );
   }
 
+  /// once press the "Existing" button, it shift to the "New" button and
+  /// vise versa
   void _onSignInButtonPress() {
     _pageController.animateToPage(
       0,
@@ -475,18 +485,21 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
     );
   }
 
+  /// show / not show your passwords
   void _toggleSignIn() {
     setState(() {
       _obscureTextSignIn = !_obscureTextSignIn;
     });
   }
 
+  /// show / not show your passwords
   void _toggleSignup() {
     setState(() {
       _obscureTextSignup = !_obscureTextSignup;
     });
   }
-
+  
+  /// show / not show your passwords
   void _toggleSignupConfirm() {
     setState(() {
       _obscureTextSignupConfirm = !_obscureTextSignupConfirm;

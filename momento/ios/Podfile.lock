@@ -182,7 +182,11 @@ SPEC CHECKSUMS:
   FirebaseCore: aecf02fb2274ec361b9bebeac112f5daa18273bd
   FirebaseFirestore: 41a035642eb017fc7206318985501626993840bd
   FirebaseInstanceID: 662b8108a09fe9ed01aafdedba100fde8536b0f6
+<<<<<<< HEAD
   FirebaseStorage: b7c6d00997bc21d4465453bdcc5cc65513110fed
+=======
+  FirebaseStorage: 618dd8fd886b30adf6e5d1915b1f5c18cb5c3944
+>>>>>>> 08b19e7595bb12a5ac6b7d074081c872fe92574d
   Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
   GoogleAppMeasurement: 183bd916af7f80deb67c01888368f1108d641832
   GoogleUtilities: d2b0e277a95962e09bb27f5cd42f5f0b6a506c7d

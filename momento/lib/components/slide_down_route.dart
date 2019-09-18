@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+
+/// A customized page transition route from bottom to top
 class SlideUpRoute extends PageRouteBuilder {
   final Widget page;
   SlideUpRoute({this.page})

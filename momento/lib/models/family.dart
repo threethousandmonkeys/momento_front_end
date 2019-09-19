@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 /// a model to represent family, which store the name and description and email
 class Family {
   String name;
@@ -11,21 +9,20 @@ class Family {
     this.description,
     this.email,
   });
-}
 
-Future<Family> parseFamily(String uid) async {
-  Firestore _firestore = Firestore.instance;
-  Family family;
-  await _firestore
-      .collection("family")
-      .document(uid)
-      .get()
-      .then((DocumentSnapshot ds) {
-    family = Family(
-      name: ds.data["name"],
-      description: ds.data["description"],
-      email: ds.data["email"],
+  static Family parseFamily(Map<String, dynamic> jsonFamily) {
+    return Family(
+      name: jsonFamily["name"],
+      description: jsonFamily["description"],
+      email: jsonFamily["email"],
     );
-  });
-  return family;
+  }
+
+  Map<String, dynamic> serialize() {
+    return {
+      "name": this.name,
+      "description": this.description,
+      "email": this.email,
+    };
+  }
 }

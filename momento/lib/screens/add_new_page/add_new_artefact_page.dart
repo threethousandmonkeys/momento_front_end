@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:momento/constants.dart';
-import 'package:momento/components/ugly_button.dart';
+import 'package:momento/screens/components/ugly_button.dart';
 import 'package:image_picker/image_picker.dart';
 import 'components/form_text_field.dart';
 import 'components/form_drop_down_field.dart';

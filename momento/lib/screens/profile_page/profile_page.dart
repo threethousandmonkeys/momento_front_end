@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/constants.dart';
 import 'family_tree.dart';
 import 'artefact_gallery.dart';
 import 'package:provider/provider.dart';
 import 'package:momento/services/auth_service.dart';
 import 'package:momento/models/family.dart';
+import 'package:momento/repository/member_repository.dart';
 
 /// ProfilePage: the widget of family profile page(home page)
 class ProfilePage extends StatefulWidget {
@@ -13,10 +15,11 @@ class ProfilePage extends StatefulWidget {
 }
 
 /// _ProfilePageState: the state control of family profile page
-class _ProfilePageState extends State<ProfilePage>
-    with TickerProviderStateMixin {
+class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
   /// family detailed data
   Family family;
+
+  ProfileBloc _bloc = ProfileBloc();
 
   TabController _tabController;
   int _tabIndex = 0;
@@ -53,14 +56,13 @@ class _ProfilePageState extends State<ProfilePage>
   /// build function of profile_page widget
   @override
   Widget build(BuildContext context) {
-    final AuthService auth = Provider.of<AuthService>(context);
-    final user = Provider.of<User>(context);
+    final authUser = Provider.of<AuthUser>(context);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return family != null
         ? _buildProfile(family, width, height)
         : FutureBuilder(
-            future: parseFamily(user.uid),
+            future: _bloc.getFamily(authUser),
             builder: (BuildContext context, AsyncSnapshot<Family> snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 family = snapshot.data;
@@ -78,6 +80,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   /// _buildProfile: build family profile display from the family details
   Widget _buildProfile(Family family, double width, double height) {
+    MemberRepository().getMember("chZGkZKD1EG4yZNBo23c");
     return Scaffold(
       body: Container(
         decoration: kBackgroundDecoration,
@@ -95,8 +98,7 @@ class _ProfilePageState extends State<ProfilePage>
                       ? null
                       : Image(
                           fit: BoxFit.fitWidth,
-                          image: AssetImage(
-                              'assets/images/test_family_profile.jpg'),
+                          image: AssetImage('assets/images/test_family_profile.jpg'),
                         ),
                 ),
 
@@ -145,7 +147,7 @@ class _ProfilePageState extends State<ProfilePage>
                 ),
               ),
               onPressed: () {
-                ;
+                print("edit");
               },
             ),
 
@@ -185,9 +187,7 @@ class _ProfilePageState extends State<ProfilePage>
 
             /// the display of 3 main components
             Container(
-              height: _tabIndex == 1
-                  ? (10 / 3).ceil() * (width - (10 / 3).floor()) / 3
-                  : width,
+              height: _tabIndex == 1 ? (10 / 3).ceil() * (width - (10 / 3).floor()) / 3 : width,
               child: TabBarView(
                 controller: _tabController,
                 children: _tabs,

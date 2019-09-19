@@ -14,6 +14,7 @@ class FormDateField extends StatefulWidget {
 
 class _FormDateFieldState extends State<FormDateField> {
   DateTime selectedDate = DateTime.now();
+  DateTime date;
 
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -25,6 +26,7 @@ class _FormDateFieldState extends State<FormDateField> {
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
+        date = selectedDate;
         widget.controller.text = selectedDate.toString().split(" ")[0];
       });
   }

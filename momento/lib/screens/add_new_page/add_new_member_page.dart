@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:momento/constants.dart';
-import 'package:momento/components/ugly_button.dart';
+import 'package:momento/screens/components/ugly_button.dart';
 import 'package:image_picker/image_picker.dart';
 import 'components/form_drop_down_field.dart';
 import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
 import 'package:momento/models/member.dart';
+import 'package:momento/services/firestore_service.dart';
 
 class AddNewMemberPage extends StatefulWidget {
   @override
@@ -17,8 +18,10 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
   TextEditingController dateOfBirthController;
   TextEditingController dateOfDeathController;
   TextEditingController descriptionController;
+  DateTime dateOfBirth;
 
   void _addMember() {
+    FirestoreService().getDocument("person", "chZGkZKD1EG4yZNBo23c");
     String firstName = firstNameController.text;
     String description = descriptionController.text;
     print(firstName);
@@ -76,6 +79,7 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
               FormDateField(
                 title: "Date of Birth",
                 controller: dateOfBirthController,
+//                date: dateOfBirth,
               ),
               FormDateField(
                 title: "Date of Death (if dead)",

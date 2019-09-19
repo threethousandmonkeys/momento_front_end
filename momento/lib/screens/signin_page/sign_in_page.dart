@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:momento/constants.dart';
-import 'package:momento/components/input_field.dart';
-import 'package:momento/components/ugly_button.dart';
+import 'package:momento/screens/components/input_field.dart';
+import 'package:momento/screens/components/ugly_button.dart';
 import 'components/card_divider.dart';
 import 'components/bubble_indication_painter.dart';
-import 'package:momento/services/auth_service.dart';
-import 'package:provider/provider.dart';
+import 'package:momento/bloc/sign_in_bloc.dart';
 
 /// SignInPage: for user to sign in the application
 class SignInPage extends StatefulWidget {
@@ -17,19 +16,17 @@ class SignInPage extends StatefulWidget {
 }
 
 /// _SignInPageState: state control of SignInPage
-class _SignInPageState extends State<SignInPage>
-    with SingleTickerProviderStateMixin {
+class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  AuthService _auth;
+  SignInBloc _bloc = SignInBloc();
 
   ///  For recording the inputs in the text field:
   TextEditingController _signInEmailController = TextEditingController();
   TextEditingController _signInPasswordController = TextEditingController();
   TextEditingController _signupEmailController = TextEditingController();
   TextEditingController _signupPasswordController = TextEditingController();
-  TextEditingController _signupConfirmPasswordController =
-      TextEditingController();
+  TextEditingController _signupConfirmPasswordController = TextEditingController();
   TextEditingController _familyNameController = TextEditingController();
 
   bool _obscureTextSignIn = true;
@@ -44,7 +41,6 @@ class _SignInPageState extends State<SignInPage>
   /// Basic setting for the sign in page (Size, Image, theme etc.)
   @override
   Widget build(BuildContext context) {
-    _auth = Provider.of<AuthService>(context);
     double contentWidth = MediaQuery.of(context).size.width * kWidthRatio;
     double contentHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -239,9 +235,7 @@ class _SignInPageState extends State<SignInPage>
                     suffix: GestureDetector(
                       onTap: _toggleSignIn,
                       child: Icon(
-                        _obscureTextSignIn
-                            ? FontAwesomeIcons.eye
-                            : FontAwesomeIcons.eyeSlash,
+                        _obscureTextSignIn ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash,
                         size: 15.0,
                         color: Colors.black,
                       ),
@@ -265,7 +259,7 @@ class _SignInPageState extends State<SignInPage>
                 showInSnackBar("please enter email/password");
               } else {
                 showInSnackBar("logging in");
-                final user = await _auth.signIn(
+                await _bloc.signIn(
                   email: _signInEmailController.text.trim(),
                   password: _signInPasswordController.text,
                 );
@@ -418,9 +412,7 @@ class _SignInPageState extends State<SignInPage>
                     suffix: GestureDetector(
                       onTap: _toggleSignup,
                       child: Icon(
-                        _obscureTextSignup
-                            ? FontAwesomeIcons.eye
-                            : FontAwesomeIcons.eyeSlash,
+                        _obscureTextSignup ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash,
                         size: 15.0,
                         color: Colors.black,
                       ),
@@ -453,18 +445,17 @@ class _SignInPageState extends State<SignInPage>
             text: "SIGNUP",
             height: buttonHeight,
             transform: Matrix4.translationValues(0.0, -buttonHeight * 0.5, 0.0),
-            onPressed: () {
+            onPressed: () async {
               if (_familyNameController.text == "" ||
                   _signupEmailController.text == "" ||
                   _signupPasswordController.text == "" ||
                   _signupConfirmPasswordController.text == "")
                 showInSnackBar("Please fill all the fields");
-              else if (_signupPasswordController.text !=
-                  _signupConfirmPasswordController.text)
+              else if (_signupPasswordController.text != _signupConfirmPasswordController.text)
                 showInSnackBar("passwords do not match");
               else {
                 showInSnackBar("signing up");
-                _auth.signUp(
+                await _bloc.signUp(
                   name: _familyNameController.text,
                   email: _signupEmailController.text,
                   password: _signupPasswordController.text,

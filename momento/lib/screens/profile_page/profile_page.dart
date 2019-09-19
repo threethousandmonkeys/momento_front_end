@@ -6,16 +6,22 @@ import 'package:provider/provider.dart';
 import 'package:momento/services/auth_service.dart';
 import 'package:momento/models/family.dart';
 
+/// ProfilePage: the widget of family profile page(home page)
 class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
+/// _ProfilePageState: the state control of family profile page
+class _ProfilePageState extends State<ProfilePage>
+    with TickerProviderStateMixin {
+  /// family detailed data
   Family family;
 
   TabController _tabController;
   int _tabIndex = 0;
+
+  /// 3 components under family profile page
   List<Widget> _tabs = [
     FamilyTree(),
     ArtefactGallery(),
@@ -37,12 +43,14 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
     super.dispose();
   }
 
+  /// switching among 3 main components
   void _handleTabChange() {
     setState(() {
       _tabIndex = _tabController.index;
     });
   }
 
+  /// build function of profile_page widget
   @override
   Widget build(BuildContext context) {
     final AuthService auth = Provider.of<AuthService>(context);
@@ -68,6 +76,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
           );
   }
 
+  /// _buildProfile: build family profile display from the family details
   Widget _buildProfile(Family family, double width, double height) {
     return Scaffold(
       body: Container(
@@ -86,9 +95,12 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                       ? null
                       : Image(
                           fit: BoxFit.fitWidth,
-                          image: AssetImage('assets/images/test_family_profile.jpg'),
+                          image: AssetImage(
+                              'assets/images/test_family_profile.jpg'),
                         ),
                 ),
+
+                /// family name display
                 Container(
                   margin: EdgeInsets.only(top: width * 9 / 16 - 20),
                   child: Text(
@@ -101,6 +113,8 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                 ),
               ],
             ),
+
+            /// family description display
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 16.0,
@@ -113,6 +127,9 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                 ),
               ),
             ),
+
+            /// edit family description button
+            /// (not connected to editing page yet)
             MaterialButton(
               color: Color(0xFF9E8C81),
               child: Padding(
@@ -131,6 +148,8 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                 ;
               },
             ),
+
+            /// logout button (testing only)
             MaterialButton(
               color: Color(0xFF9E8C81),
               child: Padding(
@@ -149,6 +168,8 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                 Provider.of<AuthService>(context).signOut();
               },
             ),
+
+            /// tab to switch among 3 main components
             Container(
               color: Colors.white24,
               child: TabBar(
@@ -161,8 +182,12 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                 ],
               ),
             ),
+
+            /// the display of 3 main components
             Container(
-              height: _tabIndex == 1 ? (10 / 3).ceil() * (width - (10 / 3).floor()) / 3 : width,
+              height: _tabIndex == 1
+                  ? (10 / 3).ceil() * (width - (10 / 3).floor()) / 3
+                  : width,
               child: TabBarView(
                 controller: _tabController,
                 children: _tabs,

@@ -28,7 +28,7 @@ class Member {
       middleName: jsonMember["middleName"],
       gender: jsonMember["gender"],
       birthday: DateTime.fromMillisecondsSinceEpoch(jsonMember["birthday"].seconds * 1000),
-      deathday: jsonMember["birthday"]
+      deathday: jsonMember["birthday"] != null
           ? DateTime.fromMillisecondsSinceEpoch(jsonMember["birthday"].seconds * 1000)
           : null,
       description: jsonMember["description"],

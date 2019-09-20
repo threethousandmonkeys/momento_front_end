@@ -5,11 +5,13 @@ class FormTextField extends StatelessWidget {
   final int maxLines;
   final TextEditingController controller;
   final bool enabled;
+  final Function onChanged;
   FormTextField({
     @required this.title,
     this.maxLines = 1,
     this.controller,
     this.enabled = true,
+    this.onChanged,
   });
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,7 @@ class FormTextField extends StatelessWidget {
             ),
           ),
           TextField(
+            onChanged: onChanged,
             enabled: enabled,
             controller: controller,
             keyboardType: TextInputType.multiline,

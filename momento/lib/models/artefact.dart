@@ -7,6 +7,6 @@ class Artefact {
   List<Member> passingHistory;
 
   Artefact({this.artifactName, this.originalOwner, this.passingHistory});
-}
 
-Future<Artefact> parseArtifact(String uid) async {}
+  static Future<Null> parseArtifact(String uid) async {}
+}

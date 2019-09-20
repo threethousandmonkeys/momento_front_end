@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:momento/services/auth_service.dart';
-import 'package:momento/repository/family_repository.dart';
+import 'package:momento/repositories/family_repository.dart';
 import 'package:momento/models/family.dart';
 
 class AuthBloc {

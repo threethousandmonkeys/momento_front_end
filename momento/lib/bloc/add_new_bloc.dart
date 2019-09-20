@@ -1,27 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:momento/models/member.dart';
-import 'package:momento/repository/member_repository.dart';
-import 'package:momento/repository/family_repository.dart';
+import 'package:momento/repositories/member_repository.dart';
+import 'package:momento/repositories/family_repository.dart';
 
 class AddNewBloc {
   MemberRepository _memberRepository = MemberRepository();
   FamilyRepository _familyRepository = FamilyRepository();
 
-  TextEditingController firstNameController = TextEditingController();
-  TextEditingController dateOfBirthController = TextEditingController();
-  TextEditingController dateOfDeathController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
+  String firstName = "";
+  String middleName = "";
+  String gender = "";
+  DateTime birthday;
+  DateTime deathday;
+  String description = "";
+  String photoPath;
+
+  TextEditingController birthdayController = TextEditingController();
+  TextEditingController deathdayController = TextEditingController();
+
+  String validate() {
+    if (firstName == "") {
+      return "first name";
+    }
+    if (gender == "") {
+      return "gender";
+    }
+    if (birthday == null) {
+      return "birthday";
+    }
+    return "";
+  }
 
   Future<Null> addNewMember(String familyId) async {
-    String firstName = firstNameController.text;
-    String description = descriptionController.text;
     Member newMember = Member(
       firstName: firstName,
-      middleName: null,
-      gender: "Male",
-      birthday: DateTime.now(),
-      deathday: DateTime.now(),
+      middleName: middleName,
+      gender: gender,
+      birthday: birthday,
+      deathday: deathday,
       description: description,
       photoId: null,
     );
@@ -31,5 +48,6 @@ class AddNewBloc {
 
   void pickImage() async {
     final image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    print(image);
   }
 }

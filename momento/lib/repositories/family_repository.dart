@@ -6,12 +6,11 @@ class FamilyRepository {
   final _firestore = FirestoreService();
 
   Future<Null> createFamily(Family family, AuthUser user) async {
-    final aha = await _firestore.createDocumentById(
+    await _firestore.createDocumentById(
       "family",
       user.uid,
       family.serialize(),
     );
-    print(aha);
   }
 
   Future<Family> getFamily(String familyId) async {

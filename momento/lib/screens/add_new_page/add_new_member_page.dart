@@ -17,11 +17,6 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
   AddNewBloc _bloc = AddNewBloc();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     double horizontalPadding = MediaQuery.of(context).size.width * 0.1;
     return Scaffold(
@@ -45,25 +40,37 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
               ),
               FormTextField(
                 title: "First Name",
-                controller: _bloc.firstNameController,
+                onChanged: (value) {
+                  _bloc.firstName = value;
+                },
               ),
               FormDropDownField(
-                "Gender",
-                ["Male", "Female", "Others"],
+                title: "Gender",
+                items: ["Male", "Female", "Others"],
+                onChanged: (value) {
+                  _bloc.gender = value;
+                },
               ),
               FormDateField(
                 title: "Date of Birth",
-                controller: _bloc.dateOfBirthController,
-//                date: dateOfBirth,
+                controller: _bloc.birthdayController,
+                onChange: (value) {
+                  _bloc.birthday = value;
+                },
               ),
               FormDateField(
                 title: "Date of Death (if dead)",
-                controller: _bloc.dateOfDeathController,
+                controller: _bloc.deathdayController,
+                onChange: (value) {
+                  _bloc.deathday = value;
+                },
               ),
               FormTextField(
                 title: "Description",
                 maxLines: 5,
-                controller: _bloc.descriptionController,
+                onChanged: (value) {
+                  _bloc.description = value;
+                },
               ),
               MaterialButton(
                 child: Text("Upload Photo"),
@@ -83,8 +90,13 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                     text: "Add",
                     height: 10,
                     onPressed: () async {
-                      await _bloc.addNewMember(widget.familyId);
-                      Navigator.pop(context);
+                      final validation = _bloc.validate();
+                      if (validation == "") {
+                        await _bloc.addNewMember(widget.familyId);
+                        Navigator.pop(context);
+                      } else {
+                        print(validation);
+                      }
                     },
                   )
                 ],

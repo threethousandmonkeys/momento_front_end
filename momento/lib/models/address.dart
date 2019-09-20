@@ -6,7 +6,13 @@ class Address {
   String country;
   String postcode;
 
-  Address({this.line1, this.line2, this.state, this.country, this.postcode});
-}
+  Address({
+    this.line1,
+    this.line2,
+    this.state,
+    this.country,
+    this.postcode,
+  });
 
-Future<Address> parseAddress(String uid) async {}
+  static Future<Null> parseAddress(String uid) async {}
+}

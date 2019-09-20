@@ -4,9 +4,11 @@ import 'form_text_field.dart';
 class FormDateField extends StatefulWidget {
   final String title;
   final TextEditingController controller;
+  final Function onChange;
   FormDateField({
     this.title,
     this.controller,
+    this.onChange,
   });
   @override
   _FormDateFieldState createState() => _FormDateFieldState();
@@ -14,7 +16,6 @@ class FormDateField extends StatefulWidget {
 
 class _FormDateFieldState extends State<FormDateField> {
   DateTime selectedDate = DateTime.now();
-  DateTime date;
 
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -26,14 +27,15 @@ class _FormDateFieldState extends State<FormDateField> {
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
-        date = selectedDate;
         widget.controller.text = selectedDate.toString().split(" ")[0];
+        widget.onChange(picked);
       });
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () => _selectDate(context),
       child: FormTextField(
         title: widget.title,

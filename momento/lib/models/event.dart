@@ -5,6 +5,6 @@ class Event {
   DateTime eventDate;
 
   Event({this.eventName, this.eventParticipant, this.eventDate});
-}
 
-Future<Event> parseEvent(String uid) async {}
+  static Future<Null> parseEvent(String uid) async {}
+}

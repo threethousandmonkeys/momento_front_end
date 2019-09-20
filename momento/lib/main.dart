@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:momento/screens/landing_page/landing_page.dart';
+import 'package:momento/screens/profile_page/profile_page.dart';
 import 'package:provider/provider.dart';
 import 'services/auth_service.dart';
 
@@ -12,9 +12,9 @@ class MyApp extends StatelessWidget {
       builder: (_) => AuthService(),
       child: MaterialApp(
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.purple,
         ),
-        home: LandingPage(),
+        home: ProfilePage(),
       ),
     );
   }

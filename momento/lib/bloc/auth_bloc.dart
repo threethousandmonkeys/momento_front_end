@@ -4,9 +4,35 @@ import 'package:momento/services/auth_service.dart';
 import 'package:momento/repository/family_repository.dart';
 import 'package:momento/models/family.dart';
 
-class SignInBloc {
+class AuthBloc {
   final AuthService _auth = AuthService();
   final FamilyRepository _familyRepository = FamilyRepository();
+
+  final _authFamilyController = StreamController<AuthUser>();
+  StreamSink<AuthUser> get _inAuthUser => _authFamilyController.sink;
+  Stream<AuthUser> get authUser => _authFamilyController.stream;
+
+  AuthBloc() {
+    _auth.onAuthStateChanged.listen(_handleAuthStateChange);
+  }
+
+  AuthUser currentUser;
+
+  void _handleAuthStateChange(AuthUser user) {
+    if (currentUser == null) {
+      if (user != null) {
+        currentUser = user;
+        _inAuthUser.add(user);
+      } else {
+        _inAuthUser.add(null);
+      }
+    } else {
+      if (user == null) {
+        _inAuthUser.add(null);
+        currentUser = null;
+      }
+    }
+  }
 
   Future<AuthUser> signUp({String email, String password, String name}) async {
     final AuthUser authUser = await _auth.signUp(
@@ -32,5 +58,9 @@ class SignInBloc {
     } else {
       return null;
     }
+  }
+
+  Future<Null> signOut() async {
+    await _auth.signOut();
   }
 }

@@ -14,15 +14,21 @@ class _FamilyTreeState extends State<FamilyTree> {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height,
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddNewMemberPage()));
-        },
-        child: Icon(
-          Icons.people_outline,
-          size: 100,
-        ),
+      child: Column(
+        children: <Widget>[
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AddNewMemberPage()),
+              );
+            },
+            child: Icon(
+              Icons.people_outline,
+              size: 100,
+            ),
+          ),
+        ],
       ),
     );
   }

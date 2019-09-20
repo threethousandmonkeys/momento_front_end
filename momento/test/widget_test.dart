@@ -8,11 +8,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:ui';
 
-import 'package:momento/screens/landing_page/landing_page.dart';
+import 'package:momento/screens/profile_page/profile_page.dart';
 
 void main() {
   testWidgets('', (WidgetTester tester) async {
-    LandingPage landing = LandingPage();
+    ProfilePage landing = ProfilePage();
 
     await tester.pumpWidget(landing);
 //    // Build our app and trigger a frame.

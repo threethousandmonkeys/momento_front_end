@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:momento/bloc/auth_bloc.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/constants.dart';
+import 'package:momento/screens/signin_page/sign_in_page.dart';
 import 'family_tree.dart';
 import 'artefact_gallery.dart';
 import 'package:provider/provider.dart';
 import 'package:momento/services/auth_service.dart';
 import 'package:momento/models/family.dart';
-import 'package:momento/repository/member_repository.dart';
 
 /// ProfilePage: the widget of family profile page(home page)
 class ProfilePage extends StatefulWidget {
@@ -16,71 +17,64 @@ class ProfilePage extends StatefulWidget {
 
 /// _ProfilePageState: the state control of family profile page
 class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
-  /// family detailed data
-  Family family;
-
-  ProfileBloc _bloc = ProfileBloc();
-
-  TabController _tabController;
-  int _tabIndex = 0;
-
-  /// 3 components under family profile page
-  List<Widget> _tabs = [
-    FamilyTree(),
-    ArtefactGallery(),
-    FamilyTree(),
-  ];
+  AuthBloc _authBloc;
+  ProfileBloc _profileBloc;
 
   // initializations
   @override
   void initState() {
+    _authBloc = AuthBloc();
+    _profileBloc = ProfileBloc(this);
     super.initState();
-    _tabController = TabController(vsync: this, length: 3);
-    _tabController.addListener(_handleTabChange);
   }
 
   // disposals
   @override
   void dispose() {
-    _tabController.dispose();
     super.dispose();
-  }
-
-  /// switching among 3 main components
-  void _handleTabChange() {
-    setState(() {
-      _tabIndex = _tabController.index;
-    });
   }
 
   /// build function of profile_page widget
   @override
   Widget build(BuildContext context) {
-    final authUser = Provider.of<AuthUser>(context);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    return family != null
-        ? _buildProfile(family, width, height)
-        : FutureBuilder(
-            future: _bloc.getFamily(authUser),
-            builder: (BuildContext context, AsyncSnapshot<Family> snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                family = snapshot.data;
-                return _buildProfile(family, width, height);
-              } else {
-                return Scaffold(
-                  body: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              }
-            },
+    return StreamBuilder(
+      stream: _authBloc.authUser,
+      builder: (context, snapshot) {
+        print(snapshot);
+        if (snapshot.connectionState == ConnectionState.active) {
+          if (snapshot.data != null) {
+            return FutureBuilder(
+              future: _profileBloc.init(snapshot.data.uid),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return _buildProfile(_profileBloc.family, width, height);
+                } else {
+                  return Scaffold(
+                    body: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+              },
+            );
+          } else {
+            return SignInPage();
+          }
+        } else {
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
           );
+        }
+      },
+    );
   }
 
   /// _buildProfile: build family profile display from the family details
   Widget _buildProfile(Family family, double width, double height) {
-    MemberRepository().getMember("chZGkZKD1EG4yZNBo23c");
     return Scaffold(
       body: Container(
         decoration: kBackgroundDecoration,
@@ -94,19 +88,17 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                 Container(
                   width: width,
                   height: width * 9 / 16,
-                  child: family == null
-                      ? null
-                      : Image(
-                          fit: BoxFit.fitWidth,
-                          image: AssetImage('assets/images/test_family_profile.jpg'),
-                        ),
+                  child: Image(
+                    fit: BoxFit.fitWidth,
+                    image: AssetImage('assets/images/test_family_profile.jpg'),
+                  ),
                 ),
 
                 /// family name display
                 Container(
                   margin: EdgeInsets.only(top: width * 9 / 16 - 20),
                   child: Text(
-                    family == null ? null : "The ${family.name}s",
+                    "The ${family.name}s",
                     style: TextStyle(
                       fontSize: 40,
                       fontFamily: "WorkSansSemiBold",
@@ -167,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                 ),
               ),
               onPressed: () {
-                Provider.of<AuthService>(context).signOut();
+                _authBloc.signOut();
               },
             ),
 
@@ -176,7 +168,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
               color: Colors.white24,
               child: TabBar(
                 indicatorColor: Colors.grey,
-                controller: _tabController,
+                controller: _profileBloc.tabController,
                 tabs: [
                   Tab(icon: Icon(Icons.people_outline)),
                   Tab(icon: Icon(Icons.photo_library)),
@@ -187,10 +179,10 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
 
             /// the display of 3 main components
             Container(
-              height: _tabIndex == 1 ? (10 / 3).ceil() * (width - (10 / 3).floor()) / 3 : width,
+              height: height,
               child: TabBarView(
-                controller: _tabController,
-                children: _tabs,
+                controller: _profileBloc.tabController,
+                children: _profileBloc.tabs,
               ),
             ),
           ],

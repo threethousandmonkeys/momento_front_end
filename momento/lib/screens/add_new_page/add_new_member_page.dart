@@ -1,49 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:momento/bloc/add_new_bloc.dart';
 import 'package:momento/constants.dart';
 import 'package:momento/screens/components/ugly_button.dart';
-import 'package:image_picker/image_picker.dart';
 import 'components/form_drop_down_field.dart';
 import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
-import 'package:momento/models/member.dart';
-import 'package:momento/services/firestore_service.dart';
 
 class AddNewMemberPage extends StatefulWidget {
+  final String familyId;
+  AddNewMemberPage(this.familyId);
   @override
   _AddNewMemberPageState createState() => _AddNewMemberPageState();
 }
 
 class _AddNewMemberPageState extends State<AddNewMemberPage> {
-  TextEditingController firstNameController;
-  TextEditingController dateOfBirthController;
-  TextEditingController dateOfDeathController;
-  TextEditingController descriptionController;
-  DateTime dateOfBirth;
-
-  void _addMember() {
-    FirestoreService().getDocument("person", "chZGkZKD1EG4yZNBo23c");
-    String firstName = firstNameController.text;
-    String description = descriptionController.text;
-    print(firstName);
-    print(description);
-  }
+  AddNewBloc _bloc = AddNewBloc();
 
   @override
   void initState() {
     super.initState();
-    firstNameController = TextEditingController();
-    dateOfBirthController = TextEditingController();
-    dateOfDeathController = TextEditingController();
-    descriptionController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    firstNameController.dispose();
-    dateOfBirthController.dispose();
-    dateOfDeathController.dispose();
-    descriptionController.dispose();
   }
 
   @override
@@ -70,32 +45,29 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
               ),
               FormTextField(
                 title: "First Name",
-                controller: firstNameController,
+                controller: _bloc.firstNameController,
               ),
               FormDropDownField(
                 "Gender",
-                Gender.values.map((value) => value.toString().split('.')[1]).toList(),
+                ["Male", "Female", "Others"],
               ),
               FormDateField(
                 title: "Date of Birth",
-                controller: dateOfBirthController,
+                controller: _bloc.dateOfBirthController,
 //                date: dateOfBirth,
               ),
               FormDateField(
                 title: "Date of Death (if dead)",
-                controller: dateOfDeathController,
+                controller: _bloc.dateOfDeathController,
               ),
               FormTextField(
                 title: "Description",
                 maxLines: 5,
-                controller: descriptionController,
+                controller: _bloc.descriptionController,
               ),
               MaterialButton(
                 child: Text("Upload Photo"),
-                onPressed: () async {
-                  final image = await ImagePicker.pickImage(source: ImageSource.gallery);
-                  print(image);
-                },
+                onPressed: _bloc.pickImage,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -110,7 +82,10 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                   UglyButton(
                     text: "Add",
                     height: 10,
-                    onPressed: _addMember,
+                    onPressed: () async {
+                      await _bloc.addNewMember(widget.familyId);
+                      Navigator.pop(context);
+                    },
                   )
                 ],
               ),

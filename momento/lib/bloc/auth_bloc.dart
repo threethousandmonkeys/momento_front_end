@@ -43,6 +43,7 @@ class AuthBloc {
       name: name,
       description: "This family is too lazy to write any description.",
       email: email,
+      members: [],
     );
     await _familyRepository.createFamily(defaultFamily, authUser);
     return authUser;

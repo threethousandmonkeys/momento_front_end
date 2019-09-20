@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'member.dart';
 
 /// a model to represent family, which store the name and description and email

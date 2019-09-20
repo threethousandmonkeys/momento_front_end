@@ -1,5 +1,3 @@
-import 'package:momento/models/member.dart';
-
 /// a model to represent family, which store the name and description and email
 class Family {
   String name;
@@ -15,12 +13,15 @@ class Family {
   });
 
   static Family parseFamily(Map<String, dynamic> jsonFamily) {
-    print(jsonFamily["members"].length);
+    List<String> members = [];
+    for (int i = 0; i < jsonFamily["members"].length; i++) {
+      members.add(jsonFamily["members"][i]);
+    }
     return Family(
       name: jsonFamily["name"],
       description: jsonFamily["description"],
       email: jsonFamily["email"],
-      // members: jsonFamily["members"],
+      members: members,
     );
   }
 
@@ -29,7 +30,7 @@ class Family {
       "name": this.name,
       "description": this.description,
       "email": this.email,
-      "members": this.members.toString(),
+      "members": this.members,
     };
   }
 }

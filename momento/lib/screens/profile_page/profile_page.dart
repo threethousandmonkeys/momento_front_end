@@ -3,11 +3,8 @@ import 'package:momento/bloc/auth_bloc.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/constants.dart';
 import 'package:momento/screens/signin_page/sign_in_page.dart';
-import 'family_tree.dart';
-import 'artefact_gallery.dart';
-import 'package:provider/provider.dart';
-import 'package:momento/services/auth_service.dart';
 import 'package:momento/models/family.dart';
+import 'package:momento/services/auth_service.dart';
 
 /// ProfilePage: the widget of family profile page(home page)
 class ProfilePage extends StatefulWidget {
@@ -17,21 +14,14 @@ class ProfilePage extends StatefulWidget {
 
 /// _ProfilePageState: the state control of family profile page
 class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
-  AuthBloc _authBloc;
+  AuthBloc _authBloc = AuthBloc();
   ProfileBloc _profileBloc;
 
   // initializations
   @override
   void initState() {
-    _authBloc = AuthBloc();
     _profileBloc = ProfileBloc(this);
     super.initState();
-  }
-
-  // disposals
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   /// build function of profile_page widget
@@ -42,11 +32,11 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
     return StreamBuilder(
       stream: _authBloc.authUser,
       builder: (context, snapshot) {
-        print(snapshot);
         if (snapshot.connectionState == ConnectionState.active) {
           if (snapshot.data != null) {
+            AuthUser authUser = snapshot.data;
             return FutureBuilder(
-              future: _profileBloc.init(snapshot.data.uid),
+              future: _profileBloc.init(authUser.uid),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return _buildProfile(_profileBloc.family, width, height);

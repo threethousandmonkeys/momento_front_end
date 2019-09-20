@@ -3,6 +3,8 @@ import 'package:momento/screens/add_new_page/add_new_member_page.dart';
 
 /// FamilyTree: the widget to build family tree
 class FamilyTree extends StatefulWidget {
+  final String familyId;
+  FamilyTree(this.familyId);
   @override
   _FamilyTreeState createState() => _FamilyTreeState();
 }
@@ -20,7 +22,9 @@ class _FamilyTreeState extends State<FamilyTree> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddNewMemberPage()),
+                MaterialPageRoute(
+                  builder: (context) => AddNewMemberPage(widget.familyId),
+                ),
               );
             },
             child: Icon(

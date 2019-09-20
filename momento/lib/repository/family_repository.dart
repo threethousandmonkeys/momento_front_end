@@ -6,7 +6,7 @@ class FamilyRepository {
   final _firestore = FirestoreService();
 
   Future<Null> createFamily(Family family, AuthUser user) async {
-    final aha = await _firestore.createDocument(
+    final aha = await _firestore.createDocumentById(
       "family",
       user.uid,
       family.serialize(),
@@ -21,5 +21,17 @@ class FamilyRepository {
     } else {
       return null;
     }
+  }
+
+  Future<Null> addMember(String familyId, String memberId) async {
+    Family oldFamily = await getFamily(familyId);
+    List<String> newMembers = oldFamily.members;
+    newMembers.add(memberId);
+    await _firestore.updateDocument(
+      collection: "family",
+      documentId: familyId,
+      field: "members",
+      newData: newMembers,
+    );
   }
 }

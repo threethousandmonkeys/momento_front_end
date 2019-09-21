@@ -19,7 +19,7 @@ class _FamilyTreeState extends State<FamilyTree> {
   FamilyTreeBloc _bloc;
   @override
   void initState() {
-    _bloc = FamilyTreeBloc(widget.familyId, widget.family.members);
+    _bloc = FamilyTreeBloc(widget.familyId, widget.family);
     super.initState();
   }
 
@@ -47,7 +47,7 @@ class _FamilyTreeState extends State<FamilyTree> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AddNewMemberPage(widget.familyId),
+                  builder: (context) => AddNewMemberPage(widget.familyId, widget.family),
                 ),
               );
             },

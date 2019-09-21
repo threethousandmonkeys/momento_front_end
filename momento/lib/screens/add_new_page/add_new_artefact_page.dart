@@ -38,11 +38,11 @@ class AddNewArtefactPage extends StatelessWidget {
               ),
               FormDropDownField(
                 title: "Original Owner",
-                items: ["123", "1234"],
+//                items: ["123", "1234"],
               ),
               FormDropDownField(
                 title: "Current Owner",
-                items: ["123", "1235"],
+//                items: ["123", "1235"],
               ),
               FormTextField(
                 title: "Description",

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:momento/bloc/auth_bloc.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/constants.dart';
+import 'package:momento/screens/components/loading_page.dart';
 import 'package:momento/screens/signin_page/sign_in_page.dart';
 import 'package:momento/models/family.dart';
 import 'package:momento/services/auth_service.dart';
@@ -29,8 +30,8 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    return StreamBuilder(
-      stream: _authBloc.authUser,
+    return StreamBuilder<AuthUser>(
+      stream: _authBloc.getAuthUser,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           if (snapshot.data != null) {
@@ -41,11 +42,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                 if (snapshot.connectionState == ConnectionState.done) {
                   return _buildProfile(_profileBloc.family, width, height);
                 } else {
-                  return Scaffold(
-                    body: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
+                  return LoadingPage();
                 }
               },
             );
@@ -53,11 +50,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
             return SignInPage();
           }
         } else {
-          return Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
+          return LoadingPage();
         }
       },
     );

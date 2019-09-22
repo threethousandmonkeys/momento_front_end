@@ -1,18 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
 import 'package:momento/repositories/member_repository.dart';
 import 'package:momento/repositories/family_repository.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:momento/services/cloud_storage_service.dart';
 
 class AddNewMemberBloc {
-  MemberRepository _memberRepository = MemberRepository();
-  FamilyRepository _familyRepository = FamilyRepository();
+  final _memberRepository = MemberRepository();
+  final _familyRepository = FamilyRepository();
+  final _cloudStorageService = CloudStorageService();
 
-  final _membersSubject = BehaviorSubject<List<Member>>();
-  Function(List<Member>) get _setMembers => _membersSubject.add;
-  Observable<List<Member>> get getMembers => _membersSubject.stream;
+  final List<Member> members;
 
   String firstName = "";
   String middleName = "";
@@ -22,24 +22,18 @@ class AddNewMemberBloc {
   String description = "";
   String father;
   String mother;
-  String photoPath;
+  File photo;
+
+  List<Member> fathers;
+  List<Member> mothers;
 
   TextEditingController birthdayTextController = TextEditingController();
   TextEditingController deathdayTextController = TextEditingController();
 
-  AddNewMemberBloc(Family family) {
-    _updateMembers(family);
-  }
-
-  Future<Null> _updateMembers(Family family) async {
-    final members = await _memberRepository.getFamilyMembers(family);
-    _setMembers(members);
+  AddNewMemberBloc(this.members) {
     updateFathers();
     updateMothers();
   }
-
-  List<Member> fathers;
-  List<Member> mothers;
 
   String validate() {
     if (firstName == "") {
@@ -55,6 +49,7 @@ class AddNewMemberBloc {
   }
 
   Future<Null> addNewMember(String familyId) async {
+    /// upload photo to cloud, return a retrieval path
     Member newMember = Member(
       id: null,
       firstName: firstName,
@@ -68,11 +63,12 @@ class AddNewMemberBloc {
       photoId: null,
     );
     final memberId = await _memberRepository.createMember(newMember);
+    await _cloudStorageService.uploadPhotoAt("member/", memberId, photo);
     await _familyRepository.addMember(familyId, memberId);
   }
 
   void updateFathers() {
-    List<Member> possibleFathers = List<Member>.from(_membersSubject.value);
+    List<Member> possibleFathers = List<Member>.from(members);
     possibleFathers.retainWhere((f) => f.gender == "Male");
     if (birthday != null) {
       possibleFathers.retainWhere((f) => f.birthday.isBefore(birthday));
@@ -81,16 +77,11 @@ class AddNewMemberBloc {
   }
 
   void updateMothers() {
-    List<Member> possibleMothers = List<Member>.from(_membersSubject.value);
+    List<Member> possibleMothers = List<Member>.from(members);
     possibleMothers.retainWhere((f) => f.gender == "Female");
     if (birthday != null) {
       possibleMothers.retainWhere((f) => f.birthday.isBefore(birthday));
     }
     mothers = possibleMothers;
-  }
-
-  void pickImage() async {
-    final image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    print(image);
   }
 }

@@ -3,33 +3,30 @@ import 'dart:async';
 import 'package:momento/services/auth_service.dart';
 import 'package:momento/repositories/family_repository.dart';
 import 'package:momento/models/family.dart';
+import 'package:rxdart/rxdart.dart';
 
+/// Business Logic Component for authentication
 class AuthBloc {
   final AuthService _auth = AuthService();
   final FamilyRepository _familyRepository = FamilyRepository();
 
-  final _authFamilyController = StreamController<AuthUser>();
-  StreamSink<AuthUser> get _inAuthUser => _authFamilyController.sink;
-  Stream<AuthUser> get authUser => _authFamilyController.stream;
+  final _authUserController = BehaviorSubject<AuthUser>();
+  Function(AuthUser) get _setAuthUser => _authUserController.add;
+  Stream<AuthUser> get getAuthUser => _authUserController.stream;
 
   AuthBloc() {
     _auth.onAuthStateChanged.listen(_handleAuthStateChange);
   }
 
-  AuthUser currentUser;
-
   void _handleAuthStateChange(AuthUser user) {
-    if (currentUser == null) {
+    if (_authUserController.value == null) {
       if (user != null) {
-        currentUser = user;
-        _inAuthUser.add(user);
-      } else {
-        _inAuthUser.add(null);
+        print("adding" + user.uid);
+        _setAuthUser(user);
       }
     } else {
       if (user == null) {
-        _inAuthUser.add(null);
-        currentUser = null;
+        _setAuthUser(null);
       }
     }
   }

@@ -16,7 +16,7 @@ class FamilyRepository {
   Future<Family> getFamily(String familyId) async {
     final Map<String, dynamic> jsonFamily = await _firestore.getDocument("family", familyId);
     if (jsonFamily != null) {
-      return Family.parseFamily(jsonFamily);
+      return Family.parseFamily(familyId, jsonFamily);
     } else {
       return null;
     }

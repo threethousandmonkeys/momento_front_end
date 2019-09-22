@@ -15,7 +15,7 @@ class MemberRepository {
   Future<Member> getMemberById(String memberId) async {
     final Map<String, dynamic> memberJson = await _firestore.getDocument("member", memberId);
     if (memberJson != null) {
-      return Member.parseMember(memberJson);
+      return Member.parseMember(memberId, memberJson);
     } else {
       return null;
     }

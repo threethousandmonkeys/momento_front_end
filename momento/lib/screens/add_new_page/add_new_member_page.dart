@@ -9,9 +9,8 @@ import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
 
 class AddNewMemberPage extends StatefulWidget {
-  final String familyId;
   final Family family;
-  AddNewMemberPage(this.familyId, this.family);
+  AddNewMemberPage(this.family);
   @override
   _AddNewMemberPageState createState() => _AddNewMemberPageState();
 }
@@ -74,6 +73,7 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                         onChange: (value) {
                           setState(() {
                             _bloc.birthday = value;
+                            _bloc.updateFathers();
                           });
                         },
                       ),
@@ -87,10 +87,10 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                       ),
                       FormDropDownField(
                         title: "Father",
-                        items: Map<String, Member>.fromIterable(
+                        items: Map<String, String>.fromIterable(
                           _bloc.fathers,
                           key: (f) => f.firstName,
-                          value: (v) => v,
+                          value: (v) => v.id,
                         ),
                         onChanged: (value) {
                           _bloc.father = value;
@@ -98,10 +98,10 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                       ),
                       FormDropDownField(
                         title: "Mother",
-                        items: Map<String, Member>.fromIterable(
+                        items: Map<String, String>.fromIterable(
                           _bloc.mothers,
                           key: (f) => f.firstName,
-                          value: (v) => v,
+                          value: (v) => v.id,
                         ),
                         onChanged: (value) {
                           _bloc.mother = value;
@@ -137,7 +137,7 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                             onPressed: () async {
                               final validation = _bloc.validate();
                               if (validation == "") {
-                                await _bloc.addNewMember(widget.familyId);
+                                await _bloc.addNewMember(widget.family.id);
                                 Navigator.pop(context);
                               } else {
                                 print(validation);

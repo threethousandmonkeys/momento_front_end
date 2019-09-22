@@ -11,17 +11,12 @@ class FamilyTreeBloc {
   StreamSink<List<Member>> get _inMembers => _membersController.sink;
   Stream<List<Member>> get members => _membersController.stream;
 
-  FamilyTreeBloc(String familyId, Family family) {
+  FamilyTreeBloc(Family family) {
     _updateMembers(family);
   }
 
   Future<Null> _updateMembers(Family family) async {
     final members = await _memberRepository.getFamilyMembers(family);
     _inMembers.add(members);
-  }
-
-  Future<Member> _getMember(String memberId) async {
-    final member = await _memberRepository.getMemberById(memberId);
-    return member;
   }
 }

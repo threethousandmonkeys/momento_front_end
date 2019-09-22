@@ -20,18 +20,18 @@ class AddNewMemberBloc {
   DateTime birthday;
   DateTime deathday;
   String description = "";
-  Member father;
-  Member mother;
+  String father;
+  String mother;
   String photoPath;
 
   TextEditingController birthdayTextController = TextEditingController();
   TextEditingController deathdayTextController = TextEditingController();
 
   AddNewMemberBloc(Family family) {
-    _getMembers(family);
+    _updateMembers(family);
   }
 
-  Future<Null> _getMembers(Family family) async {
+  Future<Null> _updateMembers(Family family) async {
     final members = await _memberRepository.getFamilyMembers(family);
     _setMembers(members);
     updateFathers();
@@ -56,11 +56,14 @@ class AddNewMemberBloc {
 
   Future<Null> addNewMember(String familyId) async {
     Member newMember = Member(
+      id: null,
       firstName: firstName,
       middleName: middleName,
       gender: gender,
       birthday: birthday,
       deathday: deathday,
+      fatherId: father,
+      motherId: mother,
       description: description,
       photoId: null,
     );
@@ -69,19 +72,19 @@ class AddNewMemberBloc {
   }
 
   void updateFathers() {
-    List<Member> possibleFathers = new List<Member>.from(_membersSubject.value);
+    List<Member> possibleFathers = List<Member>.from(_membersSubject.value);
     possibleFathers.retainWhere((f) => f.gender == "Male");
     if (birthday != null) {
-      possibleFathers.where((f) => f.birthday.isBefore(birthday));
+      possibleFathers.retainWhere((f) => f.birthday.isBefore(birthday));
     }
     fathers = possibleFathers;
   }
 
-  void updateMothers({DateTime deathday}) {
-    List<Member> possibleMothers = new List<Member>.from(_membersSubject.value);
+  void updateMothers() {
+    List<Member> possibleMothers = List<Member>.from(_membersSubject.value);
     possibleMothers.retainWhere((f) => f.gender == "Female");
     if (birthday != null) {
-      possibleMothers.where((f) => f.birthday.isBefore(birthday));
+      possibleMothers.retainWhere((f) => f.birthday.isBefore(birthday));
     }
     mothers = possibleMothers;
   }

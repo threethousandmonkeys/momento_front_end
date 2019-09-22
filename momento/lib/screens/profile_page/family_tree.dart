@@ -6,9 +6,8 @@ import 'package:momento/screens/add_new_page/add_new_member_page.dart';
 
 /// FamilyTree: the widget to build family tree
 class FamilyTree extends StatefulWidget {
-  final String familyId;
   final Family family;
-  FamilyTree(this.familyId, this.family);
+  FamilyTree(this.family);
   @override
   _FamilyTreeState createState() => _FamilyTreeState();
 }
@@ -19,7 +18,7 @@ class _FamilyTreeState extends State<FamilyTree> {
   FamilyTreeBloc _bloc;
   @override
   void initState() {
-    _bloc = FamilyTreeBloc(widget.familyId, widget.family);
+    _bloc = FamilyTreeBloc(widget.family);
     super.initState();
   }
 
@@ -47,7 +46,7 @@ class _FamilyTreeState extends State<FamilyTree> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AddNewMemberPage(widget.familyId, widget.family),
+                  builder: (context) => AddNewMemberPage(widget.family),
                 ),
               );
             },

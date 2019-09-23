@@ -5,6 +5,7 @@ class Family {
   String description;
   String email;
   List<String> members;
+  int numPhotos;
 
   Family({
     this.id,
@@ -12,6 +13,7 @@ class Family {
     this.description,
     this.email,
     this.members,
+    this.numPhotos,
   });
 
   static Family parseFamily(String familyId, Map<String, dynamic> jsonFamily) {
@@ -25,6 +27,7 @@ class Family {
       description: jsonFamily["description"],
       email: jsonFamily["email"],
       members: members,
+      numPhotos: jsonFamily["num_photos"],
     );
   }
 
@@ -34,6 +37,7 @@ class Family {
       "description": this.description,
       "email": this.email,
       "members": this.members,
+      "num_photos": this.numPhotos,
     };
   }
 }

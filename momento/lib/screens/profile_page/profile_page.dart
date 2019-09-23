@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:momento/bloc/auth_bloc.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/constants.dart';
@@ -6,6 +9,7 @@ import 'package:momento/screens/components/loading_page.dart';
 import 'package:momento/screens/signin_page/sign_in_page.dart';
 import 'package:momento/models/family.dart';
 import 'package:momento/services/auth_service.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 /// ProfilePage: the widget of family profile page(home page)
 class ProfilePage extends StatefulWidget {
@@ -17,11 +21,13 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
   AuthBloc _authBloc = AuthBloc();
   ProfileBloc _profileBloc;
+  Future<Null> _future;
 
   // initializations
   @override
   void initState() {
     _profileBloc = ProfileBloc(this);
+    _future = _profileBloc.authenticate(context);
     super.initState();
   }
 
@@ -30,25 +36,11 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    return StreamBuilder<AuthUser>(
-      stream: _authBloc.getAuthUser,
+    return FutureBuilder<Null>(
+      future: _future,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.active) {
-          if (snapshot.data != null) {
-            AuthUser authUser = snapshot.data;
-            return FutureBuilder(
-              future: _profileBloc.init(authUser.uid),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return _buildProfile(_profileBloc.family, width, height);
-                } else {
-                  return LoadingPage();
-                }
-              },
-            );
-          } else {
-            return SignInPage();
-          }
+        if (snapshot.connectionState == ConnectionState.done) {
+          return _buildProfile(_profileBloc.family, width, height);
         } else {
           return LoadingPage();
         }
@@ -65,30 +57,48 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
           shrinkWrap: true,
           padding: EdgeInsets.zero,
           children: [
-            Stack(
-              alignment: Alignment.topCenter,
-              children: <Widget>[
-                Container(
-                  width: width,
-                  height: width * 9 / 16,
-                  child: Image(
-                    fit: BoxFit.fitWidth,
-                    image: AssetImage('assets/images/test_family_profile.jpg'),
-                  ),
-                ),
-
-                /// family name display
-                Container(
-                  margin: EdgeInsets.only(top: width * 9 / 16 - 20),
-                  child: Text(
-                    "The ${family.name}s",
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontFamily: "WorkSansSemiBold",
+            CarouselSlider(
+              enableInfiniteScroll: false,
+              autoPlay: false,
+              viewportFraction: 1.0,
+              items: _profileBloc.photos
+                      .map((url) => Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage(url),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ))
+                      .toList() +
+                  [
+                    Container(
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () async {
+                          File selected = await ImagePicker.pickImage(source: ImageSource.gallery);
+                          if (selected != null) {
+                            await _profileBloc.uploadPhoto(selected);
+                          }
+                        },
+                        child: Icon(
+                          Icons.add_a_photo,
+                          size: 100,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
+            ),
+
+            /// family name display
+            Center(
+              child: Text(
+                "The ${family.name}s",
+                style: TextStyle(
+                  fontSize: 40,
+                  fontFamily: "WorkSansSemiBold",
                 ),
-              ],
+              ),
             ),
 
             /// family description display
@@ -141,8 +151,11 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                   ),
                 ),
               ),
-              onPressed: () {
-                _authBloc.signOut();
+              onPressed: () async {
+                await _authBloc.signOut();
+                setState(() {
+                  _future = _profileBloc.authenticate(context);
+                });
               },
             ),
 

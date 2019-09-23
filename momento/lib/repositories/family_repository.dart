@@ -5,10 +5,10 @@ import 'package:momento/services/auth_service.dart';
 class FamilyRepository {
   final _firestore = FirestoreService();
 
-  Future<Null> createFamily(Family family, AuthUser user) async {
+  Future<Null> createFamily(Family family, String uid) async {
     await _firestore.createDocumentById(
       "family",
-      user.uid,
+      uid,
       family.serialize(),
     );
   }
@@ -22,15 +22,23 @@ class FamilyRepository {
     }
   }
 
-  Future<Null> addMember(String familyId, String memberId) async {
-    Family oldFamily = await getFamily(familyId);
-    List<String> newMembers = oldFamily.members;
+  Future<Null> addMember(Family family, String memberId) async {
+    final newMembers = List<String>.from(family.members);
     newMembers.add(memberId);
     await _firestore.updateDocument(
       collection: "family",
-      documentId: familyId,
+      documentId: family.id,
       field: "members",
       newData: newMembers,
+    );
+  }
+
+  Future<Null> addPhoto(Family family) async {
+    await _firestore.updateDocument(
+      collection: "family",
+      documentId: family.id,
+      field: "num_photos",
+      newData: family.numPhotos + 1,
     );
   }
 }

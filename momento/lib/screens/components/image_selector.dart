@@ -17,29 +17,44 @@ class _ImageSelectorState extends State<ImageSelector> {
     return Column(
       children: <Widget>[
         GestureDetector(
-          onTap: () async {
-            final file = await ImagePicker.pickImage(source: ImageSource.gallery);
-            setState(() {
-              selected = file;
-            });
-            widget.onChange(file);
-          },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                "Upload Photo",
+                "Upload Photo from",
               ),
-              Icon(Icons.photo_album),
+              GestureDetector(
+                onTap: () async {
+                  final file = await ImagePicker.pickImage(source: ImageSource.gallery);
+                  if (file != null) {
+                    setState(() {
+                      selected = file;
+                    });
+                    widget.onChange(file);
+                  }
+                },
+                child: Icon(Icons.photo_album),
+              ),
+              GestureDetector(
+                onTap: () async {
+                  final file = await ImagePicker.pickImage(source: ImageSource.camera);
+                  if (file != null) {
+                    setState(() {
+                      selected = file;
+                    });
+                    widget.onChange(file);
+                  }
+                },
+                child: Icon(Icons.camera_alt),
+              ),
             ],
           ),
         ),
-        selected != null
-            ? Image.file(
-                selected,
-                fit: BoxFit.fitWidth,
-              )
-            : Image.asset("assets/images/login_logo.png"),
+        CircleAvatar(
+          radius: MediaQuery.of(context).size.width / 4,
+          backgroundImage:
+              selected != null ? FileImage(selected) : AssetImage("assets/images/login_logo.png"),
+        ),
       ],
     );
   }

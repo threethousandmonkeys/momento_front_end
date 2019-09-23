@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
 import 'package:momento/repositories/member_repository.dart';
 import 'package:momento/repositories/family_repository.dart';
@@ -48,7 +48,7 @@ class AddNewMemberBloc {
     return "";
   }
 
-  Future<Null> addNewMember(String familyId) async {
+  Future<Null> addNewMember(Family family) async {
     /// upload photo to cloud, return a retrieval path
     Member newMember = Member(
       id: null,
@@ -64,7 +64,7 @@ class AddNewMemberBloc {
     );
     final memberId = await _memberRepository.createMember(newMember);
     await _cloudStorageService.uploadPhotoAt("member/", memberId, photo);
-    await _familyRepository.addMember(familyId, memberId);
+    await _familyRepository.addMember(family, memberId);
   }
 
   void updateFathers() {

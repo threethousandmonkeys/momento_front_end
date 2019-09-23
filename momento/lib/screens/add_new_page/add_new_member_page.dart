@@ -118,30 +118,33 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                   _bloc.photo = value;
                 },
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  UglyButton(
-                    text: "Cancel",
-                    height: 10,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  UglyButton(
-                    text: "Add",
-                    height: 10,
-                    onPressed: () async {
-                      final validation = _bloc.validate();
-                      if (validation == "") {
-                        await _bloc.addNewMember(widget.family.id);
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    UglyButton(
+                      text: "Cancel",
+                      height: 10,
+                      onPressed: () {
                         Navigator.pop(context);
-                      } else {
-                        print(validation);
-                      }
-                    },
-                  )
-                ],
+                      },
+                    ),
+                    UglyButton(
+                      text: "Add",
+                      height: 10,
+                      onPressed: () async {
+                        final validation = _bloc.validate();
+                        if (validation == "") {
+                          await _bloc.addNewMember(widget.family);
+                          Navigator.pop(context);
+                        } else {
+                          print(validation);
+                        }
+                      },
+                    )
+                  ],
+                ),
               ),
             ],
           ),

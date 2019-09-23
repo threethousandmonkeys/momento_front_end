@@ -1,49 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:momento/bloc/add_new_member_bloc.dart';
 import 'package:momento/constants.dart';
+import 'package:momento/models/family.dart';
+import 'package:momento/models/member.dart';
+import 'package:momento/screens/components/image_selector.dart';
 import 'package:momento/screens/components/ugly_button.dart';
-import 'package:image_picker/image_picker.dart';
 import 'components/form_drop_down_field.dart';
 import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
-import 'package:momento/models/member.dart';
-import 'package:momento/services/firestore_service.dart';
 
 class AddNewMemberPage extends StatefulWidget {
+  final Family family;
+  final List<Member> members;
+  AddNewMemberPage(this.family, this.members);
   @override
   _AddNewMemberPageState createState() => _AddNewMemberPageState();
 }
 
 class _AddNewMemberPageState extends State<AddNewMemberPage> {
-  TextEditingController firstNameController;
-  TextEditingController dateOfBirthController;
-  TextEditingController dateOfDeathController;
-  TextEditingController descriptionController;
-  DateTime dateOfBirth;
-
-  void _addMember() {
-    FirestoreService().getDocument("person", "chZGkZKD1EG4yZNBo23c");
-    String firstName = firstNameController.text;
-    String description = descriptionController.text;
-    print(firstName);
-    print(description);
-  }
+  AddNewMemberBloc _bloc;
 
   @override
   void initState() {
+    _bloc = AddNewMemberBloc(widget.members);
     super.initState();
-    firstNameController = TextEditingController();
-    dateOfBirthController = TextEditingController();
-    dateOfDeathController = TextEditingController();
-    descriptionController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    firstNameController.dispose();
-    dateOfBirthController.dispose();
-    dateOfDeathController.dispose();
-    descriptionController.dispose();
   }
 
   @override
@@ -70,31 +50,72 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
               ),
               FormTextField(
                 title: "First Name",
-                controller: firstNameController,
+                onChanged: (value) {
+                  _bloc.firstName = value;
+                },
               ),
               FormDropDownField(
-                "Gender",
-                Gender.values.map((value) => value.toString().split('.')[1]).toList(),
+                title: "Gender",
+                items: {
+                  "Male": "Male",
+                  "Female": "Female",
+                  "Others": "Others",
+                },
+                onChanged: (value) {
+                  _bloc.gender = value;
+                },
               ),
               FormDateField(
                 title: "Date of Birth",
-                controller: dateOfBirthController,
-//                date: dateOfBirth,
+                controller: _bloc.birthdayTextController,
+                onChange: (value) {
+                  setState(() {
+                    _bloc.birthday = value;
+                    _bloc.updateFathers();
+                    _bloc.updateMothers();
+                  });
+                },
               ),
               FormDateField(
                 title: "Date of Death (if dead)",
-                controller: dateOfDeathController,
+                controller: _bloc.deathdayTextController,
+                onChange: (value) {
+                  _bloc.deathday = value;
+                },
+                firstDate: _bloc.birthday,
+              ),
+              FormDropDownField(
+                title: "Father",
+                items: Map<String, String>.fromIterable(
+                  _bloc.fathers,
+                  key: (f) => f.firstName,
+                  value: (v) => v.id,
+                ),
+                onChanged: (value) {
+                  _bloc.father = value;
+                },
+              ),
+              FormDropDownField(
+                title: "Mother",
+                items: Map<String, String>.fromIterable(
+                  _bloc.mothers,
+                  key: (f) => f.firstName,
+                  value: (v) => v.id,
+                ),
+                onChanged: (value) {
+                  _bloc.mother = value;
+                },
               ),
               FormTextField(
                 title: "Description",
                 maxLines: 5,
-                controller: descriptionController,
+                onChanged: (value) {
+                  _bloc.description = value;
+                },
               ),
-              MaterialButton(
-                child: Text("Upload Photo"),
-                onPressed: () async {
-                  final image = await ImagePicker.pickImage(source: ImageSource.gallery);
-                  print(image);
+              ImageSelector(
+                onChange: (value) {
+                  _bloc.photo = value;
                 },
               ),
               Row(
@@ -110,7 +131,15 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                   UglyButton(
                     text: "Add",
                     height: 10,
-                    onPressed: _addMember,
+                    onPressed: () async {
+                      final validation = _bloc.validate();
+                      if (validation == "") {
+                        await _bloc.addNewMember(widget.family.id);
+                        Navigator.pop(context);
+                      } else {
+                        print(validation);
+                      }
+                    },
                   )
                 ],
               ),

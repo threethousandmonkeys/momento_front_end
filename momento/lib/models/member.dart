@@ -1,33 +1,62 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 enum Gender { Male, Female, Other }
 
 /// a model to represent family, which store the name and description and email
 class Member {
+  String id;
   String firstName;
   String middleName;
-  Gender gender;
+  String gender;
   DateTime birthday;
   DateTime deathday;
+  String fatherId;
+  String motherId;
   String description;
   String photoId;
 
   Member({
+    this.id,
     this.firstName,
     this.middleName,
     this.gender,
     this.birthday,
     this.deathday,
+    this.fatherId,
+    this.motherId,
     this.description,
     this.photoId,
   });
 
-  static Future<Member> parseMember(Map<String, dynamic> jsonMember) async {
+  static Member parseMember(String memberId, Map<String, dynamic> jsonMember) {
     return Member(
+      id: memberId,
       firstName: jsonMember["firstName"],
+      middleName: jsonMember["middleName"],
       gender: jsonMember["gender"],
       birthday: DateTime.fromMillisecondsSinceEpoch(jsonMember["birthday"].seconds * 1000),
-      deathday: null,
+      deathday: jsonMember["birthday"] != null
+          ? DateTime.fromMillisecondsSinceEpoch(jsonMember["birthday"].seconds * 1000)
+          : null,
+      fatherId: jsonMember["father"],
+      motherId: jsonMember["mother"],
       description: jsonMember["description"],
       photoId: jsonMember["photoId"],
     );
+  }
+
+  Map<String, dynamic> serialize() {
+    return {
+      "firstName": this.firstName,
+      "middleName": this.middleName,
+      "gender": this.gender,
+      "birthday": Timestamp((birthday.millisecondsSinceEpoch * 0.001).toInt(), 0),
+      "deathday":
+          deathday == null ? null : Timestamp((deathday.millisecondsSinceEpoch * 0.001).toInt(), 0),
+      "father": this.fatherId,
+      "mother": this.motherId,
+      "description": this.description,
+      "photoId": this.photoId,
+    };
   }
 }

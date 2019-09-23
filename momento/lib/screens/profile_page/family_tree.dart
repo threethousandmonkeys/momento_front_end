@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:momento/models/family.dart';
+import 'package:momento/models/member.dart';
 import 'package:momento/screens/add_new_page/add_new_member_page.dart';
 
 /// FamilyTree: the widget to build family tree
 class FamilyTree extends StatefulWidget {
+  final Family family;
+  final List<Member> members;
+  FamilyTree(this.family, this.members);
   @override
   _FamilyTreeState createState() => _FamilyTreeState();
 }
@@ -14,15 +19,34 @@ class _FamilyTreeState extends State<FamilyTree> {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height,
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddNewMemberPage()));
-        },
-        child: Icon(
-          Icons.people_outline,
-          size: 100,
-        ),
+      child: Column(
+        children: <Widget>[
+          Column(
+            children: widget.members.map((member) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  member.firstName,
+                  style: TextStyle(fontSize: 30),
+                ),
+              );
+            }).toList(),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddNewMemberPage(widget.family, widget.members),
+                ),
+              );
+            },
+            child: Icon(
+              Icons.people_outline,
+              size: 100,
+            ),
+          ),
+        ],
       ),
     );
   }

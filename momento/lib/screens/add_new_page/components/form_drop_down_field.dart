@@ -1,23 +1,16 @@
 import 'package:flutter/material.dart';
 
 class FormDropDownField extends StatefulWidget {
-  List<DropdownMenuItem> dropdownMenuItems;
-  String title;
-  FormDropDownField(String title, List items) {
-    dropdownMenuItems = items
-        .map((value) => DropdownMenuItem(
-              child: Text(value),
-              value: value,
-            ))
-        .toList();
-    this.title = title;
-  }
+  final Map<String, dynamic> items;
+  final String title;
+  final Function onChanged;
+  FormDropDownField({this.title, this.items, this.onChanged});
   @override
   _FormDropDownFieldState createState() => _FormDropDownFieldState();
 }
 
 class _FormDropDownFieldState extends State<FormDropDownField> {
-  String selected;
+  String selectedValue;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -35,11 +28,17 @@ class _FormDropDownFieldState extends State<FormDropDownField> {
           DropdownButtonFormField(
             onChanged: (value) {
               setState(() {
-                selected = value;
+                selectedValue = value;
               });
+              widget.onChanged(widget.items[value]);
             },
-            value: selected,
-            items: widget.dropdownMenuItems,
+            value: selectedValue,
+            items: widget.items.keys
+                .map((key) => DropdownMenuItem(
+                      value: key,
+                      child: Text(key),
+                    ))
+                .toList(),
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,

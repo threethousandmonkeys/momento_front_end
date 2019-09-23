@@ -36,8 +36,14 @@ class AddNewArtefactPage extends StatelessWidget {
                 title: "Date Created",
                 controller: TextEditingController(),
               ),
-              FormDropDownField("Original Owner", ["123", "1234"]),
-              FormDropDownField("Current Owner", ["123", "1235"]),
+              FormDropDownField(
+                title: "Original Owner",
+//                items: ["123", "1234"],
+              ),
+              FormDropDownField(
+                title: "Current Owner",
+//                items: ["123", "1235"],
+              ),
               FormTextField(
                 title: "Description",
                 maxLines: 4,

@@ -3,7 +3,7 @@ import 'package:momento/bloc/add_new_member_bloc.dart';
 import 'package:momento/constants.dart';
 import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
-import 'package:momento/screens/components/image_selector.dart';
+import 'package:momento/screens/add_new_page/components/form_image_selector.dart';
 import 'package:momento/screens/components/ugly_button.dart';
 import 'components/form_drop_down_field.dart';
 import 'components/form_date_field.dart';
@@ -114,6 +114,7 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                 },
               ),
               ImageSelector(
+                defaultImage: "assets/images/default_member.jpg",
                 onChange: (value) {
                   _bloc.photo = value;
                 },

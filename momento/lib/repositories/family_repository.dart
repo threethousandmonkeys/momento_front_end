@@ -1,15 +1,22 @@
 import 'package:momento/models/family.dart';
 import 'package:momento/services/firestore_service.dart';
-import 'package:momento/services/auth_service.dart';
 
 class FamilyRepository {
   final _firestore = FirestoreService();
 
-  Future<Null> createFamily(Family family, String uid) async {
+  Future<Null> createFamily(String uid, String name, String email) async {
+    Family defaultFamily = Family(
+      name: name,
+      description: "This family is too lazy to write any description.",
+      email: email,
+      members: [],
+      artefacts: [],
+      numPhotos: 0,
+    );
     await _firestore.createDocumentById(
       "family",
       uid,
-      family.serialize(),
+      defaultFamily.serialize(),
     );
   }
 
@@ -30,6 +37,17 @@ class FamilyRepository {
       documentId: family.id,
       field: "members",
       newData: newMembers,
+    );
+  }
+
+  Future<Null> addArtefact(Family family, String artefactId) async {
+    final newArtefacts = List<String>.from(family.artefacts);
+    newArtefacts.add(artefactId);
+    await _firestore.updateDocument(
+      collection: "family",
+      documentId: family.id,
+      field: "artefacts",
+      newData: newArtefacts,
     );
   }
 

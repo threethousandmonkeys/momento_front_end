@@ -13,7 +13,6 @@ class Member {
   String fatherId;
   String motherId;
   String description;
-  String photoId;
 
   Member({
     this.id,
@@ -25,7 +24,6 @@ class Member {
     this.fatherId,
     this.motherId,
     this.description,
-    this.photoId,
   });
 
   static Member parseMember(String memberId, Map<String, dynamic> jsonMember) {
@@ -41,7 +39,6 @@ class Member {
       fatherId: jsonMember["father"],
       motherId: jsonMember["mother"],
       description: jsonMember["description"],
-      photoId: jsonMember["photoId"],
     );
   }
 
@@ -56,7 +53,6 @@ class Member {
       "father": this.fatherId,
       "mother": this.motherId,
       "description": this.description,
-      "photoId": this.photoId,
     };
   }
 }

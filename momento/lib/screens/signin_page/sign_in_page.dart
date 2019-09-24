@@ -7,7 +7,7 @@ import 'package:momento/screens/components/input_field.dart';
 import 'package:momento/screens/components/ugly_button.dart';
 import 'components/card_divider.dart';
 import 'components/bubble_indication_painter.dart';
-import 'package:momento/bloc/auth_bloc.dart';
+import 'package:momento/bloc/sign_in_bloc.dart';
 
 /// SignInPage: for user to sign in the application
 class SignInPage extends StatefulWidget {
@@ -19,7 +19,7 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  AuthBloc _bloc = AuthBloc();
+  SignInBloc _bloc = SignInBloc();
 
   ///  For recording the inputs in the text field:
   TextEditingController _signInEmailController = TextEditingController();
@@ -456,11 +456,12 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
                 showInSnackBar("passwords do not match");
               else {
                 showInSnackBar("signing up");
-                await _bloc.signUp(
+                final authUser = await _bloc.signUp(
                   name: _familyNameController.text,
                   email: _signupEmailController.text,
                   password: _signupPasswordController.text,
                 );
+                Navigator.pop(context, authUser.uid);
               }
             },
           ),

@@ -2,11 +2,10 @@ import 'dart:async';
 
 import 'package:momento/services/auth_service.dart';
 import 'package:momento/repositories/family_repository.dart';
-import 'package:momento/models/family.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// Business Logic Component for authentication
-class AuthBloc {
+class SignInBloc {
   final _auth = AuthService();
   final _familyRepository = FamilyRepository();
   final _secureStorage = FlutterSecureStorage();
@@ -18,14 +17,7 @@ class AuthBloc {
       email: email,
       password: password,
     );
-    Family defaultFamily = Family(
-      name: name,
-      description: "This family is too lazy to write any description.",
-      email: email,
-      members: [],
-      numPhotos: 0,
-    );
-    await _familyRepository.createFamily(defaultFamily, authUser.uid);
+    await _familyRepository.createFamily(authUser.uid, name, email);
     await _secureStorage.write(key: "uid", value: authUser.uid);
     return authUser;
   }
@@ -36,11 +28,7 @@ class AuthBloc {
       password: password,
     );
     await _secureStorage.write(key: "uid", value: authUser.uid);
-    if (authUser != null) {
-      return authUser;
-    } else {
-      return null;
-    }
+    return authUser;
   }
 
   Future<Null> signOut() async {

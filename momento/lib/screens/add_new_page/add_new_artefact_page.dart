@@ -1,12 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:momento/bloc/add_new_artefact_bloc.dart';
 import 'package:momento/constants.dart';
+import 'package:momento/models/family.dart';
+import 'package:momento/models/member.dart';
+import 'package:momento/screens/add_new_page/components/form_image_selector.dart';
 import 'package:momento/screens/components/ugly_button.dart';
-import 'package:image_picker/image_picker.dart';
-import 'components/form_text_field.dart';
 import 'components/form_drop_down_field.dart';
 import 'components/form_date_field.dart';
+import 'components/form_text_field.dart';
 
-class AddNewArtefactPage extends StatelessWidget {
+class AddNewArtefactPage extends StatefulWidget {
+  final Family family;
+  final List<Member> members;
+  AddNewArtefactPage(this.family, this.members);
+  @override
+  _AddNewArtefactPageState createState() => _AddNewArtefactPageState();
+}
+
+class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
+  AddNewArtefactBloc _bloc;
+
+  @override
+  void initState() {
+    _bloc = AddNewArtefactBloc(widget.members);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double horizontalPadding = MediaQuery.of(context).size.width * 0.1;
@@ -21,7 +40,7 @@ class AddNewArtefactPage extends StatelessWidget {
                 padding: EdgeInsets.only(top: 50.0, bottom: 20),
                 child: Center(
                   child: Text(
-                    "ADD NEW ARTEFACT",
+                    "ADD NEW Artefact",
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
@@ -30,46 +49,82 @@ class AddNewArtefactPage extends StatelessWidget {
                 ),
               ),
               FormTextField(
-                title: "Name",
+                title: "Artefact Name",
+                onChanged: (value) {
+                  _bloc.name = value;
+                },
               ),
               FormDateField(
                 title: "Date Created",
-                controller: TextEditingController(),
+                controller: _bloc.dateCreatedController,
+                onChange: (value) {
+                  setState(() {
+                    _bloc.dateCreated = value;
+                  });
+                },
               ),
               FormDropDownField(
                 title: "Original Owner",
-//                items: ["123", "1234"],
+                items: Map<String, String>.fromIterable(
+                  _bloc.members,
+                  key: (f) => f.firstName,
+                  value: (v) => v.id,
+                ),
+                onChanged: (value) {
+                  _bloc.originalOwner = value;
+                },
               ),
               FormDropDownField(
                 title: "Current Owner",
-//                items: ["123", "1235"],
+                items: Map<String, String>.fromIterable(
+                  _bloc.members,
+                  key: (f) => f.firstName,
+                  value: (v) => v.id,
+                ),
+                onChanged: (value) {
+                  _bloc.currentOwner = value;
+                },
               ),
               FormTextField(
                 title: "Description",
-                maxLines: 4,
-              ),
-              MaterialButton(
-                child: Text("Upload Photo"),
-                onPressed: () async {
-                  await ImagePicker.pickImage(source: ImageSource.gallery);
+                maxLines: 5,
+                onChanged: (value) {
+                  _bloc.description = value;
                 },
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  UglyButton(
-                    text: "Cancel",
-                    height: 10,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  UglyButton(
-                    text: "Add",
-                    height: 10,
-                    onPressed: () {},
-                  )
-                ],
+              ImageSelector(
+                defaultImage: "assets/images/default_artefact.jpg",
+                onChange: (value) {
+                  _bloc.photo = value;
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    UglyButton(
+                      text: "Cancel",
+                      height: 10,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    UglyButton(
+                      text: "Add",
+                      height: 10,
+                      onPressed: () async {
+                        final validation = _bloc.validate();
+                        if (validation == "") {
+                          await _bloc.addNewArtefact(widget.family);
+                          Navigator.pop(context);
+                        } else {
+                          print(validation);
+                        }
+                      },
+                    )
+                  ],
+                ),
               ),
             ],
           ),

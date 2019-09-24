@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'constants.dart';
+
 class FormDropDownField extends StatefulWidget {
   final Map<String, dynamic> items;
   final String title;
@@ -14,15 +16,15 @@ class _FormDropDownFieldState extends State<FormDropDownField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.0),
+      padding: kFormFieldPadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(bottom: 3.0),
+            padding: kFormTitlePadding,
             child: Text(
               widget.title,
-              style: TextStyle(fontSize: 16),
+              style: kFormTitleStyle,
             ),
           ),
           DropdownButtonFormField(
@@ -34,20 +36,17 @@ class _FormDropDownFieldState extends State<FormDropDownField> {
             },
             value: selectedValue,
             items: widget.items.keys
-                .map((key) => DropdownMenuItem(
-                      value: key,
-                      child: Text(key),
-                    ))
+                .map(
+                  (key) => DropdownMenuItem(
+                    value: key,
+                    child: Text(
+                      key,
+                      style: kFormTextFont,
+                    ),
+                  ),
+                )
                 .toList(),
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.white,
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(
-                vertical: 12.0,
-                horizontal: 10,
-              ),
-            ),
+            decoration: kFormInputDecoration,
           ),
         ],
       ),

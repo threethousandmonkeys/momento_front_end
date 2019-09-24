@@ -2,13 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:momento/bloc/auth_bloc.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/constants.dart';
 import 'package:momento/screens/components/loading_page.dart';
-import 'package:momento/screens/signin_page/sign_in_page.dart';
-import 'package:momento/models/family.dart';
-import 'package:momento/services/auth_service.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 /// ProfilePage: the widget of family profile page(home page)
@@ -19,28 +15,24 @@ class ProfilePage extends StatefulWidget {
 
 /// _ProfilePageState: the state control of family profile page
 class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
-  AuthBloc _authBloc = AuthBloc();
-  ProfileBloc _profileBloc;
-  Future<Null> _future;
+  final _bloc = ProfileBloc();
+  Future<Null> _futureProfile;
 
   // initializations
   @override
   void initState() {
-    _profileBloc = ProfileBloc(this);
-    _future = _profileBloc.authenticate(context);
     super.initState();
+    _futureProfile = _bloc.init(context, this);
   }
 
   /// build function of profile_page widget
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return FutureBuilder<Null>(
-      future: _future,
+      future: _futureProfile,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return _buildProfile(_profileBloc.family, width, height);
+          return _buildProfile(context);
         } else {
           return LoadingPage();
         }
@@ -49,7 +41,8 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
   }
 
   /// _buildProfile: build family profile display from the family details
-  Widget _buildProfile(Family family, double width, double height) {
+  Widget _buildProfile(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Container(
         decoration: kBackgroundDecoration,
@@ -61,7 +54,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
               enableInfiniteScroll: false,
               autoPlay: false,
               viewportFraction: 1.0,
-              items: _profileBloc.photos
+              items: _bloc.photos
                       .map((url) => Container(
                             decoration: BoxDecoration(
                               image: DecorationImage(
@@ -78,7 +71,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                         onTap: () async {
                           File selected = await ImagePicker.pickImage(source: ImageSource.gallery);
                           if (selected != null) {
-                            await _profileBloc.uploadPhoto(selected);
+                            await _bloc.uploadPhoto(selected);
                           }
                         },
                         child: Icon(
@@ -93,7 +86,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
             /// family name display
             Center(
               child: Text(
-                "The ${family.name}s",
+                "The ${_bloc.family.name}s",
                 style: TextStyle(
                   fontSize: 40,
                   fontFamily: "WorkSansSemiBold",
@@ -108,7 +101,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                 vertical: 5.0,
               ),
               child: Text(
-                family.description,
+                _bloc.family.description,
                 style: TextStyle(
                   fontSize: 16.0,
                 ),
@@ -152,9 +145,9 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                 ),
               ),
               onPressed: () async {
-                await _authBloc.signOut();
+                await _bloc.signOut();
                 setState(() {
-                  _future = _profileBloc.authenticate(context);
+                  _futureProfile = _bloc.init(context, this);
                 });
               },
             ),
@@ -164,7 +157,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
               color: Colors.white24,
               child: TabBar(
                 indicatorColor: Colors.grey,
-                controller: _profileBloc.tabController,
+                controller: _bloc.tabController,
                 tabs: [
                   Tab(icon: Icon(Icons.people_outline)),
                   Tab(icon: Icon(Icons.photo_library)),
@@ -177,8 +170,8 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
             Container(
               height: height,
               child: TabBarView(
-                controller: _profileBloc.tabController,
-                children: _profileBloc.tabs,
+                controller: _bloc.tabController,
+                children: _bloc.tabs,
               ),
             ),
           ],

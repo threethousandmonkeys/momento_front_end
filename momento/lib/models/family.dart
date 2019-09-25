@@ -6,6 +6,7 @@ class Family {
   String email;
   List<String> members;
   List<String> artefacts;
+  List<String> events;
   int numPhotos;
 
   Family({
@@ -15,6 +16,7 @@ class Family {
     this.email,
     this.members,
     this.artefacts,
+    this.events,
     this.numPhotos,
   });
 
@@ -25,8 +27,9 @@ class Family {
       description: jsonFamily["description"],
       email: jsonFamily["email"],
       members: List<String>.from(jsonFamily["members"]),
-      numPhotos: jsonFamily["num_photos"],
       artefacts: List<String>.from(jsonFamily["artefacts"]),
+      events: List<String>.from(jsonFamily["events"]),
+      numPhotos: jsonFamily["num_photos"],
     );
   }
 
@@ -36,8 +39,9 @@ class Family {
       "description": this.description,
       "email": this.email,
       "members": this.members,
-      "num_photos": this.numPhotos,
       "artefacts": this.artefacts,
+      "events": this.events,
+      "num_photos": this.numPhotos,
     };
   }
 }

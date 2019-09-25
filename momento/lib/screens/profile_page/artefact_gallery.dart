@@ -15,7 +15,7 @@ class ArtefactGallery extends StatefulWidget {
   _ArtefactGalleryState createState() => _ArtefactGalleryState();
 }
 
-class _ArtefactGalleryState extends State<ArtefactGallery> {
+class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAliveClientMixin {
   final _bloc = ArtefactGalleryBloc();
   Future<Null> _futureGallery;
 
@@ -69,4 +69,7 @@ class _ArtefactGalleryState extends State<ArtefactGallery> {
       },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

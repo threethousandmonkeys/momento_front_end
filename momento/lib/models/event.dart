@@ -1,10 +1,37 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 /// a model to represent family, which store the name and description and email
 class Event {
-  String eventName;
-  String eventParticipant;
-  DateTime eventDate;
+  String id;
+  String name;
+  DateTime date;
+  List<String> participants;
+  String description;
 
-  Event({this.eventName, this.eventParticipant, this.eventDate});
+  Event({
+    this.id,
+    this.name,
+    this.date,
+    this.participants,
+    this.description,
+  });
 
-  static Future<Null> parseEvent(String uid) async {}
+  static Event parseEvent(String eventId, Map<String, dynamic> jsonEvent) {
+    return Event(
+      id: eventId,
+      name: jsonEvent["name"],
+      date: DateTime.fromMillisecondsSinceEpoch(jsonEvent["date"].seconds * 1000),
+      participants: List<String>.from(jsonEvent["participants"]),
+      description: jsonEvent["description"],
+    );
+  }
+
+  Map<String, dynamic> serialize() {
+    return {
+      "name": this.name,
+      "date": Timestamp((date.millisecondsSinceEpoch * 0.001).toInt(), 0),
+      "participants": this.participants ?? [],
+      "description": this.description,
+    };
+  }
 }

@@ -6,6 +6,9 @@ import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/constants.dart';
 import 'package:momento/screens/components/loading_page.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:momento/screens/profile_page/artefact_gallery.dart';
+import 'package:momento/screens/profile_page/family_tree.dart';
+import 'package:momento/screens/profile_page/time_line.dart';
 
 /// ProfilePage: the widget of family profile page(home page)
 class ProfilePage extends StatefulWidget {
@@ -16,13 +19,16 @@ class ProfilePage extends StatefulWidget {
 /// _ProfilePageState: the state control of family profile page
 class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
   final _bloc = ProfileBloc();
+
+  TabController _tabController;
   Future<Null> _futureProfile;
 
   // initializations
   @override
   void initState() {
     super.initState();
-    _futureProfile = _bloc.init(context, this);
+    _tabController = TabController(vsync: this, length: 3);
+    _futureProfile = _bloc.init(context);
   }
 
   /// build function of profile_page widget
@@ -51,32 +57,49 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
           padding: EdgeInsets.zero,
           children: [
             CarouselSlider(
+              scrollPhysics: ClampingScrollPhysics(),
               enableInfiniteScroll: false,
               autoPlay: false,
               viewportFraction: 1.0,
               items: _bloc.photos
-                      .map((url) => Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(url),
-                                fit: BoxFit.cover,
-                              ),
+                      .map(
+                        (url) => FractionallySizedBox(
+                          heightFactor: 1,
+                          widthFactor: 1,
+                          child: Container(
+                            child: FadeInImage.assetNetwork(
+                              image: url,
+                              placeholder: "assets/images/loading_image.gif",
                             ),
-                          ))
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      )
                       .toList() +
                   [
-                    Container(
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        onTap: () async {
-                          File selected = await ImagePicker.pickImage(source: ImageSource.gallery);
-                          if (selected != null) {
-                            await _bloc.uploadPhoto(selected);
-                          }
-                        },
-                        child: Icon(
-                          Icons.add_a_photo,
-                          size: 100,
+                    FractionallySizedBox(
+                      widthFactor: 1,
+                      heightFactor: 1,
+                      child: Container(
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () async {
+                            File selected =
+                                await ImagePicker.pickImage(source: ImageSource.gallery);
+                            if (selected != null) {
+                              await _bloc.uploadPhoto(selected);
+                            }
+                          },
+                          child: Icon(
+                            Icons.add,
+                            color: Colors.purple,
+                            size: 100,
+                          ),
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -147,7 +170,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
               onPressed: () async {
                 await _bloc.signOut();
                 setState(() {
-                  _futureProfile = _bloc.init(context, this);
+                  _futureProfile = _bloc.init(context);
                 });
               },
             ),
@@ -157,7 +180,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
               color: Colors.white24,
               child: TabBar(
                 indicatorColor: Colors.grey,
-                controller: _bloc.tabController,
+                controller: _tabController,
                 tabs: [
                   Tab(icon: Icon(Icons.people_outline)),
                   Tab(icon: Icon(Icons.photo_library)),
@@ -170,8 +193,12 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
             Container(
               height: height,
               child: TabBarView(
-                controller: _bloc.tabController,
-                children: _bloc.tabs,
+                controller: _tabController,
+                children: [
+                  FamilyTree(_bloc.family, _bloc.members),
+                  ArtefactGallery(_bloc.family, _bloc.members),
+                  TimeLine(_bloc.family, _bloc.members),
+                ],
               ),
             ),
           ],

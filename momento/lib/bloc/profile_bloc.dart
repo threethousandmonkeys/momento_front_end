@@ -6,8 +6,6 @@ import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
 import 'package:momento/repositories/family_repository.dart';
 import 'package:momento/repositories/member_repository.dart';
-import 'package:momento/screens/profile_page/artefact_gallery.dart';
-import 'package:momento/screens/profile_page/family_tree.dart';
 import 'package:momento/screens/signin_page/sign_in_page.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -22,19 +20,11 @@ class ProfileBloc {
 
   Family family;
   List<Member> members;
-  TabController tabController;
-  List<Widget> tabs;
   List<String> photos = [];
 
-  Future<Null> init(BuildContext context, TickerProvider vsync) async {
+  Future<Null> init(BuildContext context) async {
     final uid = await _authenticate(context);
     await _updateProfile(uid);
-    tabController = TabController(vsync: vsync, length: 3);
-    tabs = [
-      FamilyTree(family, members),
-      ArtefactGallery(family, members),
-      FamilyTree(family, members),
-    ];
   }
 
   Future<String> _authenticate(BuildContext context) async {
@@ -43,7 +33,10 @@ class ProfileBloc {
     if (uid == null) {
       uid = await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SignInPage()),
+        MaterialPageRoute(
+          builder: (context) => SignInPage(),
+          fullscreenDialog: true,
+        ),
       );
     }
     return uid;

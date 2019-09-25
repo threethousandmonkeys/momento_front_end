@@ -11,6 +11,7 @@ class FamilyRepository {
       email: email,
       members: [],
       artefacts: [],
+      events: [],
       numPhotos: 0,
     );
     await _firestore.createDocumentById(
@@ -48,6 +49,17 @@ class FamilyRepository {
       documentId: family.id,
       field: "artefacts",
       newData: newArtefacts,
+    );
+  }
+
+  Future<Null> addEvent(Family family, String eventId) async {
+    final newEvents = List<String>.from(family.events);
+    newEvents.add(eventId);
+    await _firestore.updateDocument(
+      collection: "family",
+      documentId: family.id,
+      field: "events",
+      newData: newEvents,
     );
   }
 

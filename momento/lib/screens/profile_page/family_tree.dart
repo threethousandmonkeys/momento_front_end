@@ -23,12 +23,9 @@ class _FamilyTreeState extends State<FamilyTree> {
         children: <Widget>[
           Column(
             children: widget.members.map((member) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  member.firstName,
-                  style: TextStyle(fontSize: 30),
-                ),
+              return Text(
+                member.firstName,
+                style: TextStyle(fontSize: 30),
               );
             }).toList(),
           ),
@@ -42,8 +39,8 @@ class _FamilyTreeState extends State<FamilyTree> {
               );
             },
             child: Icon(
-              Icons.people_outline,
-              size: 100,
+              Icons.add_circle_outline,
+              size: 50,
             ),
           ),
         ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:momento/screens/profile_page/profile_page.dart';
+import 'package:momento/theme/style.dart' as Theme;
 
 void main() => runApp(new MyApp());
 

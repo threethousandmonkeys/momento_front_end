@@ -5,6 +5,7 @@ import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
 import 'package:momento/screens/add_new_page/components/form_image_selector.dart';
 import 'package:momento/screens/components/ugly_button.dart';
+import 'package:momento/services/dialogs.dart';
 import 'components/form_drop_down_field.dart';
 import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
@@ -25,6 +26,8 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
     _bloc = AddNewMemberBloc(widget.members);
     super.initState();
   }
+
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +55,12 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                 title: "First Name",
                 onChanged: (value) {
                   _bloc.firstName = value;
+                },
+              ),
+              FormTextField(
+                title: "Middle Name",
+                onChanged: (value) {
+                  _bloc.middleName = value;
                 },
               ),
               FormDropDownField(
@@ -137,8 +146,14 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                       onPressed: () async {
                         final validation = _bloc.validate();
                         if (validation == "") {
-                          await _bloc.addNewMember(widget.family);
-                          Navigator.pop(context);
+                          try {
+                            Dialogs.showLoadingDialog(context, _keyLoader);
+                            final newMember = await _bloc.addNewMember(widget.family);
+                            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+                            Navigator.pop(context, newMember);
+                          } catch (error) {
+                            print(error);
+                          }
                         } else {
                           print(validation);
                         }

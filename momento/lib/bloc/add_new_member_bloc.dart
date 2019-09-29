@@ -48,7 +48,7 @@ class AddNewMemberBloc {
     return "";
   }
 
-  Future<Null> addNewMember(Family family) async {
+  Future<Member> addNewMember(Family family) async {
     /// upload photo to cloud, return a retrieval path
     Member newMember = Member(
       id: null,
@@ -64,6 +64,7 @@ class AddNewMemberBloc {
     final memberId = await _memberRepository.createMember(newMember);
     await _cloudStorageService.uploadPhotoAt("${family.id}/members/original/", memberId, photo);
     await _familyRepository.addMember(family, memberId);
+    return newMember;
   }
 
   void updateFathers() {

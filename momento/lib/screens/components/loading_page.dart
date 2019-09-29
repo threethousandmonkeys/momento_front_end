@@ -7,10 +7,16 @@ class LoadingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: kBackgroundDecoration,
-      child: Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+        child: Center(
           child: Image(
-        image: AssetImage('assets/images/loading.gif'),
-      )),
+            image: AssetImage(
+              'assets/images/loading.gif',
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

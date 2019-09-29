@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_multiselect/flutter_multiselect.dart';
 import 'package:momento/bloc/add_new_event_bloc.dart';
+import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/constants.dart';
-import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
 import 'package:momento/screens/add_new_page/components/form_image_selector.dart';
 import 'package:momento/screens/components/ugly_button.dart';
+import 'package:provider/provider.dart';
 import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
 
 class AddNewEventPage extends StatefulWidget {
-  final Family family;
-  final List<Member> members;
-  AddNewEventPage(this.family, this.members);
   @override
   _AddNewEventPageState createState() => _AddNewEventPageState();
 }
 
 class _AddNewEventPageState extends State<AddNewEventPage> {
   final _bloc = AddNewEventBloc();
+  ProfileBloc _profileBloc;
 
   @override
   Widget build(BuildContext context) {
+    if (_profileBloc == null) {
+      _profileBloc = Provider.of<ProfileBloc>(context);
+    }
     double horizontalPadding = MediaQuery.of(context).size.width * 0.1;
     return Scaffold(
       body: Container(
@@ -57,24 +59,28 @@ class _AddNewEventPageState extends State<AddNewEventPage> {
                   });
                 },
               ),
-              MultiSelect(
-                autovalidate: false,
-                titleText: "Participants",
-                dataSource: widget.members
-                    .map(
-                      (member) => {
-                        "display": member.firstName + " " + member.middleName,
-                        "value": member.id,
+              StreamBuilder<List<Member>>(
+                  stream: _profileBloc.getMembers,
+                  builder: (context, snapshot) {
+                    return MultiSelect(
+                      autovalidate: false,
+                      titleText: "Participants",
+                      dataSource: snapshot.data
+                          .map(
+                            (member) => {
+                              "display": member.firstName + " " + member.middleName,
+                              "value": member.id,
+                            },
+                          )
+                          .toList(),
+                      textField: 'display',
+                      valueField: 'value',
+                      value: null,
+                      change: (value) {
+                        _bloc.participants = List<String>.from(value);
                       },
-                    )
-                    .toList(),
-                textField: 'display',
-                valueField: 'value',
-                value: null,
-                change: (value) {
-                  _bloc.participants = List<String>.from(value);
-                },
-              ),
+                    );
+                  }),
               FormTextField(
                 title: "Description",
                 maxLines: 5,
@@ -106,8 +112,8 @@ class _AddNewEventPageState extends State<AddNewEventPage> {
                       onPressed: () async {
                         final validation = _bloc.validate();
                         if (validation == "") {
-                          await _bloc.addNewEvent(widget.family);
-                          Navigator.pop(context);
+                          final newFamily = await _bloc.addNewEvent(_profileBloc.family);
+                          Navigator.pop(context, newFamily);
                         } else {
                           print(validation);
                         }

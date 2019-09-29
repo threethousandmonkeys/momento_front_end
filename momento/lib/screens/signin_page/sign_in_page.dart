@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:momento/constants.dart';
 import 'package:momento/screens/components/input_field.dart';
 import 'package:momento/screens/components/ugly_button.dart';
+import 'package:momento/services/snack_bar_service.dart';
 import 'components/card_divider.dart';
 import 'components/bubble_indication_painter.dart';
 import 'package:momento/bloc/sign_in_bloc.dart';
@@ -17,9 +18,8 @@ class SignInPage extends StatefulWidget {
 
 /// _SignInPageState: state control of SignInPage
 class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateMixin {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  SignInBloc _bloc = SignInBloc();
+  final _snackBarService = SnackBarService();
+  final _bloc = SignInBloc();
 
   ///  For recording the inputs in the text field:
   TextEditingController _signInEmailController = TextEditingController();
@@ -44,7 +44,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
     double contentWidth = MediaQuery.of(context).size.width * kWidthRatio;
     double contentHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      key: _scaffoldKey,
+      key: _bloc.scaffoldKey,
       body: Container(
         decoration: kBackgroundDecoration,
         child: SingleChildScrollView(
@@ -120,26 +120,6 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
     ]);
 
     _pageController = PageController();
-  }
-
-  /// customize the bar appear at the bottom of the screen <pop-up message>
-  void showInSnackBar(String value) {
-    _scaffoldKey.currentState?.removeCurrentSnackBar();
-    _scaffoldKey.currentState.showSnackBar(
-      SnackBar(
-        content: Text(
-          value,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16.0,
-            fontFamily: "WorkSansSemiBold",
-          ),
-        ),
-        backgroundColor: Color(0xFF9E8C81),
-        duration: Duration(seconds: 3),
-      ),
-    );
   }
 
   /// customize the menu bar appear
@@ -252,18 +232,17 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
             height: buttonHeight,
             transform: Matrix4.translationValues(0.0, -buttonHeight * 0.5, 0.0),
             onPressed: () async {
-              if (_signInEmailController.text == "" ||
-                  _signInEmailController.text == null ||
-                  _signInPasswordController.text == "" ||
-                  _signInPasswordController.text == null) {
-                showInSnackBar("please enter email/password");
+              if (_signInEmailController.text == "" || _signInPasswordController.text == "") {
+                _snackBarService.showInSnackBar(_bloc.scaffoldKey, "please enter email/password");
               } else {
-                showInSnackBar("logging in");
+                _snackBarService.showInSnackBar(_bloc.scaffoldKey, "logging in");
                 final authUser = await _bloc.signIn(
                   email: _signInEmailController.text.trim(),
                   password: _signInPasswordController.text,
                 );
-                Navigator.pop(context, authUser.uid);
+                if (authUser != null) {
+                  Navigator.pop(context, authUser.uid);
+                }
               }
             },
           ),
@@ -336,7 +315,8 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
                     Padding(
                       padding: EdgeInsets.only(top: 5.0, right: 40.0),
                       child: GestureDetector(
-                        onTap: () => showInSnackBar("Facebook button pressed"),
+                        onTap: () => _snackBarService.showInSnackBar(
+                            _bloc.scaffoldKey, "Facebook button pressed"),
                         child: Container(
                           padding: EdgeInsets.all(15.0),
                           decoration: BoxDecoration(
@@ -353,7 +333,8 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
                     Padding(
                       padding: EdgeInsets.only(top: 5.0),
                       child: GestureDetector(
-                        onTap: () => showInSnackBar("Google button pressed"),
+                        onTap: () => _snackBarService.showInSnackBar(
+                            _bloc.scaffoldKey, "Google button pressed"),
                         child: Container(
                           padding: EdgeInsets.all(15.0),
                           decoration: BoxDecoration(
@@ -451,11 +432,11 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
                   _signupEmailController.text == "" ||
                   _signupPasswordController.text == "" ||
                   _signupConfirmPasswordController.text == "")
-                showInSnackBar("Please fill all the fields");
+                _snackBarService.showInSnackBar(_bloc.scaffoldKey, "Please fill all the fields");
               else if (_signupPasswordController.text != _signupConfirmPasswordController.text)
-                showInSnackBar("passwords do not match");
+                _snackBarService.showInSnackBar(_bloc.scaffoldKey, "passwords do not match");
               else {
-                showInSnackBar("signing up");
+                _snackBarService.showInSnackBar(_bloc.scaffoldKey, "signing up");
                 final authUser = await _bloc.signUp(
                   name: _familyNameController.text,
                   email: _signupEmailController.text,

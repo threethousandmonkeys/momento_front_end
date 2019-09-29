@@ -1,11 +1,12 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:momento/bloc/profile_bloc.dart';
-import 'package:momento/constants.dart';
-import 'package:momento/screens/components/loading_page.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:provider/provider.dart';
+import 'package:momento/constants.dart';
+import 'package:momento/bloc/profile_bloc.dart';
+import 'package:momento/screens/components/loading_page.dart';
+import 'package:momento/screens/components/ugly_button.dart';
 import 'package:momento/screens/profile_page/artefact_gallery.dart';
 import 'package:momento/screens/profile_page/family_tree.dart';
 import 'package:momento/screens/profile_page/time_line.dart';
@@ -20,6 +21,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
   final _bloc = ProfileBloc();
 
+  int _tabIndex = 0;
   TabController _tabController;
   Future<Null> _futureProfile;
 
@@ -28,7 +30,20 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: 3);
+    _tabController.addListener(_handleTabChange);
     _futureProfile = _bloc.init(context);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  void _handleTabChange() {
+    setState(() {
+      _tabIndex = _tabController.index;
+    });
   }
 
   /// build function of profile_page widget
@@ -48,68 +63,74 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
 
   /// _buildProfile: build family profile display from the family details
   Widget _buildProfile(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Container(
+        height: height,
         decoration: kBackgroundDecoration,
         child: ListView(
           shrinkWrap: true,
           padding: EdgeInsets.zero,
           children: [
-            CarouselSlider(
-              scrollPhysics: ClampingScrollPhysics(),
-              enableInfiniteScroll: false,
-              autoPlay: false,
-              viewportFraction: 1.0,
-              items: _bloc.photos
-                      .map(
-                        (url) => FractionallySizedBox(
-                          heightFactor: 1,
-                          widthFactor: 1,
-                          child: Container(
-                            child: FadeInImage.assetNetwork(
-                              image: url,
-                              placeholder: "assets/images/loading_image.gif",
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      )
-                      .toList() +
-                  [
-                    FractionallySizedBox(
-                      widthFactor: 1,
-                      heightFactor: 1,
-                      child: Container(
-                        child: GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          onTap: () async {
-                            File selected =
-                                await ImagePicker.pickImage(source: ImageSource.gallery);
-                            if (selected != null) {
-                              await _bloc.uploadPhoto(selected);
-                            }
-                          },
-                          child: Icon(
-                            Icons.add,
-                            color: Colors.purple,
-                            size: 100,
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
+            StreamBuilder<List<String>>(
+              stream: _bloc.getPhotos,
+              initialData: [],
+              builder: (context, snapshot) {
+                return Container(
+                  color: Colors.black,
+                  child: CarouselSlider(
+                    enableInfiniteScroll: false,
+                    viewportFraction: 1.0,
+                    items: snapshot.data
+                            .map(
+                              (url) => FractionallySizedBox(
+                                heightFactor: 1,
+                                widthFactor: 1,
+                                child: FadeInImage.assetNetwork(
+                                  image: url,
+                                  placeholder: "assets/images/loading_image.gif",
+                                ),
+                              ),
+                            )
+                            .toList() +
+                        (snapshot.data.length == 0
+                            ? []
+                            : [
+                                FractionallySizedBox(
+                                  widthFactor: 1,
+                                  heightFactor: 1,
+                                  child: Container(
+                                    child: GestureDetector(
+                                      behavior: HitTestBehavior.translucent,
+                                      onTap: () async {
+                                        File selected = await ImagePicker.pickImage(
+                                            source: ImageSource.gallery);
+                                        if (selected != null) {
+                                          await _bloc.uploadPhoto(selected);
+                                        }
+                                      },
+                                      child: Icon(
+                                        Icons.add,
+                                        color: Colors.purple,
+                                        size: 100,
+                                      ),
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ]),
+                  ),
+                );
+              },
             ),
 
             /// family name display
             Center(
               child: Text(
-                "The ${_bloc.family.name}s",
+                "The ${_bloc.name}s",
                 style: TextStyle(
                   fontSize: 40,
                   fontFamily: "WorkSansSemiBold",
@@ -118,60 +139,59 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
             ),
 
             /// family description display
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 5.0,
-              ),
-              child: Text(
-                _bloc.family.description,
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
-            ),
-
-            /// edit family description button
-            /// (not connected to editing page yet)
-            MaterialButton(
-              color: Color(0xFF9E8C81),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                ),
-                child: Text(
-                  "Edit Your Profile",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white,
+            StreamBuilder<String>(
+              stream: _bloc.getDescription,
+              initialData: "Loading...",
+              builder: (context, snapshot) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                  child: GestureDetector(
+                    onTap: () async {
+                      final newDescription = await showDialog(
+                        context: context,
+                        builder: (context) {
+                          final descriptionController = TextEditingController();
+                          descriptionController.text = snapshot.data;
+                          return AlertDialog(
+                            title: Text("Description:"),
+                            content: TextField(
+                              controller: descriptionController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                              ),
+                              maxLines: 5,
+                            ),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text("CANCEL"),
+                                onPressed: () {
+                                  Navigator.pop(context, descriptionController.text);
+                                },
+                              ),
+                              FlatButton(
+                                child: Text("DONE"),
+                                onPressed: () {
+                                  Navigator.pop(context, descriptionController.text);
+                                },
+                              )
+                            ],
+                          );
+                        },
+                      );
+                      if (newDescription != snapshot.data) {
+                        _bloc.updateDescription(newDescription);
+                      }
+                    },
+                    child: Text(
+                      snapshot.data,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 5,
+                      style: TextStyle(
+                        fontSize: 16.0,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              onPressed: () {
-                print("edit");
-              },
-            ),
-
-            /// logout button (testing only)
-            MaterialButton(
-              color: Color(0xFF9E8C81),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                ),
-                child: Text(
-                  "LOG OUT",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              onPressed: () async {
-                await _bloc.signOut();
-                setState(() {
-                  _futureProfile = _bloc.init(context);
-                });
+                );
               },
             ),
 
@@ -191,15 +211,32 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
 
             /// the display of 3 main components
             Container(
-              height: height,
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  FamilyTree(_bloc.family, _bloc.members),
-                  ArtefactGallery(_bloc.family, _bloc.members),
-                  TimeLine(_bloc.family, _bloc.members),
-                ],
+              height: _tabIndex == 1
+                  ? (width / 3) * (_bloc.family.artefacts.length / 3).ceil()
+                  : height - 110,
+              child: Provider<ProfileBloc>(
+                builder: (_) => _bloc,
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    FamilyTree(),
+                    ArtefactGallery(),
+                    TimeLine(),
+                  ],
+                ),
               ),
+            ),
+
+            /// logout button (testing only)
+            UglyButton(
+              text: "LOG OUT",
+              height: 10,
+              onPressed: () async {
+                await _bloc.signOut();
+                setState(() {
+                  _futureProfile = _bloc.init(context);
+                });
+              },
             ),
           ],
         ),

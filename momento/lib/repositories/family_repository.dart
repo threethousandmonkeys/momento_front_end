@@ -71,4 +71,13 @@ class FamilyRepository {
       newData: family.numPhotos + 1,
     );
   }
+
+  Future<Null> updateDescription(Family family, String description) async {
+    await _firestore.updateDocument(
+      collection: "family",
+      documentId: family.id,
+      field: "description",
+      newData: description,
+    );
+  }
 }

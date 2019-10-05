@@ -48,17 +48,25 @@ class ProfileBloc {
   Future<Null> uploadPhoto(File photo) async {
     String fileName = family.numPhotos.toString();
     await _cloudStorageService.uploadPhotoAt("${family.id}/photos/original/", fileName, photo);
-    await _familyRepository.addPhoto(family);
+    _familyRepository.addPhoto(family);
+    List<String> photos = List.from(_photosController.value);
+    photos.add(await _cloudStorageService
+        .getPhoto("${family.id}/photos/original/${family.numPhotos}.jpg"));
+    _setPhotos(photos);
     family.numPhotos++;
-    _updatePhotos();
   }
 
   Future<Null> _updatePhotos() async {
     List<String> photos = [];
+    String url;
     for (int i = 0; i < family.numPhotos; i++) {
-      /// TODO: Get thumbnails
-      String url = "${family.id}/photos/original/${i.toString()}";
-      photos.add(await _cloudStorageService.getPhoto(url));
+      url =
+          await _cloudStorageService.getPhoto("${family.id}/photos/thumbnails/${i.toString()}.jpg");
+      if (url == null) {
+        url =
+            await _cloudStorageService.getPhoto("${family.id}/photos/original/${i.toString()}.jpg");
+      }
+      photos.add(url);
     }
     _setPhotos(photos);
   }
@@ -71,6 +79,7 @@ class ProfileBloc {
   Future<Null> addMember(Member member) async {
     List<Member> members = List.from(_membersController.value);
     members.add(member);
+    family.members.add(member.id);
     _setMembers(members);
   }
 
@@ -94,6 +103,18 @@ class ProfileBloc {
       thumbnails.add(url);
     }
     print(thumbnails);
+    _setThumbnails(thumbnails);
+  }
+
+  Future<Null> addArtefact(String artefactId) async {
+    family.members.add(artefactId);
+    List<String> thumbnails = List<String>.from(_thumbnailsController.value);
+    String url =
+        await _cloudStorageService.getPhoto("${family.id}/artefacts/thumbnails/$artefactId");
+    if (url == null) {
+      url = await _cloudStorageService.getPhoto("${family.id}/artefacts/original/$artefactId");
+    }
+    thumbnails.add(url);
     _setThumbnails(thumbnails);
   }
 

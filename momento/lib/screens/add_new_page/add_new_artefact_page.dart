@@ -107,7 +107,7 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
                       text: "Cancel",
                       height: 10,
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pop(context, null);
                       },
                     ),
                     UglyButton(
@@ -116,8 +116,8 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
                       onPressed: () async {
                         final validation = _bloc.validate();
                         if (validation == "") {
-                          await _bloc.addNewArtefact(widget.family);
-                          Navigator.pop(context);
+                          final newArtefactId = await _bloc.addNewArtefact(widget.family);
+                          Navigator.pop(context, newArtefactId);
                         } else {
                           print(validation);
                         }

@@ -10,6 +10,7 @@ import 'package:momento/screens/components/ugly_button.dart';
 import 'package:momento/screens/profile_page/artefact_gallery.dart';
 import 'package:momento/screens/profile_page/family_tree.dart';
 import 'package:momento/screens/profile_page/time_line.dart';
+import 'package:momento/services/dialogs.dart';
 
 /// ProfilePage: the widget of family profile page(home page)
 class ProfilePage extends StatefulWidget {
@@ -20,18 +21,23 @@ class ProfilePage extends StatefulWidget {
 /// _ProfilePageState: the state control of family profile page
 class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
   final _bloc = ProfileBloc();
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
   int _tabIndex = 0;
   TabController _tabController;
   Future<Null> _futureProfile;
 
+  double _width;
+  double _height;
+  double _tabHeight = 1000;
+
   // initializations
   @override
   void initState() {
-    super.initState();
     _tabController = TabController(vsync: this, length: 3);
     _tabController.addListener(_handleTabChange);
     _futureProfile = _bloc.init(context);
+    super.initState();
   }
 
   @override
@@ -41,14 +47,20 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
   }
 
   void _handleTabChange() {
-    setState(() {
-      _tabIndex = _tabController.index;
-    });
+    if (_tabIndex == 2) {
+      _tabHeight = (_width / 3) * (_bloc.family.artefacts.length + 1 / 3).ceil();
+    } else {
+      _tabHeight = _height - 100;
+    }
   }
 
   /// build function of profile_page widget
   @override
   Widget build(BuildContext context) {
+    if (_width == null || _height == null) {
+      _width = MediaQuery.of(context).size.width;
+      _height = MediaQuery.of(context).size.height;
+    }
     return FutureBuilder<Null>(
       future: _futureProfile,
       builder: (context, snapshot) {
@@ -61,13 +73,13 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
     );
   }
 
+  File selectedUpload;
+
   /// _buildProfile: build family profile display from the family details
   Widget _buildProfile(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Container(
-        height: height,
+        height: _height,
         decoration: kBackgroundDecoration,
         child: ListView(
           shrinkWrap: true,
@@ -75,11 +87,18 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
           children: [
             StreamBuilder<List<String>>(
               stream: _bloc.getPhotos,
-              initialData: [],
+              initialData: null,
               builder: (context, snapshot) {
+                if (snapshot.data == null) {
+                  return Container(
+                    height: _height * (1 - kGoldenRatio),
+                    color: Colors.black,
+                  );
+                }
                 return Container(
                   color: Colors.black,
                   child: CarouselSlider(
+                    height: _height * (1 - kGoldenRatio),
                     enableInfiniteScroll: false,
                     viewportFraction: 1.0,
                     items: snapshot.data
@@ -94,34 +113,46 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                               ),
                             )
                             .toList() +
-                        (snapshot.data.length == 0
-                            ? []
-                            : [
-                                FractionallySizedBox(
-                                  widthFactor: 1,
-                                  heightFactor: 1,
-                                  child: Container(
-                                    child: GestureDetector(
-                                      behavior: HitTestBehavior.translucent,
-                                      onTap: () async {
-                                        File selected = await ImagePicker.pickImage(
-                                            source: ImageSource.gallery);
-                                        if (selected != null) {
-                                          await _bloc.uploadPhoto(selected);
-                                        }
-                                      },
-                                      child: Icon(
-                                        Icons.add,
-                                        color: Colors.purple,
-                                        size: 100,
-                                      ),
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.black,
-                                    ),
+                        [
+                          FractionallySizedBox(
+                            widthFactor: 1,
+                            heightFactor: 1,
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.translucent,
+                              onTap: () async {
+                                selectedUpload =
+                                    await ImagePicker.pickImage(source: ImageSource.gallery);
+                                if (selectedUpload != null) {
+                                  setState(() {});
+                                  try {
+                                    Dialogs.showLoadingDialog(context, _keyLoader);
+                                    await _bloc.uploadPhoto(selectedUpload);
+                                    selectedUpload = null;
+                                    Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                                        .pop();
+                                  } catch (error) {
+                                    print(error);
+                                  }
+                                }
+                              },
+                              child: Stack(
+                                alignment: AlignmentDirectional.center,
+                                children: <Widget>[
+                                  Image(
+                                    image: selectedUpload == null
+                                        ? AssetImage("assets/images/login_logo.png")
+                                        : FileImage(selectedUpload),
                                   ),
-                                ),
-                              ]),
+                                  Icon(
+                                    Icons.add,
+                                    size: selectedUpload == null ? 100 : 0,
+                                    color: Colors.white,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                   ),
                 );
               },
@@ -211,9 +242,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
 
             /// the display of 3 main components
             Container(
-              height: _tabIndex == 1
-                  ? (width / 3) * (_bloc.family.artefacts.length / 3).ceil()
-                  : height - 110,
+              height: _tabHeight,
               child: Provider<ProfileBloc>(
                 builder: (_) => _bloc,
                 child: TabBarView(

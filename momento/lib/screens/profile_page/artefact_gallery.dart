@@ -18,8 +18,11 @@ class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAli
     _bloc = Provider.of<ProfileBloc>(context);
     return StreamBuilder<List<String>>(
       stream: _bloc.getThumbnails,
-      initialData: [],
+      initialData: null,
       builder: (context, snapshot) {
+        if (snapshot.data == null) {
+          return Text("Loading");
+        }
         return GridView.count(
           physics: NeverScrollableScrollPhysics(),
           padding: EdgeInsets.only(top: 0),
@@ -43,27 +46,28 @@ class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAli
           ),
         )
         .toList();
-    if (grids.length != 0) {
-      grids.add(
-        GestureDetector(
-          child: Container(
-            color: Colors.white38,
-            child: Icon(
-              Icons.add,
-              size: 60,
-            ),
+    grids.add(
+      GestureDetector(
+        child: Container(
+          color: Colors.white38,
+          child: Icon(
+            Icons.add,
+            size: 60,
           ),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AddNewArtefactPage(_bloc.family, _bloc.getLatestMembers),
-              ),
-            );
-          },
         ),
-      );
-    }
+        onTap: () async {
+          final newArtefactId = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddNewArtefactPage(_bloc.family, _bloc.getLatestMembers),
+            ),
+          );
+          if (newArtefactId != null) {
+            _bloc.addArtefact(newArtefactId);
+          }
+        },
+      ),
+    );
     return grids;
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Dialogs {
   static Future<void> showLoadingDialog(BuildContext context, GlobalKey key) async {
@@ -14,13 +15,9 @@ class Dialogs {
             children: <Widget>[
               Center(
                 child: Column(children: [
-                  CircularProgressIndicator(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    "Please Wait...",
-                    style: TextStyle(color: Colors.blueAccent),
+                  SpinKitPumpingHeart(
+                    color: Colors.purple,
+                    size: 128,
                   ),
                 ]),
               )

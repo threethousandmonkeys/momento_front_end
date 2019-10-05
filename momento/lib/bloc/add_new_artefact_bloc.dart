@@ -37,7 +37,7 @@ class AddNewArtefactBloc {
     return "";
   }
 
-  Future<Null> addNewArtefact(Family family) async {
+  Future<String> addNewArtefact(Family family) async {
     /// upload photo to cloud, return a retrieval path
     Artefact newArtefact = Artefact(
       id: null,
@@ -50,5 +50,6 @@ class AddNewArtefactBloc {
     final artefactId = await _artefactRepository.createArtefact(newArtefact);
     await _cloudStorageService.uploadPhotoAt("${family.id}/artefacts/original/", artefactId, photo);
     await _familyRepository.addArtefact(family, artefactId);
+    return artefactId;
   }
 }

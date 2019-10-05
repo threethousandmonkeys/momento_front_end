@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:momento/theme/style.dart' as Theme;
 
+const kGoldenRatio = 0.61803398875;
+
 const kTextFieldTextStyle = TextStyle(
   fontFamily: "WorkSansSemiBold",
   fontSize: 16.0,

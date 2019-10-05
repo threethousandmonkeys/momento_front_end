@@ -21,14 +21,6 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
   final _snackBarService = SnackBarService();
   final _bloc = SignInBloc();
 
-  ///  For recording the inputs in the text field:
-  TextEditingController _signInEmailController = TextEditingController();
-  TextEditingController _signInPasswordController = TextEditingController();
-  TextEditingController _signupEmailController = TextEditingController();
-  TextEditingController _signupPasswordController = TextEditingController();
-  TextEditingController _signupConfirmPasswordController = TextEditingController();
-  TextEditingController _familyNameController = TextEditingController();
-
   bool _obscureTextSignIn = true;
   bool _obscureTextSignup = true;
   bool _obscureTextSignupConfirm = true;
@@ -41,85 +33,67 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
   /// Basic setting for the sign in page (Size, Image, theme etc.)
   @override
   Widget build(BuildContext context) {
-    double contentWidth = MediaQuery.of(context).size.width * kWidthRatio;
+    double contentWidth = MediaQuery.of(context).size.width;
     double contentHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       key: _bloc.scaffoldKey,
       body: Container(
+        height: contentHeight,
         decoration: kBackgroundDecoration,
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: contentHeight / 10,
+        child: ListView(
+          children: <Widget>[
+            SizedBox(
+              height: contentHeight / 10,
+            ),
+            Image(
+              height: contentHeight * 3 / 10,
+              image: AssetImage('assets/images/login_logo.png'),
+            ),
+            Container(
+              height: contentHeight / 10,
+              child: _buildMenuBar(contentWidth, contentHeight / 10),
+            ),
+            Container(
+              height: contentHeight * 5 / 10,
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (i) {
+                  if (i == 0) {
+                    setState(() {
+                      right = Colors.white;
+                      left = Colors.black;
+                    });
+                  } else if (i == 1) {
+                    setState(() {
+                      right = Colors.black;
+                      left = Colors.white;
+                    });
+                  }
+                },
+                children: <Widget>[
+                  _buildSignIn(),
+                  _buildSignUp(),
+                ],
               ),
-              Image(
-                height: contentHeight * 3 / 10,
-                image: AssetImage('assets/images/login_logo.png'),
-              ),
-              Container(
-                height: contentHeight / 10,
-                child: _buildMenuBar(contentWidth, contentHeight / 10),
-              ),
-              Container(
-                height: contentHeight * 5 / 10,
-                child: PageView(
-                  controller: _pageController,
-                  onPageChanged: (i) {
-                    if (i == 0) {
-                      setState(() {
-                        right = Colors.white;
-                        left = Colors.black;
-                      });
-                    } else if (i == 1) {
-                      setState(() {
-                        right = Colors.black;
-                        left = Colors.white;
-                      });
-                    }
-                  },
-                  children: <Widget>[
-                    ConstrainedBox(
-                      constraints: BoxConstraints.expand(),
-                      child: _buildSignIn(contentWidth, contentHeight * 5 / 10),
-                    ),
-                    ConstrainedBox(
-                      constraints: BoxConstraints.expand(),
-                      child: _buildSignUp(contentWidth, contentHeight * 5 / 10),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
-  }
-
-  /// After build the widget, dispose it. <flutter lifecycle>
-  @override
-  void dispose() {
-    _signInEmailController.dispose();
-    _signInPasswordController.dispose();
-    _signupEmailController.dispose();
-    _signupPasswordController.dispose();
-    _signupConfirmPasswordController.dispose();
-    _pageController?.dispose();
-    super.dispose();
   }
 
   /// Before build the widget, init it. <flutter lifecycle>
   @override
   void initState() {
     super.initState();
-
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-
     _pageController = PageController();
+  }
+
+  /// After build the widget, dispose it. <flutter lifecycle>
+  @override
+  void dispose() {
+    _pageController?.dispose();
+    super.dispose();
   }
 
   /// customize the menu bar appear
@@ -128,9 +102,9 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
     return Padding(
       padding: EdgeInsets.symmetric(
         vertical: barRadius / 2,
+        horizontal: width * (1 - kWidthRatio) * 0.5,
       ),
       child: Container(
-        width: width,
         decoration: BoxDecoration(
           color: Color(0x552B2B2B),
           borderRadius: BorderRadius.all(Radius.circular(barRadius)),
@@ -138,7 +112,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
         child: CustomPaint(
           painter: TabIndicationPainter(
             pageController: _pageController,
-            dxTarget: width * 0.5 - barRadius,
+            dxTarget: width * kWidthRatio * 0.5 - barRadius,
             radius: barRadius,
             dy: barRadius,
             dxEntry: barRadius,
@@ -184,270 +158,268 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
   }
 
   /// customize the sign in page
-  Widget _buildSignIn(double width, double height) {
-    double buttonHeight = height / 6;
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Card(
-            elevation: 2.0,
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: Container(
-              width: width,
-              child: Column(
-                children: <Widget>[
-                  InputField(
-                    controller: _signInEmailController,
-                    icon: FontAwesomeIcons.solidEnvelope,
-                    hintText: "Email",
-                    inputType: TextInputType.emailAddress,
-                  ),
-                  CardDivider(
-                    width: width * kDividerRatio,
-                  ),
-                  InputField(
-                    controller: _signInPasswordController,
-                    icon: FontAwesomeIcons.lock,
-                    hintText: "Password",
-                    suffix: GestureDetector(
-                      onTap: _toggleSignIn,
-                      child: Icon(
-                        _obscureTextSignIn ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash,
-                        size: 15.0,
-                        color: Colors.black,
-                      ),
-                    ),
-                    obscureText: _obscureTextSignIn,
-                    bottomPadding: buttonHeight * 0.5,
-                  ),
-                ],
-              ),
-            ),
+  Widget _buildSignIn() {
+    double width = MediaQuery.of(context).size.width * kWidthRatio;
+    double buttonHeight = MediaQuery.of(context).size.height * 0.5 / 6;
+    return Column(
+      children: <Widget>[
+        Card(
+          elevation: 2.0,
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
           ),
-          UglyButton(
-            text: "LOGIN",
-            height: buttonHeight,
-            transform: Matrix4.translationValues(0.0, -buttonHeight * 0.5, 0.0),
-            onPressed: () async {
-              if (_signInEmailController.text == "" || _signInPasswordController.text == "") {
-                _snackBarService.showInSnackBar(_bloc.scaffoldKey, "please enter email/password");
-              } else {
-                _snackBarService.showInSnackBar(_bloc.scaffoldKey, "logging in");
-                final authUser = await _bloc.signIn(
-                  email: _signInEmailController.text.trim(),
-                  password: _signInPasswordController.text,
-                );
-                if (authUser != null) {
-                  Navigator.pop(context, authUser.uid);
-                }
-              }
-            },
-          ),
-          Container(
-            transform: Matrix4.translationValues(0.0, -buttonHeight * 0.5, 0.0),
+          child: Container(
+            width: width,
             child: Column(
               children: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    // _auth.sendPasswordResetEmail(email: signInEmail);
-                  },
-                  child: Text(
-                    "Forgot Password?",
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      color: Colors.white,
-                      fontSize: 16.0,
-                      fontFamily: "WorkSansMedium",
+                InputField(
+                  controller: _bloc.signInEmailController,
+                  icon: FontAwesomeIcons.solidEnvelope,
+                  hintText: "Email",
+                  inputType: TextInputType.emailAddress,
+                ),
+                CardDivider(
+                  width: width * kDividerRatio,
+                ),
+                InputField(
+                  controller: _bloc.signInPasswordController,
+                  icon: FontAwesomeIcons.lock,
+                  hintText: "Password",
+                  suffix: GestureDetector(
+                    onTap: _toggleSignIn,
+                    child: Icon(
+                      _obscureTextSignIn ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash,
+                      size: 15.0,
+                      color: Colors.black,
                     ),
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Colors.white10, Colors.white],
-                          begin: FractionalOffset(0.0, 0.0),
-                          end: FractionalOffset(1.0, 1.0),
-                          stops: [0.0, 1.0],
-                          tileMode: TileMode.clamp,
-                        ),
-                      ),
-                      width: 100.0,
-                      height: 1.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                      child: Text(
-                        "Or",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                          fontFamily: "WorkSansMedium",
-                        ),
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.white,
-                            Colors.white10,
-                          ],
-                          begin: FractionalOffset(0.0, 0.0),
-                          end: FractionalOffset(1.0, 1.0),
-                          stops: [0.0, 1.0],
-                          tileMode: TileMode.clamp,
-                        ),
-                      ),
-                      width: 100.0,
-                      height: 1.0,
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 5.0, right: 40.0),
-                      child: GestureDetector(
-                        onTap: () => _snackBarService.showInSnackBar(
-                            _bloc.scaffoldKey, "Facebook button pressed"),
-                        child: Container(
-                          padding: EdgeInsets.all(15.0),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                          ),
-                          child: Icon(
-                            FontAwesomeIcons.facebookF,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 5.0),
-                      child: GestureDetector(
-                        onTap: () => _snackBarService.showInSnackBar(
-                            _bloc.scaffoldKey, "Google button pressed"),
-                        child: Container(
-                          padding: EdgeInsets.all(15.0),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                          ),
-                          child: Icon(
-                            FontAwesomeIcons.google,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  obscureText: _obscureTextSignIn,
+                  bottomPadding: buttonHeight * 0.5,
                 ),
               ],
             ),
           ),
-        ],
-      ),
+        ),
+        UglyButton(
+          text: "LOGIN",
+          height: buttonHeight,
+          transform: Matrix4.translationValues(0.0, -buttonHeight * 0.5, 0.0),
+          onPressed: () async {
+            if (_bloc.signInEmailController.text == "" ||
+                _bloc.signInPasswordController.text == "") {
+              _snackBarService.showInSnackBar(_bloc.scaffoldKey, "please enter email/password");
+            } else {
+              _snackBarService.showInSnackBar(_bloc.scaffoldKey, "logging in");
+              final authUser = await _bloc.signIn(
+                email: _bloc.signInEmailController.text.trim(),
+                password: _bloc.signInPasswordController.text,
+              );
+              if (authUser != null) {
+                Navigator.pop(context, authUser.uid);
+              }
+            }
+          },
+        ),
+        Container(
+          transform: Matrix4.translationValues(0.0, -buttonHeight * 0.5, 0.0),
+          child: Column(
+            children: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  // _auth.sendPasswordResetEmail(email: signInEmail);
+                },
+                child: Text(
+                  "Forgot Password?",
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
+                    color: Colors.white,
+                    fontSize: 16.0,
+                    fontFamily: "WorkSansMedium",
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.white10, Colors.white],
+                        begin: FractionalOffset(0.0, 0.0),
+                        end: FractionalOffset(1.0, 1.0),
+                        stops: [0.0, 1.0],
+                        tileMode: TileMode.clamp,
+                      ),
+                    ),
+                    width: 100.0,
+                    height: 1.0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                    child: Text(
+                      "Or",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                        fontFamily: "WorkSansMedium",
+                      ),
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.white,
+                          Colors.white10,
+                        ],
+                        begin: FractionalOffset(0.0, 0.0),
+                        end: FractionalOffset(1.0, 1.0),
+                        stops: [0.0, 1.0],
+                        tileMode: TileMode.clamp,
+                      ),
+                    ),
+                    width: 100.0,
+                    height: 1.0,
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.0, right: 40.0),
+                    child: GestureDetector(
+                      onTap: () => _snackBarService.showInSnackBar(
+                          _bloc.scaffoldKey, "Facebook button pressed"),
+                      child: Container(
+                        padding: EdgeInsets.all(15.0),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                        child: Icon(
+                          FontAwesomeIcons.facebookF,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5.0),
+                    child: GestureDetector(
+                      onTap: () => _snackBarService.showInSnackBar(
+                          _bloc.scaffoldKey, "Google button pressed"),
+                      child: Container(
+                        padding: EdgeInsets.all(15.0),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                        child: Icon(
+                          FontAwesomeIcons.google,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
   /// customize the sign up page
-  Widget _buildSignUp(double width, double height) {
-    double buttonHeight = height / 6;
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Card(
-            elevation: 2.0,
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: Container(
-              width: width,
-              child: Column(
-                children: <Widget>[
-                  InputField(
-                    controller: _familyNameController,
-                    icon: FontAwesomeIcons.user,
-                    hintText: "Family Name",
-                  ),
-                  CardDivider(width: width * kDividerRatio),
-                  InputField(
-                    controller: _signupEmailController,
-                    icon: FontAwesomeIcons.solidEnvelope,
-                    hintText: "Email",
-                    inputType: TextInputType.emailAddress,
-                  ),
-                  CardDivider(width: width * kDividerRatio),
-                  InputField(
-                    controller: _signupPasswordController,
-                    icon: FontAwesomeIcons.lock,
-                    hintText: "Password",
-                    suffix: GestureDetector(
-                      onTap: _toggleSignup,
-                      child: Icon(
-                        _obscureTextSignup ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash,
-                        size: 15.0,
-                        color: Colors.black,
-                      ),
+  Widget _buildSignUp() {
+    double width = MediaQuery.of(context).size.width * kWidthRatio;
+    double buttonHeight = MediaQuery.of(context).size.height * 0.5 / 6;
+    return Column(
+      children: <Widget>[
+        Card(
+          elevation: 2.0,
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Container(
+            width: width,
+            child: Column(
+              children: <Widget>[
+                InputField(
+                  controller: _bloc.familyNameController,
+                  icon: FontAwesomeIcons.user,
+                  hintText: "Family Name",
+                ),
+                CardDivider(width: width * kDividerRatio),
+                InputField(
+                  controller: _bloc.signupEmailController,
+                  icon: FontAwesomeIcons.solidEnvelope,
+                  hintText: "Email",
+                  inputType: TextInputType.emailAddress,
+                ),
+                CardDivider(width: width * kDividerRatio),
+                InputField(
+                  controller: _bloc.signupPasswordController,
+                  icon: FontAwesomeIcons.lock,
+                  hintText: "Password",
+                  suffix: GestureDetector(
+                    onTap: _toggleSignup,
+                    child: Icon(
+                      _obscureTextSignup ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash,
+                      size: 15.0,
+                      color: Colors.black,
                     ),
-                    obscureText: _obscureTextSignup,
                   ),
-                  CardDivider(width: width * kDividerRatio),
-                  InputField(
-                    controller: _signupConfirmPasswordController,
-                    icon: FontAwesomeIcons.lock,
-                    hintText: "Confirmation",
-                    suffix: GestureDetector(
-                      onTap: _toggleSignupConfirm,
-                      child: Icon(
-                        _obscureTextSignupConfirm
-                            ? FontAwesomeIcons.eye
-                            : FontAwesomeIcons.eyeSlash,
-                        size: 15.0,
-                        color: Colors.black,
-                      ),
+                  obscureText: _obscureTextSignup,
+                ),
+                CardDivider(width: width * kDividerRatio),
+                InputField(
+                  controller: _bloc.signupConfirmPasswordController,
+                  icon: FontAwesomeIcons.lock,
+                  hintText: "Confirmation",
+                  suffix: GestureDetector(
+                    onTap: _toggleSignupConfirm,
+                    child: Icon(
+                      _obscureTextSignupConfirm ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash,
+                      size: 15.0,
+                      color: Colors.black,
                     ),
-                    obscureText: _obscureTextSignupConfirm,
-                    bottomPadding: buttonHeight * 0.5,
                   ),
-                ],
-              ),
+                  obscureText: _obscureTextSignupConfirm,
+                  bottomPadding: buttonHeight * 0.5,
+                ),
+              ],
             ),
           ),
-          UglyButton(
-            text: "SIGNUP",
-            height: buttonHeight,
-            transform: Matrix4.translationValues(0.0, -buttonHeight * 0.5, 0.0),
-            onPressed: () async {
-              if (_familyNameController.text == "" ||
-                  _signupEmailController.text == "" ||
-                  _signupPasswordController.text == "" ||
-                  _signupConfirmPasswordController.text == "")
-                _snackBarService.showInSnackBar(_bloc.scaffoldKey, "Please fill all the fields");
-              else if (_signupPasswordController.text != _signupConfirmPasswordController.text)
-                _snackBarService.showInSnackBar(_bloc.scaffoldKey, "passwords do not match");
-              else {
-                _snackBarService.showInSnackBar(_bloc.scaffoldKey, "signing up");
-                final authUser = await _bloc.signUp(
-                  name: _familyNameController.text,
-                  email: _signupEmailController.text,
-                  password: _signupPasswordController.text,
-                );
-                Navigator.pop(context, authUser.uid);
-              }
-            },
-          ),
-        ],
-      ),
+        ),
+        UglyButton(
+          text: "SIGNUP",
+          height: buttonHeight,
+          transform: Matrix4.translationValues(0.0, -buttonHeight * 0.5, 0.0),
+          onPressed: () async {
+            if (_bloc.familyNameController.text == "" ||
+                _bloc.signupEmailController.text == "" ||
+                _bloc.signupPasswordController.text == "" ||
+                _bloc.signupConfirmPasswordController.text == "")
+              _snackBarService.showInSnackBar(_bloc.scaffoldKey, "Please fill all the fields");
+            else if (_bloc.signupPasswordController.text !=
+                _bloc.signupConfirmPasswordController.text)
+              _snackBarService.showInSnackBar(_bloc.scaffoldKey, "passwords do not match");
+            else {
+              _snackBarService.showInSnackBar(_bloc.scaffoldKey, "signing up");
+              final authUser = await _bloc.signUp(
+                name: _bloc.familyNameController.text,
+                email: _bloc.signupEmailController.text,
+                password: _bloc.signupPasswordController.text,
+              );
+              Navigator.pop(context, authUser.uid);
+            }
+          },
+        ),
+      ],
     );
   }
 

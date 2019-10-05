@@ -11,7 +11,16 @@ class SignInBloc {
   final _familyRepository = FamilyRepository();
   final _secureStorage = FlutterSecureStorage();
   final _snackBarService = SnackBarService();
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  ///  For recording the inputs in the text field:
+  final signInEmailController = TextEditingController();
+  final signInPasswordController = TextEditingController();
+  final signupEmailController = TextEditingController();
+  final signupPasswordController = TextEditingController();
+  final signupConfirmPasswordController = TextEditingController();
+  final familyNameController = TextEditingController();
 
   AuthUser authUser;
 

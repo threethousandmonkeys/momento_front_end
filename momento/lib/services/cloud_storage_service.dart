@@ -13,6 +13,12 @@ class CloudStorageService {
   }
 
   Future<dynamic> getPhoto(String path) async {
-    return await _cloudStorage.ref().child(path).getDownloadURL();
+    String url;
+    try {
+      url = await _cloudStorage.ref().child(path).getDownloadURL();
+    } catch (e) {
+      return null;
+    }
+    return url;
   }
 }

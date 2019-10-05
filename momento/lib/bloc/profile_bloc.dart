@@ -86,9 +86,14 @@ class ProfileBloc {
   Future<Null> _updateThumbnails() async {
     List<String> thumbnails = [];
     for (String artefactId in family.artefacts) {
-      thumbnails
-          .add(await _cloudStorageService.getPhoto("${family.id}/artefacts/original/$artefactId"));
+      String url =
+          await _cloudStorageService.getPhoto("${family.id}/artefacts/thumbnails/$artefactId");
+      if (url == null) {
+        url = await _cloudStorageService.getPhoto("${family.id}/artefacts/original/$artefactId");
+      }
+      thumbnails.add(url);
     }
+    print(thumbnails);
     _setThumbnails(thumbnails);
   }
 

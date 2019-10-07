@@ -5,28 +5,39 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'dart:ui';
 
 import 'package:momento/screens/profile_page/profile_page.dart';
+import 'package:momento/screens/signin_page/sign_in_page.dart';
+import 'package:momento/services/auth_service.dart';
+import 'package:provider/provider.dart';
+import 'package:mockito/mockito.dart';
+import 'package:momento/main.dart';
+
+//class MockAuthService extends Mock implements AuthBloc {}
 
 void main() {
-  testWidgets('', (WidgetTester tester) async {
-    ProfilePage landing = ProfilePage();
+  Widget makeTestableWidget({Widget child}) {
+    return ClipRect(
+      child: MaterialApp(
+        theme: ThemeData(
+          primarySwatch: Colors.purple,
+        ),
+        home: child,
+      ),
+    );
+  }
 
-    await tester.pumpWidget(landing);
-//    // Build our app and trigger a frame.
-//    await tester.pumpWidget(MyApp());
-//
-//    // Verify that our counter starts at 0.
-//    expect(find.text('0'), findsOneWidget);
-//    expect(find.text('1'), findsNothing);
-//
-//    // Tap the '+' icon and trigger a frame.
-//    await tester.tap(find.byIcon(Icons.add));
-//    await tester.pump();
-//
-//    // Verify that our counter has incremented.
-//    expect(find.text('0'), findsNothing);
-//    expect(find.text('1'), findsOneWidget);
+  testWidgets('email or password is empty, does not sign in',
+      (WidgetTester tester) async {
+    SignInPage signIn = SignInPage();
+//    MockAuthService mockAuth = MockAuthService();
+
+    await tester.pumpWidget(makeTestableWidget(child: signIn));
+//    final emailFind = find.text('description');
+//    expect(emailFind, findsOneWidget);
+    //await tester.tap(find.text("LOGIN"));
   });
 }

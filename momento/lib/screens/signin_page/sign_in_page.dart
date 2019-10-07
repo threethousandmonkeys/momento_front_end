@@ -1,7 +1,6 @@
 ///This file contains all the widgets required to build the login page
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:momento/constants.dart';
 import 'package:momento/screens/components/input_field.dart';
 import 'package:momento/screens/components/ugly_button.dart';
@@ -175,7 +174,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
               children: <Widget>[
                 InputField(
                   controller: _bloc.signInEmailController,
-                  icon: FontAwesomeIcons.solidEnvelope,
+                  icon: Icons.email,
                   hintText: "Email",
                   inputType: TextInputType.emailAddress,
                 ),
@@ -184,12 +183,12 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
                 ),
                 InputField(
                   controller: _bloc.signInPasswordController,
-                  icon: FontAwesomeIcons.lock,
+                  icon: Icons.lock,
                   hintText: "Password",
                   suffix: GestureDetector(
                     onTap: _toggleSignIn,
                     child: Icon(
-                      _obscureTextSignIn ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash,
+                      _obscureTextSignIn ? Icons.visibility : Icons.visibility_off,
                       size: 15.0,
                       color: Colors.black,
                     ),
@@ -264,25 +263,25 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
               children: <Widget>[
                 InputField(
                   controller: _bloc.familyNameController,
-                  icon: FontAwesomeIcons.user,
+                  icon: Icons.person,
                   hintText: "Family Name",
                 ),
                 CardDivider(width: width * kDividerRatio),
                 InputField(
                   controller: _bloc.signupEmailController,
-                  icon: FontAwesomeIcons.solidEnvelope,
+                  icon: Icons.email,
                   hintText: "Email",
                   inputType: TextInputType.emailAddress,
                 ),
                 CardDivider(width: width * kDividerRatio),
                 InputField(
                   controller: _bloc.signupPasswordController,
-                  icon: FontAwesomeIcons.lock,
+                  icon: Icons.lock,
                   hintText: "Password",
                   suffix: GestureDetector(
                     onTap: _toggleSignup,
                     child: Icon(
-                      _obscureTextSignup ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash,
+                      _obscureTextSignup ? Icons.visibility : Icons.visibility_off,
                       size: 15.0,
                       color: Colors.black,
                     ),
@@ -292,12 +291,12 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
                 CardDivider(width: width * kDividerRatio),
                 InputField(
                   controller: _bloc.signupConfirmPasswordController,
-                  icon: FontAwesomeIcons.lock,
+                  icon: Icons.lock,
                   hintText: "Confirmation",
                   suffix: GestureDetector(
                     onTap: _toggleSignupConfirm,
                     child: Icon(
-                      _obscureTextSignupConfirm ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash,
+                      _obscureTextSignupConfirm ? Icons.visibility : Icons.visibility_off,
                       size: 15.0,
                       color: Colors.black,
                     ),

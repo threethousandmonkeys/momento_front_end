@@ -9,10 +9,10 @@ class FamilyRepository {
       name: name,
       description: "This family is too lazy to write any description.",
       email: email,
+      photos: [],
       members: [],
       artefacts: [],
       events: [],
-      numPhotos: 0,
     );
     await _firestore.createDocumentById(
       "family",
@@ -63,12 +63,14 @@ class FamilyRepository {
     );
   }
 
-  Future<Null> addPhoto(Family family) async {
+  Future<Null> addPhoto(Family family, String photoId) async {
+    final newPhotos = List<String>.from(family.photos);
+    newPhotos.add(photoId);
     await _firestore.updateDocument(
       collection: "family",
       documentId: family.id,
-      field: "num_photos",
-      newData: family.numPhotos + 1,
+      field: "photos",
+      newData: newPhotos,
     );
   }
 

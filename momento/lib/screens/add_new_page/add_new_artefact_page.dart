@@ -5,6 +5,7 @@ import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
 import 'package:momento/screens/add_new_page/components/form_image_selector.dart';
 import 'package:momento/screens/components/ugly_button.dart';
+import 'package:momento/services/dialogs.dart';
 import 'components/form_drop_down_field.dart';
 import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
@@ -19,6 +20,7 @@ class AddNewArtefactPage extends StatefulWidget {
 
 class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
   AddNewArtefactBloc _bloc;
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
   @override
   void initState() {
@@ -116,8 +118,10 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
                       onPressed: () async {
                         final validation = _bloc.validate();
                         if (validation == "") {
-                          final newArtefactId = await _bloc.addNewArtefact(widget.family);
-                          Navigator.pop(context, newArtefactId);
+                          Dialogs.showLoadingDialog(context, _keyLoader);
+                          final newArtefact = await _bloc.addNewArtefact(widget.family);
+                          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+                          Navigator.pop(context, newArtefact);
                         } else {
                           print(validation);
                         }

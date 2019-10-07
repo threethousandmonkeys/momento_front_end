@@ -27,7 +27,7 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
     super.initState();
   }
 
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +137,7 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                       text: "Cancel",
                       height: 10,
                       onPressed: () {
-                        Navigator.pop(context);
+                        Navigator.pop(context, null);
                       },
                     ),
                     UglyButton(
@@ -146,14 +146,10 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                       onPressed: () async {
                         final validation = _bloc.validate();
                         if (validation == "") {
-                          try {
-                            Dialogs.showLoadingDialog(context, _keyLoader);
-                            final newMember = await _bloc.addNewMember(widget.family);
-                            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-                            Navigator.pop(context, newMember);
-                          } catch (error) {
-                            print(error);
-                          }
+                          Dialogs.showLoadingDialog(context, _keyLoader);
+                          final newMember = await _bloc.addNewMember(widget.family);
+                          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+                          Navigator.pop(context, newMember);
                         } else {
                           print(validation);
                         }

@@ -28,6 +28,7 @@ class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAli
           padding: EdgeInsets.only(top: 0),
           crossAxisCount: 3,
           crossAxisSpacing: 1,
+          mainAxisSpacing: 1,
           children: _buildGrids(snapshot.data),
         );
       },
@@ -56,14 +57,14 @@ class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAli
           ),
         ),
         onTap: () async {
-          final newArtefactId = await Navigator.push(
+          final newArtefact = await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => AddNewArtefactPage(_bloc.family, _bloc.getLatestMembers),
             ),
           );
-          if (newArtefactId != null) {
-            _bloc.addArtefact(newArtefactId);
+          if (newArtefact != null) {
+            _bloc.addArtefact(newArtefact);
           }
         },
       ),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:momento/models/artefact.dart';
 import 'package:momento/models/event.dart';
 import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
@@ -27,7 +28,7 @@ class ProfileBloc {
 
   Family family;
 
-  Future<Null> _getFamily(String uid) async {
+  Future<Null> _getFamily() async {
     family = await _familyRepository.getFamily(uid);
   }
 
@@ -46,29 +47,33 @@ class ProfileBloc {
   Stream<List<String>> get getPhotos => _photosController.stream;
 
   Future<Null> uploadPhoto(File photo) async {
-    String fileName = family.numPhotos.toString();
-    await _cloudStorageService.uploadPhotoAt("${family.id}/photos/original/", fileName, photo);
-    _familyRepository.addPhoto(family);
+    // upload photo
+    String id = DateTime.now().millisecondsSinceEpoch.toString();
+    await _cloudStorageService.uploadPhotoAt("${family.id}/photos/original/", id, photo);
+    // update the database entry
+    _familyRepository.addPhoto(family, id);
+    // update locally
     List<String> photos = List.from(_photosController.value);
-    photos.add(await _cloudStorageService
-        .getPhoto("${family.id}/photos/original/${family.numPhotos}.jpg"));
+    photos.add(await _cloudStorageService.getPhoto("${family.id}/photos/original/$id.jpg"));
     _setPhotos(photos);
-    family.numPhotos++;
+    family.photos.add(id);
   }
 
   Future<Null> _updatePhotos() async {
+    if (family.photos.length == 0) {
+      _setPhotos([]);
+      return;
+    }
     List<String> photos = [];
     String url;
-    for (int i = 0; i < family.numPhotos; i++) {
-      url =
-          await _cloudStorageService.getPhoto("${family.id}/photos/thumbnails/${i.toString()}.jpg");
+    for (String id in family.photos) {
+      url = await _cloudStorageService.getPhoto("${family.id}/photos/thumbnails/$id.jpg");
       if (url == null) {
-        url =
-            await _cloudStorageService.getPhoto("${family.id}/photos/original/${i.toString()}.jpg");
+        url = await _cloudStorageService.getPhoto("${family.id}/photos/original/$id.jpg");
       }
       photos.add(url);
+      _setPhotos(photos);
     }
-    _setPhotos(photos);
   }
 
   final _membersController = BehaviorSubject<List<Member>>();
@@ -76,14 +81,14 @@ class ProfileBloc {
   Stream<List<Member>> get getMembers => _membersController.stream;
   List<Member> get getLatestMembers => _membersController.value;
 
-  Future<Null> addMember(Member member) async {
+  void addMember(Member member) {
+    family.members.add(member.id);
     List<Member> members = List.from(_membersController.value);
     members.add(member);
-    family.members.add(member.id);
     _setMembers(members);
   }
 
-  Future<Null> updateMembers() async {
+  Future<Null> _updateMembers() async {
     final members = await _memberRepository.getFamilyMembers(family);
     _setMembers(members);
   }
@@ -96,55 +101,67 @@ class ProfileBloc {
     List<String> thumbnails = [];
     for (String artefactId in family.artefacts) {
       String url =
-          await _cloudStorageService.getPhoto("${family.id}/artefacts/thumbnails/$artefactId");
+          await _cloudStorageService.getPhoto("${family.id}/artefacts/thumbnails/$artefactId.jpg");
       if (url == null) {
-        url = await _cloudStorageService.getPhoto("${family.id}/artefacts/original/$artefactId");
+        url =
+            await _cloudStorageService.getPhoto("${family.id}/artefacts/original/$artefactId.jpg");
       }
       thumbnails.add(url);
     }
-    print(thumbnails);
     _setThumbnails(thumbnails);
   }
 
-  Future<Null> addArtefact(String artefactId) async {
-    family.members.add(artefactId);
-    List<String> thumbnails = List<String>.from(_thumbnailsController.value);
-    String url =
-        await _cloudStorageService.getPhoto("${family.id}/artefacts/thumbnails/$artefactId");
-    if (url == null) {
-      url = await _cloudStorageService.getPhoto("${family.id}/artefacts/original/$artefactId");
-    }
-    thumbnails.add(url);
-    _setThumbnails(thumbnails);
+  Future<Null> addArtefact(Artefact artefact) async {
+    family.artefacts.add(artefact.id);
+    List<String> newThumbnails = List<String>.from(_thumbnailsController.value);
+    newThumbnails.add(
+        await _cloudStorageService.getPhoto("${family.id}/artefacts/original/${artefact.id}.jpg"));
+    _setThumbnails(newThumbnails);
   }
 
   final _eventsController = BehaviorSubject<List<Event>>();
   Function(List<Event>) get _setEvents => _eventsController.add;
   Stream<List<Event>> get getEvents => _eventsController.stream;
 
-  Future<Null> updateEvents() async {
+  void addEvent(Event newEvent) {
+    // update locally
+    family.events.add(newEvent.id);
+    List<Event> newEvents = List<Event>.from(_eventsController.value);
+    newEvents.add(newEvent);
+    _setEvents(newEvents);
+  }
+
+  Future<Null> _updateEvents() async {
     List<Future<Event>> futureEvents =
         family.events.map((id) => _eventRepository.getEventById(id)).toList();
     List<Event> events = await Future.wait(futureEvents);
     _setEvents(events);
   }
 
+  // close sinks
+  void close() {
+    _photosController.close();
+    _thumbnailsController.close();
+    _descriptionController.close();
+    _membersController.close();
+    _eventsController.close();
+  }
+
   /// check if user logged in before, if not, push login page
   /// then read user's family name and description
   Future<Null> init(BuildContext context) async {
-    uid = await _authenticate(context);
+    await _authenticate(context);
     name = await _secureStorage.read(key: "familyName");
-
-    _getFamily(uid)
-        .then((_) => _setDescription(family.description))
-        .then((_) => _updatePhotos())
-        .then((_) => updateMembers())
-        .then((_) => _updateThumbnails())
-        .then((_) => updateEvents());
+    _getFamily().then((_) {
+      _setDescription(family.description);
+      _updatePhotos();
+      _updateMembers();
+      _updateThumbnails();
+      _updateEvents();
+    });
   }
 
-  Future<String> _authenticate(BuildContext context) async {
-    String uid;
+  Future<Null> _authenticate(BuildContext context) async {
     uid = await _secureStorage.read(key: "uid");
     if (uid == null) {
       uid = await Navigator.push(
@@ -155,7 +172,6 @@ class ProfileBloc {
         ),
       );
     }
-    return uid;
   }
 
   Future<Null> signOut() async {

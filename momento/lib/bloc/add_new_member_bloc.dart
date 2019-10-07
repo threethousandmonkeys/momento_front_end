@@ -64,6 +64,7 @@ class AddNewMemberBloc {
     final memberId = await _memberRepository.createMember(newMember);
     await _cloudStorageService.uploadPhotoAt("${family.id}/members/original/", memberId, photo);
     await _familyRepository.addMember(family, memberId);
+    newMember.id = memberId;
     return newMember;
   }
 

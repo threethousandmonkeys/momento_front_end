@@ -17,45 +17,42 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
     if (_bloc == null) {
       _bloc = Provider.of<ProfileBloc>(context);
     }
-    return Container(
-      height: 500,
-      child: StreamBuilder<List<Event>>(
-          stream: _bloc.getEvents,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.active) {
-              return Container(
-                height: MediaQuery.of(context).size.height,
-                child: Column(
-                  children: <Widget>[
-                    Column(
-                      children: snapshot.data.map((event) => Text(event.name)).toList(),
+    return StreamBuilder<List<Event>>(
+        stream: _bloc.getEvents,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
+            return Container(
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                children: <Widget>[
+                  Column(
+                    children: snapshot.data.map((event) => Text(event.name)).toList(),
+                  ),
+                  GestureDetector(
+                    onTap: () async {
+                      final newEvent = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              AddNewEventPage(_bloc.family, _bloc.getLatestMembers),
+                        ),
+                      );
+                      if (newEvent != null) {
+                        _bloc.addEvent(newEvent);
+                      }
+                    },
+                    child: Icon(
+                      Icons.add_circle_outline,
+                      size: 50,
                     ),
-                    GestureDetector(
-                      onTap: () async {
-                        final result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddNewEventPage(),
-                          ),
-                        );
-                        if (result != null) {
-                          print(result.events.toString());
-                          _bloc.updateEvents();
-                        }
-                      },
-                      child: Icon(
-                        Icons.add_circle_outline,
-                        size: 50,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            } else {
-              return Scaffold();
-            }
-          }),
-    );
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return Scaffold();
+          }
+        });
   }
 
   @override

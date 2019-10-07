@@ -11,6 +11,8 @@ import 'package:momento/screens/profile_page/artefact_gallery.dart';
 import 'package:momento/screens/profile_page/family_tree.dart';
 import 'package:momento/screens/profile_page/time_line.dart';
 import 'package:momento/services/dialogs.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 /// ProfilePage: the widget of family profile page(home page)
 class ProfilePage extends StatefulWidget {
@@ -21,9 +23,8 @@ class ProfilePage extends StatefulWidget {
 /// _ProfilePageState: the state control of family profile page
 class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
   final _bloc = ProfileBloc();
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
-  int _tabIndex = 0;
   TabController _tabController;
   Future<Null> _futureProfile;
 
@@ -47,16 +48,30 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
   }
 
   void _handleTabChange() {
-    if (_tabIndex == 2) {
-      _tabHeight = (_width / 3) * (_bloc.family.artefacts.length + 1 / 3).ceil();
+    // avoid vertical overflow while changing
+    if (_tabController.indexIsChanging) {
+      setState(() {
+        _tabHeight = _height;
+      });
+      return;
+    }
+    // calculate suitable height
+    if (_tabController.index == 1) {
+      setState(() {
+        int numLines = ((_bloc.family.artefacts.length + 1) / 3).ceil();
+        _tabHeight = ((_width - 2) / 3) * numLines + (numLines - 1);
+      });
     } else {
-      _tabHeight = _height - 100;
+      setState(() {
+        _tabHeight = _height - 42;
+      });
     }
   }
 
   /// build function of profile_page widget
   @override
   Widget build(BuildContext context) {
+    // get device dimensions
     if (_width == null || _height == null) {
       _width = MediaQuery.of(context).size.width;
       _height = MediaQuery.of(context).size.height;
@@ -94,67 +109,67 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                     height: _height * (1 - kGoldenRatio),
                     color: Colors.black,
                   );
-                }
-                return Container(
-                  color: Colors.black,
-                  child: CarouselSlider(
-                    height: _height * (1 - kGoldenRatio),
-                    enableInfiniteScroll: false,
-                    viewportFraction: 1.0,
-                    items: snapshot.data
-                            .map(
-                              (url) => FractionallySizedBox(
-                                heightFactor: 1,
-                                widthFactor: 1,
-                                child: FadeInImage.assetNetwork(
-                                  image: url,
-                                  placeholder: "assets/images/loading_image.gif",
+                } else {
+                  return Container(
+                    color: Colors.black,
+                    child: CarouselSlider(
+                      height: _height * (1 - kGoldenRatio),
+                      enableInfiniteScroll: false,
+                      viewportFraction: 1.0,
+                      items: snapshot.data
+                              .map(
+                                (url) => FractionallySizedBox(
+                                  heightFactor: 1,
+                                  widthFactor: 1,
+                                  child: CachedNetworkImage(
+                                    imageUrl: url,
+                                    placeholder: (context, url) => SpinKitCircle(
+                                      color: Colors.purple,
+                                    ),
+                                    errorWidget: (context, url, error) => Icon(Icons.error),
+                                  ),
                                 ),
-                              ),
-                            )
-                            .toList() +
-                        [
-                          FractionallySizedBox(
-                            widthFactor: 1,
-                            heightFactor: 1,
-                            child: GestureDetector(
-                              behavior: HitTestBehavior.translucent,
-                              onTap: () async {
-                                selectedUpload =
-                                    await ImagePicker.pickImage(source: ImageSource.gallery);
-                                if (selectedUpload != null) {
-                                  setState(() {});
-                                  try {
+                              )
+                              .toList() +
+                          [
+                            FractionallySizedBox(
+                              widthFactor: 1,
+                              heightFactor: 1,
+                              child: GestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                onTap: () async {
+                                  selectedUpload =
+                                      await ImagePicker.pickImage(source: ImageSource.gallery);
+                                  if (selectedUpload != null) {
+                                    setState(() {});
                                     Dialogs.showLoadingDialog(context, _keyLoader);
                                     await _bloc.uploadPhoto(selectedUpload);
                                     selectedUpload = null;
                                     Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                                         .pop();
-                                  } catch (error) {
-                                    print(error);
                                   }
-                                }
-                              },
-                              child: Stack(
-                                alignment: AlignmentDirectional.center,
-                                children: <Widget>[
-                                  Image(
-                                    image: selectedUpload == null
-                                        ? AssetImage("assets/images/login_logo.png")
-                                        : FileImage(selectedUpload),
-                                  ),
-                                  Icon(
-                                    Icons.add,
-                                    size: selectedUpload == null ? 100 : 0,
-                                    color: Colors.white,
-                                  )
-                                ],
+                                },
+                                child: Stack(
+                                  alignment: AlignmentDirectional.center,
+                                  children: <Widget>[
+                                    Image(
+                                      image: selectedUpload == null
+                                          ? AssetImage("assets/images/login_logo.png")
+                                          : FileImage(selectedUpload),
+                                    ),
+                                    Icon(
+                                      Icons.add,
+                                      size: selectedUpload == null ? 100 : 0,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                  ),
-                );
+                          ],
+                    ),
+                  );
+                }
               },
             ),
 
@@ -172,10 +187,10 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
             /// family description display
             StreamBuilder<String>(
               stream: _bloc.getDescription,
-              initialData: "Loading...",
+              initialData: "",
               builder: (context, snapshot) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
                   child: GestureDetector(
                     onTap: () async {
                       final newDescription = await showDialog(
@@ -226,6 +241,16 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
               },
             ),
 
+            /// logout button (testing only)
+            UglyButton(
+              text: "LOG OUT",
+              height: 10,
+              onPressed: () async {
+                await _bloc.signOut();
+                _futureProfile = _bloc.init(context);
+              },
+            ),
+
             /// tab to switch among 3 main components
             Container(
               color: Colors.white24,
@@ -254,18 +279,6 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                   ],
                 ),
               ),
-            ),
-
-            /// logout button (testing only)
-            UglyButton(
-              text: "LOG OUT",
-              height: 10,
-              onPressed: () async {
-                await _bloc.signOut();
-                setState(() {
-                  _futureProfile = _bloc.init(context);
-                });
-              },
             ),
           ],
         ),

@@ -4,20 +4,20 @@ class Family {
   String name;
   String description;
   String email;
+  List<String> photos;
   List<String> members;
   List<String> artefacts;
   List<String> events;
-  int numPhotos;
 
   Family({
     this.id,
     this.name,
     this.description,
     this.email,
+    this.photos,
     this.members,
     this.artefacts,
     this.events,
-    this.numPhotos,
   });
 
   static Family parseFamily(String familyId, Map<String, dynamic> jsonFamily) {
@@ -26,10 +26,10 @@ class Family {
       name: jsonFamily["name"],
       description: jsonFamily["description"],
       email: jsonFamily["email"],
+      photos: List<String>.from(jsonFamily["photos"]),
       members: List<String>.from(jsonFamily["members"]),
       artefacts: List<String>.from(jsonFamily["artefacts"]),
       events: List<String>.from(jsonFamily["events"]),
-      numPhotos: jsonFamily["num_photos"],
     );
   }
 
@@ -41,7 +41,7 @@ class Family {
       "members": this.members,
       "artefacts": this.artefacts,
       "events": this.events,
-      "num_photos": this.numPhotos,
+      "photos": this.photos,
     };
   }
 }

@@ -30,7 +30,7 @@ class AddNewEventBloc {
     return "";
   }
 
-  Future<Family> addNewEvent(Family family) async {
+  Future<Event> addNewEvent(Family family) async {
     /// upload photo to cloud, return a retrieval path
     Event newEvent = Event(
       id: null,
@@ -41,7 +41,7 @@ class AddNewEventBloc {
     final eventId = await _eventRepository.createEvent(newEvent);
     await _cloudStorageService.uploadPhotoAt("${family.id}/events/original/", eventId, photo);
     await _familyRepository.addEvent(family, eventId);
-    family.events.add(eventId);
-    return family;
+    newEvent.id = eventId;
+    return newEvent;
   }
 }

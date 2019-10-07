@@ -27,6 +27,12 @@ class AddNewEventBloc {
     if (date == null) {
       return "date";
     }
+    if (participants.length == 0) {
+      return "participants";
+    }
+    if (photo == null) {
+      return "photo";
+    }
     return "";
   }
 

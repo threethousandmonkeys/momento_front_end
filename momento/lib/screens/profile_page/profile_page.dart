@@ -35,9 +35,9 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
   // initializations
   @override
   void initState() {
+    _futureProfile = _bloc.init(context);
     _tabController = TabController(vsync: this, length: 3);
     _tabController.addListener(_handleTabChange);
-    _futureProfile = _bloc.init(context);
     super.initState();
   }
 
@@ -211,7 +211,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                               FlatButton(
                                 child: Text("CANCEL"),
                                 onPressed: () {
-                                  Navigator.pop(context, descriptionController.text);
+                                  Navigator.pop(context, null);
                                 },
                               ),
                               FlatButton(
@@ -224,7 +224,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                           );
                         },
                       );
-                      if (newDescription != snapshot.data) {
+                      if (newDescription != null && newDescription != snapshot.data) {
                         _bloc.updateDescription(newDescription);
                       }
                     },

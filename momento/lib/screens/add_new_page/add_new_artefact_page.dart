@@ -6,6 +6,7 @@ import 'package:momento/models/member.dart';
 import 'package:momento/screens/add_new_page/components/form_image_selector.dart';
 import 'package:momento/screens/components/ugly_button.dart';
 import 'package:momento/services/dialogs.dart';
+import 'package:momento/services/snack_bar_service.dart';
 import 'components/form_drop_down_field.dart';
 import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
@@ -21,6 +22,8 @@ class AddNewArtefactPage extends StatefulWidget {
 class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
   AddNewArtefactBloc _bloc;
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final _snackBarService = SnackBarService();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -32,6 +35,7 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
   Widget build(BuildContext context) {
     double horizontalPadding = MediaQuery.of(context).size.width * 0.1;
     return Scaffold(
+      key: _scaffoldKey,
       body: Container(
         decoration: kBackgroundDecoration,
         child: Padding(
@@ -123,7 +127,8 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
                           Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
                           Navigator.pop(context, newArtefact);
                         } else {
-                          print(validation);
+                          _snackBarService.showInSnackBar(
+                              _scaffoldKey, "Please provide $validation");
                         }
                       },
                     )

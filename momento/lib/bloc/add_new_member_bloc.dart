@@ -45,6 +45,9 @@ class AddNewMemberBloc {
     if (birthday == null) {
       return "birthday";
     }
+    if (photo == null) {
+      return "photo";
+    }
     return "";
   }
 

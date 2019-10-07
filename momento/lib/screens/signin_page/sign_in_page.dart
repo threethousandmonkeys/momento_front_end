@@ -84,8 +84,8 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
   /// Before build the widget, init it. <flutter lifecycle>
   @override
   void initState() {
-    super.initState();
     _pageController = PageController();
+    super.initState();
   }
 
   /// After build the widget, dispose it. <flutter lifecycle>

@@ -27,8 +27,6 @@ class UpdateArtefactBloc {
 
   Future<Artefact> updateArtefact(Family family) async {
     // update photo
-    String photoUrl = artefact.photo;
-    String thumbnailUrl = artefact.thumbnail;
     if (photo != null) {
       // delete old photo
       _cloudStorageService.deletePhoto(artefact.photo);
@@ -37,21 +35,11 @@ class UpdateArtefactBloc {
       }
       // upload new photo
       final fileName = "artefact_${DateTime.now().millisecondsSinceEpoch}";
-      photoUrl = await _cloudStorageService.uploadPhotoAt("${family.id}/", fileName, photo);
-      thumbnailUrl = null;
+      artefact.photo = await _cloudStorageService.uploadPhotoAt("${family.id}/", fileName, photo);
+      artefact.thumbnail = null;
     }
 
-    Artefact newArtefact = Artefact(
-      id: artefact.id,
-      name: artefact.name,
-      dateCreated: artefact.dateCreated,
-      originalOwnerId: artefact.originalOwnerId,
-      currentOwnerId: artefact.currentOwnerId,
-      description: artefact.description,
-      photo: photoUrl,
-      thumbnail: thumbnailUrl,
-    );
-    await _artefactRepository.updateArtefact(newArtefact);
-    return newArtefact;
+    await _artefactRepository.updateArtefact(artefact);
+    return artefact;
   }
 }

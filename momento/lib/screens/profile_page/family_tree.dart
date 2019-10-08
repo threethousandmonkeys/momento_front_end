@@ -3,6 +3,7 @@ import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/models/member.dart';
 import 'package:momento/screens/form_pages//add_new_member_page.dart';
 import 'package:momento/screens/components/loading_page.dart';
+import 'package:momento/screens/form_pages/update_member_page.dart';
 import 'package:provider/provider.dart';
 
 /// FamilyTree: the widget to build family tree
@@ -28,9 +29,23 @@ class _FamilyTreeState extends State<FamilyTree> {
               children: <Widget>[
                 Column(
                   children: snapshot.data.map((member) {
-                    return Text(
-                      member.firstName,
-                      style: TextStyle(fontSize: 30),
+                    return GestureDetector(
+                      onTap: () async {
+                        final updatedMember = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                UpdateMemberPage(_bloc.family, member, _bloc.getLatestMembers),
+                          ),
+                        );
+                        if (updatedMember != null) {
+                          _bloc.updateMember(updatedMember);
+                        }
+                      },
+                      child: Text(
+                        member.firstName,
+                        style: TextStyle(fontSize: 30),
+                      ),
                     );
                   }).toList(),
                 ),

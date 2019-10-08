@@ -72,9 +72,20 @@ class ProfileBloc {
     _setMembers(members);
   }
 
-  Future<Null> _updateMembers() async {
+  Future<Null> _getMembers() async {
     final members = await _memberRepository.getFamilyMembers(family);
     _setMembers(members);
+  }
+
+  void updateMember(Member updatedMember) {
+    // update locally
+    final newMembers = List<Member>.from(_membersController.value);
+    final index = newMembers.indexWhere((member) {
+      return member.id == updatedMember.id;
+    });
+    newMembers.removeAt(index);
+    newMembers.insert(index, updatedMember);
+    _setMembers(newMembers);
   }
 
   final _artefactsController = BehaviorSubject<List<Artefact>>();
@@ -156,7 +167,7 @@ class ProfileBloc {
       _setDescription(family.description);
       _setPhotos(family.photos);
       _getArtefacts();
-      _updateMembers();
+      _getMembers();
       _getEvents();
     });
   }

@@ -35,7 +35,13 @@ class MemberRepository {
     return members;
   }
 
-  void updateMember(String memberId, Member member) {}
+  Future<Null> updateMember(Member member) async {
+    await _firestore.updateDocument(
+      collection: "member",
+      documentId: member.id,
+      newData: member.serialize(),
+    );
+  }
 
   void deleteMember(String memberId) {}
 }

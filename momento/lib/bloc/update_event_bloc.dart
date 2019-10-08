@@ -30,8 +30,6 @@ class UpdateEventBloc {
 
   Future<Event> updateEvent(Family family) async {
     // update photo
-    String photoUrl = event.photo;
-    String thumbnailUrl = event.thumbnail;
     if (photo != null) {
       // delete old photo
       _cloudStorageService.deletePhoto(event.photo);
@@ -40,20 +38,11 @@ class UpdateEventBloc {
       }
       // upload new photo
       final fileName = "event_${DateTime.now().millisecondsSinceEpoch}";
-      photoUrl = await _cloudStorageService.uploadPhotoAt("${family.id}/", fileName, photo);
-      thumbnailUrl = null;
+      event.photo = await _cloudStorageService.uploadPhotoAt("${family.id}/", fileName, photo);
+      event.thumbnail = null;
     }
 
-    Event newEvent = Event(
-      id: event.id,
-      name: event.name,
-      date: event.date,
-      participants: event.participants,
-      description: event.description,
-      photo: photoUrl,
-      thumbnail: thumbnailUrl,
-    );
-    await _eventRepository.updateEvent(newEvent);
-    return newEvent;
+    await _eventRepository.updateEvent(event);
+    return event;
   }
 }

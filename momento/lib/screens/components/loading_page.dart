@@ -8,7 +8,7 @@ class LoadingPage extends StatelessWidget {
     return Container(
       decoration: kBackgroundDecoration,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+        padding: EdgeInsets.symmetric(horizontal: 30.0),
         child: Center(
           child: Image(
             image: AssetImage(

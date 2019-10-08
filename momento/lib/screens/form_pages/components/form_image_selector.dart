@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'constants.dart';
@@ -7,7 +5,7 @@ import 'constants.dart';
 class ImageSelector extends StatefulWidget {
   final ImageProvider defaultImage;
   final Function onChange;
-  File selected;
+  final selected;
   ImageSelector({
     @required this.defaultImage,
     this.onChange,
@@ -38,9 +36,6 @@ class _ImageSelectorState extends State<ImageSelector> {
                       onTap: () async {
                         final file = await ImagePicker.pickImage(source: ImageSource.gallery);
                         if (file != null) {
-                          setState(() {
-                            widget.selected = file;
-                          });
                           widget.onChange(file);
                         }
                       },
@@ -53,9 +48,6 @@ class _ImageSelectorState extends State<ImageSelector> {
                       onTap: () async {
                         final file = await ImagePicker.pickImage(source: ImageSource.camera);
                         if (file != null) {
-                          setState(() {
-                            widget.selected = file;
-                          });
                           widget.onChange(file);
                         }
                       },

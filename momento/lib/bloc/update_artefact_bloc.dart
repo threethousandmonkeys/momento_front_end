@@ -3,13 +3,11 @@ import 'dart:io';
 import 'package:momento/models/artefact.dart';
 import 'package:momento/models/family.dart';
 import 'package:momento/repositories/artefact_repository.dart';
-import 'package:momento/repositories/family_repository.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 
 class UpdateArtefactBloc {
   final _artefactRepository = ArtefactRepository();
   final _cloudStorageService = CloudStorageService();
-  final _familyRepository = FamilyRepository();
 
   Artefact artefact;
 

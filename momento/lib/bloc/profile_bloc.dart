@@ -120,11 +120,22 @@ class ProfileBloc {
     _setEvents(newEvents);
   }
 
-  Future<Null> _updateEvents() async {
+  Future<Null> _getEvents() async {
     List<Future<Event>> futureEvents =
         family.events.map((id) => _eventRepository.getEventById(id)).toList();
     List<Event> events = await Future.wait(futureEvents);
     _setEvents(events);
+  }
+
+  void updateEvent(Event updatedEvent) {
+    // update locally
+    final newEvents = List<Event>.from(_eventsController.value);
+    final index = newEvents.indexWhere((event) {
+      return event.id == updatedEvent.id;
+    });
+    newEvents.removeAt(index);
+    newEvents.insert(index, updatedEvent);
+    _setEvents(newEvents);
   }
 
   // close sinks
@@ -146,7 +157,7 @@ class ProfileBloc {
       _setPhotos(family.photos);
       _getArtefacts();
       _updateMembers();
-      _updateEvents();
+      _getEvents();
     });
   }
 

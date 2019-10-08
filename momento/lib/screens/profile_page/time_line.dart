@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/models/event.dart';
 import 'package:momento/screens/form_pages//add_new_event_page.dart';
+import 'package:momento/screens/form_pages/update_event_page.dart';
 import 'package:provider/provider.dart';
-import 'package:timeline_list/timeline.dart';
 import 'package:timeline_list/timeline_model.dart';
 
 class TimeLine extends StatefulWidget {
@@ -44,7 +44,26 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
               child: Column(
                 children: <Widget>[
                   Column(
-                    children: snapshot.data.map((event) => Text(event.name)).toList(),
+                    children: snapshot.data
+                        .map((event) => GestureDetector(
+                              onTap: () async {
+                                final updatedEvent = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => UpdateEventPage(
+                                        _bloc.family, event, _bloc.getLatestMembers),
+                                  ),
+                                );
+                                if (updatedEvent != null) {
+                                  _bloc.updateEvent(updatedEvent);
+                                }
+                              },
+                              child: Text(
+                                event.name,
+                                style: TextStyle(fontSize: 40),
+                              ),
+                            ))
+                        .toList(),
                   ),
                   GestureDetector(
                     onTap: () async {

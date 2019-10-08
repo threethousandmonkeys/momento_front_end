@@ -44,6 +44,7 @@ class AddNewEventBloc {
       name: name,
       date: date,
       description: description,
+      participants: participants,
       photo: url,
       thumbnail: null,
     );

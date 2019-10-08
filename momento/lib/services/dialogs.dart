@@ -15,9 +15,15 @@ class Dialogs {
             children: <Widget>[
               Center(
                 child: Column(children: [
+                  SizedBox(
+                    height: 27,
+                  ),
                   SpinKitPumpingHeart(
                     color: Colors.purple,
                     size: 128,
+                  ),
+                  SizedBox(
+                    height: 27,
                   ),
                 ]),
               )

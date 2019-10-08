@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/models/event.dart';
-import 'package:momento/screens/form_pages//add_new_event_page.dart';
-import 'package:momento/screens/form_pages/update_event_page.dart';
+import 'package:momento/screens/add_new_page/add_new_event_page.dart';
 import 'package:provider/provider.dart';
+import 'package:timeline_list/timeline.dart';
 import 'package:timeline_list/timeline_model.dart';
 
 class TimeLine extends StatefulWidget {
@@ -11,7 +11,8 @@ class TimeLine extends StatefulWidget {
   _TimeLineState createState() => _TimeLineState();
 }
 
-class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin {
+class _TimeLineState extends State<TimeLine>
+    with AutomaticKeepAliveClientMixin {
   ProfileBloc _bloc;
 
   List<TimelineModel> items = [
@@ -29,6 +30,25 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
         icon: Icon(Icons.blur_circular)),
   ];
 
+  List<TimelineModel> createTimelineModels(List<Event> events) {
+    TimelineItemPosition position = TimelineItemPosition.right;
+
+    events.sort((a, b) => a.date.compareTo(b.date));
+    List<TimelineModel> timelineModels = [];
+    for (var i = 0; i < events.length; i++) {
+      timelineModels.add(TimelineModel(Text(events[i].name),
+          position: position,
+          iconBackground: Colors.redAccent,
+          icon: Icon(Icons.star)));
+      if (position == TimelineItemPosition.right) {
+        position = TimelineItemPosition.left;
+      } else {
+        position = TimelineItemPosition.right;
+      }
+    }
+    return timelineModels;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_bloc == null) {
@@ -39,39 +59,18 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
         stream: _bloc.getEvents,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
+//            return Timeline(children: items, position: TimelinePosition.Center);
             return Container(
               height: MediaQuery.of(context).size.height,
               child: Column(
                 children: <Widget>[
-                  Column(
-                    children: snapshot.data
-                        .map((event) => GestureDetector(
-                              onTap: () async {
-                                final updatedEvent = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => UpdateEventPage(
-                                        _bloc.family, event, _bloc.getLatestMembers),
-                                  ),
-                                );
-                                if (updatedEvent != null) {
-                                  _bloc.updateEvent(updatedEvent);
-                                }
-                              },
-                              child: Text(
-                                event.name,
-                                style: TextStyle(fontSize: 40),
-                              ),
-                            ))
-                        .toList(),
-                  ),
                   GestureDetector(
                     onTap: () async {
                       final newEvent = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              AddNewEventPage(_bloc.family, _bloc.getLatestMembers),
+                          builder: (context) => AddNewEventPage(
+                              _bloc.family, _bloc.getLatestMembers),
                         ),
                       );
                       if (newEvent != null) {
@@ -83,8 +82,39 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
                       size: 50,
                     ),
                   ),
+                  Flexible(
+                    child: Timeline(
+                        children: createTimelineModels(snapshot.data),
+                        position: TimelinePosition.Center),
+                  ),
                 ],
               ),
+//              child: Column(
+//                children: <Widget>[
+//                  Column(
+//                    children:
+//                        snapshot.data.map((event) => Text(event.name)).toList(),
+//                  ),
+//                  GestureDetector(
+//                    onTap: () async {
+//                      final newEvent = await Navigator.push(
+//                        context,
+//                        MaterialPageRoute(
+//                          builder: (context) => AddNewEventPage(
+//                              _bloc.family, _bloc.getLatestMembers),
+//                        ),
+//                      );
+//                      if (newEvent != null) {
+//                        _bloc.addEvent(newEvent);
+//                      }
+//                    },
+//                    child: Icon(
+//                      Icons.add_circle_outline,
+//                      size: 50,
+//                    ),
+//                  ),
+//                ],
+//              ),
             );
           } else {
             return Scaffold();

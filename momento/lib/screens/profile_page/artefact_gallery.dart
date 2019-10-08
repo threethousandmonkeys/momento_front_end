@@ -12,7 +12,8 @@ class ArtefactGallery extends StatefulWidget {
   _ArtefactGalleryState createState() => _ArtefactGalleryState();
 }
 
-class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAliveClientMixin {
+class _ArtefactGalleryState extends State<ArtefactGallery>
+    with AutomaticKeepAliveClientMixin {
   ProfileBloc _bloc;
 
   @override
@@ -45,8 +46,8 @@ class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAli
               final updatedArtefact = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      UpdateArtefactPage(_bloc.family, artefact, _bloc.getLatestMembers),
+                  builder: (context) => UpdateArtefactPage(
+                      _bloc.family, artefact, _bloc.getLatestMembers),
                 ),
               );
               if (updatedArtefact != null) {
@@ -74,7 +75,8 @@ class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAli
           final newArtefact = await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddNewArtefactPage(_bloc.family, _bloc.getLatestMembers),
+              builder: (context) =>
+                  AddNewArtefactPage(_bloc.family, _bloc.getLatestMembers),
             ),
           );
           if (newArtefact != null) {

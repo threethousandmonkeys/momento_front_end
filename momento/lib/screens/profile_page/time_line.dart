@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/models/event.dart';
-import 'package:momento/screens/add_new_page/add_new_event_page.dart';
+import 'package:momento/screens/form_pages/add_new_event_page.dart';
 import 'package:provider/provider.dart';
 import 'package:timeline_list/timeline.dart';
 import 'package:timeline_list/timeline_model.dart';
@@ -36,7 +36,26 @@ class _TimeLineState extends State<TimeLine>
     events.sort((a, b) => a.date.compareTo(b.date));
     List<TimelineModel> timelineModels = [];
     for (var i = 0; i < events.length; i++) {
-      timelineModels.add(TimelineModel(Text(events[i].name),
+      timelineModels.add(TimelineModel(
+          GestureDetector(
+            onTap: () async {
+              final updatedArtefact = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      AddNewEventPage(_bloc.family, _bloc.getLatestMembers),
+                ),
+              );
+              if (updatedArtefact != null) {
+                _bloc.updateArtefact(updatedArtefact);
+              }
+            },
+            child: FadeInImage.assetNetwork(
+              placeholder: "assets/images/loading_image.gif",
+              image: events[i].thumbnail ?? events[i].photo,
+              fit: BoxFit.cover,
+            ),
+          ),
           position: position,
           iconBackground: Colors.redAccent,
           icon: Icon(Icons.star)));

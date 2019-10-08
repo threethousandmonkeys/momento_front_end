@@ -3,6 +3,8 @@ import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/models/event.dart';
 import 'package:momento/screens/form_pages//add_new_event_page.dart';
 import 'package:provider/provider.dart';
+import 'package:timeline_list/timeline.dart';
+import 'package:timeline_list/timeline_model.dart';
 
 class TimeLine extends StatefulWidget {
   @override
@@ -12,11 +14,27 @@ class TimeLine extends StatefulWidget {
 class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin {
   ProfileBloc _bloc;
 
+  List<TimelineModel> items = [
+    TimelineModel(Placeholder(),
+        position: TimelineItemPosition.left,
+        iconBackground: Colors.redAccent,
+        icon: Icon(Icons.blur_circular)),
+    TimelineModel(Placeholder(),
+        position: TimelineItemPosition.right,
+        iconBackground: Colors.redAccent,
+        icon: Icon(Icons.blur_circular)),
+    TimelineModel(Placeholder(),
+        position: TimelineItemPosition.left,
+        iconBackground: Colors.redAccent,
+        icon: Icon(Icons.blur_circular)),
+  ];
+
   @override
   Widget build(BuildContext context) {
     if (_bloc == null) {
       _bloc = Provider.of<ProfileBloc>(context);
     }
+//    return Timeline(children: items, position: TimelinePosition.Center);
     return StreamBuilder<List<Event>>(
         stream: _bloc.getEvents,
         builder: (context, snapshot) {

@@ -13,7 +13,7 @@ import 'package:momento/screens/profile_page/profile_page.dart';
 import 'package:momento/screens/signin_page/sign_in_page.dart';
 import 'package:momento/services/auth_service.dart';
 import 'package:provider/provider.dart';
-import 'package:mockito/mockito.dart';
+//import 'package:mockito/mockito.dart';
 import 'package:momento/main.dart';
 
 //class MockAuthService extends Mock implements AuthBloc {}

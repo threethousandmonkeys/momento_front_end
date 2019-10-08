@@ -3,20 +3,39 @@ import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/models/event.dart';
 import 'package:momento/screens/add_new_page/add_new_event_page.dart';
 import 'package:provider/provider.dart';
+import 'package:timeline_list/timeline.dart';
+import 'package:timeline_list/timeline_model.dart';
 
 class TimeLine extends StatefulWidget {
   @override
   _TimeLineState createState() => _TimeLineState();
 }
 
-class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin {
+class _TimeLineState extends State<TimeLine>
+    with AutomaticKeepAliveClientMixin {
   ProfileBloc _bloc;
+
+  List<TimelineModel> items = [
+    TimelineModel(Placeholder(),
+        position: TimelineItemPosition.left,
+        iconBackground: Colors.redAccent,
+        icon: Icon(Icons.blur_circular)),
+    TimelineModel(Placeholder(),
+        position: TimelineItemPosition.right,
+        iconBackground: Colors.redAccent,
+        icon: Icon(Icons.blur_circular)),
+    TimelineModel(Placeholder(),
+        position: TimelineItemPosition.left,
+        iconBackground: Colors.redAccent,
+        icon: Icon(Icons.blur_circular)),
+  ];
 
   @override
   Widget build(BuildContext context) {
     if (_bloc == null) {
       _bloc = Provider.of<ProfileBloc>(context);
     }
+//    return Timeline(children: items, position: TimelinePosition.Center);
     return StreamBuilder<List<Event>>(
         stream: _bloc.getEvents,
         builder: (context, snapshot) {
@@ -26,15 +45,16 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
               child: Column(
                 children: <Widget>[
                   Column(
-                    children: snapshot.data.map((event) => Text(event.name)).toList(),
+                    children:
+                        snapshot.data.map((event) => Text(event.name)).toList(),
                   ),
                   GestureDetector(
                     onTap: () async {
                       final newEvent = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              AddNewEventPage(_bloc.family, _bloc.getLatestMembers),
+                          builder: (context) => AddNewEventPage(
+                              _bloc.family, _bloc.getLatestMembers),
                         ),
                       );
                       if (newEvent != null) {

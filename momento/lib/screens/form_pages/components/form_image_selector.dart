@@ -5,15 +5,19 @@ import 'package:image_picker/image_picker.dart';
 import 'constants.dart';
 
 class ImageSelector extends StatefulWidget {
-  final String defaultImage;
+  final ImageProvider defaultImage;
   final Function onChange;
-  ImageSelector({@required this.defaultImage, this.onChange});
+  File selected;
+  ImageSelector({
+    @required this.defaultImage,
+    this.onChange,
+    this.selected,
+  });
   @override
   _ImageSelectorState createState() => _ImageSelectorState();
 }
 
 class _ImageSelectorState extends State<ImageSelector> {
-  File selected;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -35,7 +39,7 @@ class _ImageSelectorState extends State<ImageSelector> {
                         final file = await ImagePicker.pickImage(source: ImageSource.gallery);
                         if (file != null) {
                           setState(() {
-                            selected = file;
+                            widget.selected = file;
                           });
                           widget.onChange(file);
                         }
@@ -50,7 +54,7 @@ class _ImageSelectorState extends State<ImageSelector> {
                         final file = await ImagePicker.pickImage(source: ImageSource.camera);
                         if (file != null) {
                           setState(() {
-                            selected = file;
+                            widget.selected = file;
                           });
                           widget.onChange(file);
                         }
@@ -66,7 +70,7 @@ class _ImageSelectorState extends State<ImageSelector> {
             backgroundColor: Colors.white,
             radius: MediaQuery.of(context).size.width / 4,
             backgroundImage:
-                selected != null ? FileImage(selected) : AssetImage(widget.defaultImage),
+                widget.selected != null ? FileImage(widget.selected) : widget.defaultImage,
           ),
         ],
       ),

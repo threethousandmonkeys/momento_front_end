@@ -4,7 +4,7 @@ import 'package:momento/bloc/add_new_event_bloc.dart';
 import 'package:momento/constants.dart';
 import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
-import 'package:momento/screens/add_new_page/components/form_image_selector.dart';
+import 'package:momento/screens/form_pages//components/form_image_selector.dart';
 import 'package:momento/screens/components/ugly_button.dart';
 import 'package:momento/services/dialogs.dart';
 import 'package:momento/services/snack_bar_service.dart';
@@ -56,7 +56,6 @@ class _AddNewEventPageState extends State<AddNewEventPage> {
               ),
               FormDateField(
                 title: "Date",
-                controller: _bloc.dateController,
                 onChange: (value) {
                   setState(() {
                     _bloc.date = value;
@@ -89,7 +88,7 @@ class _AddNewEventPageState extends State<AddNewEventPage> {
                 },
               ),
               ImageSelector(
-                defaultImage: "assets/images/default_event.jpg",
+                defaultImage: AssetImage("assets/images/default_event.jpg"),
                 onChange: (value) {
                   _bloc.photo = value;
                 },

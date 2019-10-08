@@ -38,10 +38,10 @@ class Family {
       "name": this.name,
       "description": this.description,
       "email": this.email,
+      "photos": this.photos,
       "members": this.members,
       "artefacts": this.artefacts,
       "events": this.events,
-      "photos": this.photos,
     };
   }
 }

@@ -6,13 +6,28 @@ class FormDropDownField extends StatefulWidget {
   final Map<String, dynamic> items;
   final String title;
   final Function onChanged;
-  FormDropDownField({this.title, this.items, this.onChanged});
+  final String itemKey;
+  FormDropDownField({
+    this.title,
+    this.items,
+    this.onChanged,
+    this.itemKey,
+  });
   @override
   _FormDropDownFieldState createState() => _FormDropDownFieldState();
 }
 
 class _FormDropDownFieldState extends State<FormDropDownField> {
   String selectedValue;
+
+  @override
+  void initState() {
+    if (widget.itemKey != null) {
+      selectedValue = widget.itemKey;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -32,7 +47,7 @@ class _FormDropDownFieldState extends State<FormDropDownField> {
               setState(() {
                 selectedValue = value;
               });
-              widget.onChanged(widget.items[value]);
+              widget.onChanged(value);
             },
             value: selectedValue,
             items: widget.items.keys
@@ -40,7 +55,7 @@ class _FormDropDownFieldState extends State<FormDropDownField> {
                   (key) => DropdownMenuItem(
                     value: key,
                     child: Text(
-                      key,
+                      widget.items[key],
                       style: kFormTextFont,
                     ),
                   ),

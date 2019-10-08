@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:momento/models/artefact.dart';
 import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
@@ -12,7 +11,6 @@ class AddNewArtefactBloc {
   final _artefactRepository = ArtefactRepository();
   final _cloudStorageService = CloudStorageService();
   final _familyRepository = FamilyRepository();
-  final dateCreatedController = TextEditingController();
 
   final List<Member> members;
   AddNewArtefactBloc(this.members);

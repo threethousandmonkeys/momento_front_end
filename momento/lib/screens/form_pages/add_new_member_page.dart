@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:momento/bloc/add_new_artefact_bloc.dart';
+import 'package:momento/bloc/add_new_member_bloc.dart';
 import 'package:momento/constants.dart';
 import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
-import 'package:momento/screens/add_new_page/components/form_image_selector.dart';
+import 'package:momento/screens/form_pages//components/form_image_selector.dart';
 import 'package:momento/screens/components/ugly_button.dart';
 import 'package:momento/services/dialogs.dart';
 import 'package:momento/services/snack_bar_service.dart';
@@ -11,23 +11,29 @@ import 'components/form_drop_down_field.dart';
 import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
 
-class AddNewArtefactPage extends StatefulWidget {
+class AddNewMemberPage extends StatefulWidget {
   final Family family;
   final List<Member> members;
-  AddNewArtefactPage(this.family, this.members);
+  AddNewMemberPage(this.family, this.members);
   @override
-  _AddNewArtefactPageState createState() => _AddNewArtefactPageState();
+  _AddNewMemberPageState createState() => _AddNewMemberPageState();
 }
 
-class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
-  AddNewArtefactBloc _bloc;
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+class _AddNewMemberPageState extends State<AddNewMemberPage> {
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
   final _snackBarService = SnackBarService();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _firstNameController = TextEditingController();
+  final _middleNameController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _birthdayController = TextEditingController();
+  final _deathdayController = TextEditingController();
+
+  AddNewMemberBloc _bloc;
 
   @override
   void initState() {
-    _bloc = AddNewArtefactBloc(widget.members);
+    _bloc = AddNewMemberBloc(widget.members);
     super.initState();
   }
 
@@ -46,7 +52,7 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
                 padding: EdgeInsets.only(top: 50.0, bottom: 20),
                 child: Center(
                   child: Text(
-                    "ADD NEW Artefact",
+                    "ADD NEW MEMBER",
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
@@ -55,54 +61,87 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
                 ),
               ),
               FormTextField(
-                title: "Artefact Name",
+                title: "First Name",
+                controller: _firstNameController,
                 onChanged: (value) {
-                  _bloc.name = value;
-                },
-              ),
-              FormDateField(
-                title: "Date Created",
-                controller: _bloc.dateCreatedController,
-                onChange: (value) {
-                  setState(() {
-                    _bloc.dateCreated = value;
-                  });
-                },
-              ),
-              FormDropDownField(
-                title: "Original Owner",
-                items: Map<String, String>.fromIterable(
-                  _bloc.members,
-                  key: (f) => f.firstName,
-                  value: (v) => v.id,
-                ),
-                onChanged: (value) {
-                  _bloc.originalOwner = value;
-                },
-              ),
-              FormDropDownField(
-                title: "Current Owner",
-                items: Map<String, String>.fromIterable(
-                  _bloc.members,
-                  key: (f) => f.firstName,
-                  value: (v) => v.id,
-                ),
-                onChanged: (value) {
-                  _bloc.currentOwner = value;
+                  _bloc.firstName = value;
                 },
               ),
               FormTextField(
+                title: "Middle Name",
+                controller: _middleNameController,
+                onChanged: (value) {
+                  _bloc.middleName = value;
+                },
+              ),
+              FormDropDownField(
+                title: "Gender",
+                items: {
+                  "Male": "Male",
+                  "Female": "Female",
+                  "Others": "Others",
+                },
+                onChanged: (value) {
+                  _bloc.gender = value;
+                },
+              ),
+              FormDateField(
+                title: "Date of Birth",
+                controller: _birthdayController,
+                onChange: (value) {
+                  setState(() {
+                    _bloc.birthday = value;
+                    _bloc.updateFathers();
+                    _bloc.updateMothers();
+                  });
+                },
+              ),
+              FormDateField(
+                title: "Date of Death (if dead)",
+                controller: _deathdayController,
+                onChange: (value) {
+                  _bloc.deathday = value;
+                },
+                firstDate: _bloc.birthday,
+              ),
+              FormDropDownField(
+                title: "Father",
+                items: Map<String, String>.fromIterable(
+                  _bloc.fathers,
+                  key: (f) => f.id,
+                  value: (v) => v.firstName,
+                ),
+                onChanged: (value) {
+                  _bloc.father = value;
+                },
+                itemKey: _bloc.father,
+              ),
+              FormDropDownField(
+                title: "Mother",
+                items: Map<String, String>.fromIterable(
+                  _bloc.mothers,
+                  key: (f) => f.id,
+                  value: (v) => v.firstName,
+                ),
+                onChanged: (value) {
+                  _bloc.mother = value;
+                },
+                itemKey: _bloc.mother,
+              ),
+              FormTextField(
                 title: "Description",
+                controller: _descriptionController,
                 maxLines: 5,
                 onChanged: (value) {
                   _bloc.description = value;
                 },
               ),
               ImageSelector(
-                defaultImage: "assets/images/default_artefact.jpg",
+                defaultImage: AssetImage("assets/images/default_member.jpg"),
                 onChange: (value) {
                   _bloc.photo = value;
                 },
+                selected: _bloc.photo,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -123,9 +162,9 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
                         final validation = _bloc.validate();
                         if (validation == "") {
                           Dialogs.showLoadingDialog(context, _keyLoader);
-                          final newArtefact = await _bloc.addNewArtefact(widget.family);
+                          final newMember = await _bloc.addNewMember(widget.family);
                           Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-                          Navigator.pop(context, newArtefact);
+                          Navigator.pop(context, newMember);
                         } else {
                           _snackBarService.showInSnackBar(
                               _scaffoldKey, "Please provide $validation");

@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:momento/bloc/profile_bloc.dart';
-import 'package:momento/screens/add_new_page/add_new_artefact_page.dart';
+import 'package:momento/screens/form_pages//add_new_artefact_page.dart';
 import 'package:provider/provider.dart';
 
 /// ArtefactGallery: Instagram style of artifacts display under home page

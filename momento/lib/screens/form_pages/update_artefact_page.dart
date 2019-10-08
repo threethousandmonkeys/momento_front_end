@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:momento/bloc/add_new_member_bloc.dart';
+import 'package:momento/bloc/update_artefact_bloc.dart';
 import 'package:momento/constants.dart';
-import 'package:momento/models/family.dart';
+import 'package:momento/models/artefact.dart';
 import 'package:momento/models/member.dart';
-import 'package:momento/screens/add_new_page/components/form_image_selector.dart';
+import 'package:momento/screens/form_pages//components/form_image_selector.dart';
 import 'package:momento/screens/components/ugly_button.dart';
 import 'package:momento/services/dialogs.dart';
 import 'package:momento/services/snack_bar_service.dart';
@@ -11,26 +11,25 @@ import 'components/form_drop_down_field.dart';
 import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
 
-class AddNewMemberPage extends StatefulWidget {
-  final Family family;
+class UpdateArtefactPage extends StatefulWidget {
+  final Artefact artefact;
   final List<Member> members;
-  AddNewMemberPage(this.family, this.members);
+  UpdateArtefactPage(this.artefact, this.members);
   @override
-  _AddNewMemberPageState createState() => _AddNewMemberPageState();
+  _UpdateArtefactPageState createState() => _UpdateArtefactPageState();
 }
 
-class _AddNewMemberPageState extends State<AddNewMemberPage> {
-  AddNewMemberBloc _bloc;
-
-  @override
-  void initState() {
-    _bloc = AddNewMemberBloc(widget.members);
-    super.initState();
-  }
-
+class _UpdateArtefactPageState extends State<UpdateArtefactPage> {
+  UpdateArtefactBloc _bloc;
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   final _snackBarService = SnackBarService();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+//    _bloc = UpdateArtefactBloc(widget.artefact);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +46,7 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                 padding: EdgeInsets.only(top: 50.0, bottom: 20),
                 child: Center(
                   child: Text(
-                    "ADD NEW MEMBER",
+                    "UPDATE ARTEFACT",
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
@@ -56,80 +55,66 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                 ),
               ),
               FormTextField(
-                title: "First Name",
+                title: "Artefact Name",
                 onChanged: (value) {
-                  _bloc.firstName = value;
+                  _bloc.artefact.name = value;
                 },
-              ),
-              FormTextField(
-                title: "Middle Name",
-                onChanged: (value) {
-                  _bloc.middleName = value;
-                },
-              ),
-              FormDropDownField(
-                title: "Gender",
-                items: {
-                  "Male": "Male",
-                  "Female": "Female",
-                  "Others": "Others",
-                },
-                onChanged: (value) {
-                  _bloc.gender = value;
-                },
+                controller: TextEditingController()..text = widget.artefact.name,
               ),
               FormDateField(
-                title: "Date of Birth",
-                controller: _bloc.birthdayTextController,
+                title: "Date Created",
+                initialDateTime: widget.artefact.dateCreated,
                 onChange: (value) {
                   setState(() {
-                    _bloc.birthday = value;
-                    _bloc.updateFathers();
-                    _bloc.updateMothers();
+                    _bloc.artefact.dateCreated = value;
                   });
                 },
               ),
-              FormDateField(
-                title: "Date of Death (if dead)",
-                controller: _bloc.deathdayTextController,
-                onChange: (value) {
-                  _bloc.deathday = value;
-                },
-                firstDate: _bloc.birthday,
-              ),
               FormDropDownField(
-                title: "Father",
+                title: "Original Owner",
                 items: Map<String, String>.fromIterable(
-                  _bloc.fathers,
-                  key: (f) => f.firstName,
-                  value: (v) => v.id,
+                  widget.members,
+                  key: (f) => f.id,
+                  value: (v) => v.firstName,
                 ),
                 onChanged: (value) {
-                  _bloc.father = value;
+                  _bloc.artefact.originalOwnerId = value;
                 },
+                itemKey: widget.artefact.originalOwnerId,
               ),
               FormDropDownField(
-                title: "Mother",
+                title: "Current Owner",
                 items: Map<String, String>.fromIterable(
-                  _bloc.mothers,
-                  key: (f) => f.firstName,
-                  value: (v) => v.id,
+                  widget.members,
+                  key: (f) => f.id,
+                  value: (v) => v.firstName,
                 ),
                 onChanged: (value) {
-                  _bloc.mother = value;
+                  _bloc.artefact.currentOwnerId = value;
                 },
+                itemKey: widget.artefact.currentOwnerId,
               ),
               FormTextField(
                 title: "Description",
                 maxLines: 5,
                 onChanged: (value) {
-                  _bloc.description = value;
+                  _bloc.artefact.description = value;
                 },
+                controller: TextEditingController()..text = widget.artefact.description,
               ),
-              ImageSelector(
-                defaultImage: "assets/images/default_member.jpg",
-                onChange: (value) {
-                  _bloc.photo = value;
+              FutureBuilder(
+                future: _bloc.getPhoto,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return ImageSelector(
+                      defaultImage: NetworkImage(snapshot.data),
+                      onChange: (value) {
+                        _bloc.photo = value;
+                      },
+                    );
+                  } else {
+                    return Container();
+                  }
                 },
               ),
               Padding(
@@ -151,9 +136,9 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                         final validation = _bloc.validate();
                         if (validation == "") {
                           Dialogs.showLoadingDialog(context, _keyLoader);
-                          final newMember = await _bloc.addNewMember(widget.family);
+//                          final newArtefact = await _bloc.addNewArtefact(widget.family);
                           Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-                          Navigator.pop(context, newMember);
+//                          Navigator.pop(context, newArtefact);
                         } else {
                           _snackBarService.showInSnackBar(
                               _scaffoldKey, "Please provide $validation");

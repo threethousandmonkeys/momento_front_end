@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:momento/models/event.dart';
 import 'package:momento/models/family.dart';
 import 'package:momento/repositories/event_repository.dart';
@@ -11,8 +10,6 @@ class AddNewEventBloc {
   final _familyRepository = FamilyRepository();
   final _eventRepository = EventRepository();
   final _cloudStorageService = CloudStorageService();
-
-  final dateController = TextEditingController();
 
   String name = "";
   DateTime date;

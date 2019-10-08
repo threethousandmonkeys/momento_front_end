@@ -47,33 +47,15 @@ class ProfileBloc {
   Stream<List<String>> get getPhotos => _photosController.stream;
 
   Future<Null> uploadPhoto(File photo) async {
-    // upload photo
-    String id = DateTime.now().millisecondsSinceEpoch.toString();
-    await _cloudStorageService.uploadPhotoAt("${family.id}/photos/original/", id, photo);
-    // update the database entry
-    _familyRepository.addPhoto(family, id);
+    // upload photo to cloud and get url
+    final id = "profile_photo_" + DateTime.now().millisecondsSinceEpoch.toString();
+    final url = await _cloudStorageService.uploadPhotoAt("${family.id}/", id, photo);
     // update locally
-    List<String> photos = List.from(_photosController.value);
-    photos.add(await _cloudStorageService.getPhoto("${family.id}/photos/original/$id.jpg"));
+    final photos = List.from(_photosController.value)..add(url);
     _setPhotos(photos);
     family.photos.add(id);
-  }
-
-  Future<Null> _updatePhotos() async {
-    if (family.photos.length == 0) {
-      _setPhotos([]);
-      return;
-    }
-    List<String> photos = [];
-    String url;
-    for (String id in family.photos) {
-      url = await _cloudStorageService.getPhoto("${family.id}/photos/thumbnails/$id.jpg");
-      if (url == null) {
-        url = await _cloudStorageService.getPhoto("${family.id}/photos/original/$id.jpg");
-      }
-      photos.add(url);
-      _setPhotos(photos);
-    }
+    // update the database entry
+    _familyRepository.addPhoto(family, url);
   }
 
   final _membersController = BehaviorSubject<List<Member>>();
@@ -154,7 +136,7 @@ class ProfileBloc {
     name = await _secureStorage.read(key: "familyName");
     _getFamily().then((_) {
       _setDescription(family.description);
-      _updatePhotos();
+      _setPhotos(family.photos);
       _updateMembers();
       _updateThumbnails();
       _updateEvents();

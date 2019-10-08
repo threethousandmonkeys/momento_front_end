@@ -41,9 +41,11 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
     super.initState();
   }
 
+  // disposals
   @override
   void dispose() {
     _tabController.dispose();
+    _bloc.close();
     super.dispose();
   }
 

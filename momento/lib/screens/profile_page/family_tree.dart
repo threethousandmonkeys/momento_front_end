@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/models/member.dart';
-import 'package:momento/screens/add_new_page/add_new_member_page.dart';
+import 'package:momento/screens/form_pages//add_new_member_page.dart';
 import 'package:momento/screens/components/loading_page.dart';
 import 'package:provider/provider.dart';
 

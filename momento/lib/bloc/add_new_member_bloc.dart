@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
 import 'package:momento/repositories/member_repository.dart';
@@ -27,9 +26,6 @@ class AddNewMemberBloc {
   List<Member> fathers;
   List<Member> mothers;
 
-  TextEditingController birthdayTextController = TextEditingController();
-  TextEditingController deathdayTextController = TextEditingController();
-
   AddNewMemberBloc(this.members) {
     updateFathers();
     updateMothers();
@@ -51,8 +47,8 @@ class AddNewMemberBloc {
     return "";
   }
 
+  /// upload photo to cloud, return a retrieval path
   Future<Member> addNewMember(Family family) async {
-    /// upload photo to cloud, return a retrieval path
     Member newMember = Member(
       id: null,
       firstName: firstName,

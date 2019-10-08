@@ -8,6 +8,8 @@ class Artefact {
   String originalOwnerId;
   String currentOwnerId;
   String description;
+  String photo;
+  String thumbnail;
 
   Artefact({
     this.id,
@@ -16,6 +18,8 @@ class Artefact {
     this.originalOwnerId,
     this.currentOwnerId,
     this.description,
+    this.photo,
+    this.thumbnail,
   });
 
   static Artefact parseArtefact(String artefactId, Map<String, dynamic> jsonArtefact) {
@@ -26,6 +30,8 @@ class Artefact {
       originalOwnerId: jsonArtefact["original_owner"],
       currentOwnerId: jsonArtefact["current_owner"],
       description: jsonArtefact["description"],
+      photo: jsonArtefact["photo"],
+      thumbnail: jsonArtefact["thumbnail"],
     );
   }
 
@@ -38,6 +44,8 @@ class Artefact {
       "original_owner": this.originalOwnerId,
       "current_owner": this.currentOwnerId,
       "description": this.description,
+      "photo": this.photo,
+      "thumbnial": this.thumbnail,
     };
   }
 }

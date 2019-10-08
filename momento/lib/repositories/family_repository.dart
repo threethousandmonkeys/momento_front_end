@@ -33,7 +33,7 @@ class FamilyRepository {
   Future<Null> addMember(Family family, String memberId) async {
     final newMembers = List<String>.from(family.members);
     newMembers.add(memberId);
-    await _firestore.updateDocument(
+    await _firestore.updateDocumentByField(
       collection: "family",
       documentId: family.id,
       field: "members",
@@ -44,7 +44,7 @@ class FamilyRepository {
   Future<Null> addArtefact(Family family, String artefactId) async {
     final newArtefacts = List<String>.from(family.artefacts);
     newArtefacts.add(artefactId);
-    await _firestore.updateDocument(
+    await _firestore.updateDocumentByField(
       collection: "family",
       documentId: family.id,
       field: "artefacts",
@@ -55,7 +55,7 @@ class FamilyRepository {
   Future<Null> addEvent(Family family, String eventId) async {
     final newEvents = List<String>.from(family.events);
     newEvents.add(eventId);
-    await _firestore.updateDocument(
+    await _firestore.updateDocumentByField(
       collection: "family",
       documentId: family.id,
       field: "events",
@@ -66,7 +66,7 @@ class FamilyRepository {
   Future<Null> addPhoto(Family family, String photoId) async {
     final newPhotos = List<String>.from(family.photos);
     newPhotos.add(photoId);
-    await _firestore.updateDocument(
+    await _firestore.updateDocumentByField(
       collection: "family",
       documentId: family.id,
       field: "photos",
@@ -75,7 +75,7 @@ class FamilyRepository {
   }
 
   Future<Null> updateDescription(Family family, String description) async {
-    await _firestore.updateDocument(
+    await _firestore.updateDocumentByField(
       collection: "family",
       documentId: family.id,
       field: "description",

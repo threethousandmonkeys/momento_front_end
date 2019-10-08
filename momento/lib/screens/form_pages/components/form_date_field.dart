@@ -6,12 +6,14 @@ class FormDateField extends StatefulWidget {
   final DateTime initialDateTime;
   final Function onChange;
   final DateTime firstDate;
+  final DateTime lastDate;
   final TextEditingController controller;
   FormDateField({
     @required this.title,
     this.initialDateTime,
     this.onChange,
     this.firstDate,
+    this.lastDate,
     this.controller,
   });
   @override
@@ -45,9 +47,9 @@ class _FormDateFieldState extends State<FormDateField> {
   Future<Null> _selectDate(BuildContext context) async {
     final picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate,
+      initialDate: _selectedDate ?? widget.lastDate ?? DateTime.now(),
       firstDate: widget.firstDate ?? DateTime(1000),
-      lastDate: DateTime.now(),
+      lastDate: widget.lastDate ?? DateTime.now(),
     );
     if (picked != null && picked != _selectedDate)
       setState(() {

@@ -84,6 +84,7 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                 onChanged: (value) {
                   _bloc.gender = value;
                 },
+                itemKey: _bloc.gender,
               ),
               FormDateField(
                 title: "Date of Birth",
@@ -95,12 +96,15 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                     _bloc.updateMothers();
                   });
                 },
+                lastDate: _bloc.deathday,
               ),
               FormDateField(
                 title: "Date of Death (if dead)",
                 controller: _deathdayController,
                 onChange: (value) {
-                  _bloc.deathday = value;
+                  setState(() {
+                    _bloc.deathday = value;
+                  });
                 },
                 firstDate: _bloc.birthday,
               ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:momento/bloc/update_artefact_bloc.dart';
 import 'package:momento/constants.dart';
 import 'package:momento/models/artefact.dart';
+import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
 import 'package:momento/screens/form_pages//components/form_image_selector.dart';
 import 'package:momento/screens/components/ugly_button.dart';
@@ -12,9 +13,10 @@ import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
 
 class UpdateArtefactPage extends StatefulWidget {
+  final Family family;
   final Artefact artefact;
   final List<Member> members;
-  UpdateArtefactPage(this.artefact, this.members);
+  UpdateArtefactPage(this.family, this.artefact, this.members);
   @override
   _UpdateArtefactPageState createState() => _UpdateArtefactPageState();
 }
@@ -27,9 +29,15 @@ class _UpdateArtefactPageState extends State<UpdateArtefactPage> {
 
   @override
   void initState() {
-//    _bloc = UpdateArtefactBloc(widget.artefact);
+    _nameController.text = widget.artefact.name;
+    _descriptionController.text = widget.artefact.description;
+    _bloc = UpdateArtefactBloc(widget.artefact);
     super.initState();
   }
+
+  final _nameController = TextEditingController();
+  final _dateCreatedController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +67,7 @@ class _UpdateArtefactPageState extends State<UpdateArtefactPage> {
                 onChanged: (value) {
                   _bloc.artefact.name = value;
                 },
-                controller: TextEditingController()..text = widget.artefact.name,
+                controller: _nameController,
               ),
               FormDateField(
                 title: "Date Created",
@@ -69,6 +77,7 @@ class _UpdateArtefactPageState extends State<UpdateArtefactPage> {
                     _bloc.artefact.dateCreated = value;
                   });
                 },
+                controller: _dateCreatedController,
               ),
               FormDropDownField(
                 title: "Original Owner",
@@ -100,25 +109,17 @@ class _UpdateArtefactPageState extends State<UpdateArtefactPage> {
                 onChanged: (value) {
                   _bloc.artefact.description = value;
                 },
-                controller: TextEditingController()..text = widget.artefact.description,
+                controller: _descriptionController,
               ),
-              FutureBuilder(
-                future: _bloc.getPhoto,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return ImageSelector(
-                      defaultImage: NetworkImage(snapshot.data),
-                      onChange: (value) {
-                        _bloc.photo = value;
-                      },
-                    );
-                  } else {
-                    return Container();
-                  }
+              ImageSelector(
+                defaultImage: NetworkImage(widget.artefact.photo),
+                onChange: (value) {
+                  _bloc.photo = value;
                 },
+                selected: _bloc.photo,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                padding: EdgeInsets.symmetric(vertical: 10.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
@@ -130,15 +131,15 @@ class _UpdateArtefactPageState extends State<UpdateArtefactPage> {
                       },
                     ),
                     UglyButton(
-                      text: "Add",
+                      text: "Update",
                       height: 10,
                       onPressed: () async {
                         final validation = _bloc.validate();
                         if (validation == "") {
                           Dialogs.showLoadingDialog(context, _keyLoader);
-//                          final newArtefact = await _bloc.addNewArtefact(widget.family);
+                          final newArtefact = await _bloc.updateArtefact(widget.family);
                           Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-//                          Navigator.pop(context, newArtefact);
+                          Navigator.pop(context, newArtefact);
                         } else {
                           _snackBarService.showInSnackBar(
                               _scaffoldKey, "Please provide $validation");

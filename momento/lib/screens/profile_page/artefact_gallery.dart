@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import 'package:momento/bloc/profile_bloc.dart';
+import 'package:momento/models/artefact.dart';
 import 'package:momento/screens/form_pages//add_new_artefact_page.dart';
+import 'package:momento/screens/form_pages/update_artefact_page.dart';
 import 'package:provider/provider.dart';
 
 /// ArtefactGallery: Instagram style of artifacts display under home page
@@ -16,8 +18,8 @@ class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAli
   @override
   Widget build(BuildContext context) {
     _bloc = Provider.of<ProfileBloc>(context);
-    return StreamBuilder<List<String>>(
-      stream: _bloc.getThumbnails,
+    return StreamBuilder<List<Artefact>>(
+      stream: _bloc.getArtefacts,
       initialData: null,
       builder: (context, snapshot) {
         if (snapshot.data == null) {
@@ -35,13 +37,25 @@ class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAli
     );
   }
 
-  List<Widget> _buildGrids(List<String> urls) {
-    List<Widget> grids = urls
+  List<Widget> _buildGrids(List<Artefact> artefacts) {
+    List<Widget> grids = artefacts
         .map(
-          (url) => GestureDetector(
+          (artefact) => GestureDetector(
+            onTap: () async {
+              final updatedArtefact = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      UpdateArtefactPage(_bloc.family, artefact, _bloc.getLatestMembers),
+                ),
+              );
+              if (updatedArtefact != null) {
+                _bloc.updateArtefact(updatedArtefact);
+              }
+            },
             child: FadeInImage.assetNetwork(
               placeholder: "assets/images/loading_image.gif",
-              image: url,
+              image: artefact.thumbnail ?? artefact.photo,
               fit: BoxFit.cover,
             ),
           ),

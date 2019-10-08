@@ -21,13 +21,16 @@ class AddNewArtefactPage extends StatefulWidget {
 
 class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
   AddNewArtefactBloc _bloc;
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
   final _snackBarService = SnackBarService();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _nameController = TextEditingController();
+  final _dateCreatedController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   @override
   void initState() {
-    _bloc = AddNewArtefactBloc(widget.members);
+    _bloc = AddNewArtefactBloc();
     super.initState();
   }
 
@@ -46,7 +49,7 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
                 padding: EdgeInsets.only(top: 50.0, bottom: 20),
                 child: Center(
                   child: Text(
-                    "ADD NEW Artefact",
+                    "ADD NEW ARTEFACT",
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
@@ -59,6 +62,7 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
                 onChanged: (value) {
                   _bloc.name = value;
                 },
+                controller: _nameController,
               ),
               FormDateField(
                 title: "Date Created",
@@ -67,17 +71,19 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
                     _bloc.dateCreated = value;
                   });
                 },
+                controller: _dateCreatedController,
               ),
               FormDropDownField(
                 title: "Original Owner",
                 items: Map<String, String>.fromIterable(
-                  _bloc.members,
+                  widget.members,
                   key: (f) => f.id,
                   value: (v) => v.firstName,
                 ),
                 onChanged: (value) {
                   _bloc.originalOwner = value;
                 },
+                itemKey: _bloc.originalOwner,
               ),
               FormDropDownField(
                 title: "Current Owner",
@@ -89,6 +95,7 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
                 onChanged: (value) {
                   _bloc.currentOwner = value;
                 },
+                itemKey: _bloc.currentOwner,
               ),
               FormTextField(
                 title: "Description",
@@ -96,15 +103,17 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
                 onChanged: (value) {
                   _bloc.description = value;
                 },
+                controller: _descriptionController,
               ),
               ImageSelector(
                 defaultImage: AssetImage("assets/images/default_artefact.jpg"),
                 onChange: (value) {
                   _bloc.photo = value;
                 },
+                selected: _bloc.photo,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                padding: EdgeInsets.symmetric(vertical: 10.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[

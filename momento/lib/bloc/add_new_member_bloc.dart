@@ -49,6 +49,8 @@ class AddNewMemberBloc {
 
   /// upload photo to cloud, return a retrieval path
   Future<Member> addNewMember(Family family) async {
+    final fileName = "member_${DateTime.now().millisecondsSinceEpoch}";
+    final url = await _cloudStorageService.uploadPhotoAt("${family.id}/", fileName, photo);
     Member newMember = Member(
       id: null,
       firstName: firstName,
@@ -59,9 +61,10 @@ class AddNewMemberBloc {
       fatherId: father,
       motherId: mother,
       description: description,
+      photo: url,
+      thumbnail: null,
     );
     final memberId = await _memberRepository.createMember(newMember);
-    await _cloudStorageService.uploadPhotoAt("${family.id}/members/original/", memberId, photo);
     await _familyRepository.addMember(family, memberId);
     newMember.id = memberId;
     return newMember;

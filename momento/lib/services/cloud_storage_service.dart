@@ -24,4 +24,11 @@ class CloudStorageService {
     }
     return url;
   }
+
+  Future<Null> deletePhoto(String url) async {
+    final storageReference = await _cloudStorage.getReferenceFromUrl(url);
+    if (storageReference != null) {
+      storageReference.delete();
+    }
+  }
 }

@@ -7,6 +7,8 @@ class Event {
   DateTime date;
   List<String> participants;
   String description;
+  String photo;
+  String thumbnail;
 
   Event({
     this.id,
@@ -14,6 +16,8 @@ class Event {
     this.date,
     this.participants,
     this.description,
+    this.photo,
+    this.thumbnail,
   });
 
   static Event parseEvent(String eventId, Map<String, dynamic> jsonEvent) {
@@ -23,6 +27,8 @@ class Event {
       date: DateTime.fromMillisecondsSinceEpoch(jsonEvent["date"].seconds * 1000),
       participants: List<String>.from(jsonEvent["participants"]),
       description: jsonEvent["description"],
+      photo: jsonEvent["photo"],
+      thumbnail: jsonEvent["thumbnail"],
     );
   }
 
@@ -32,6 +38,8 @@ class Event {
       "date": Timestamp((date.millisecondsSinceEpoch * 0.001).toInt(), 0),
       "participants": this.participants ?? [],
       "description": this.description,
+      "photo": this.photo,
+      "thumbnail": this.thumbnail,
     };
   }
 }

@@ -11,4 +11,17 @@ class ArtefactRepository {
     );
     return artefactId;
   }
+
+  Future<Artefact> getArtefactById(String id) async {
+    final jsonArtefact = await _firestore.getDocument("artefact", id);
+    return Artefact.parseArtefact(id, jsonArtefact);
+  }
+
+  Future<Null> updateArtefact(Artefact artefact) async {
+    await _firestore.updateDocument(
+      collection: "artefact",
+      documentId: artefact.id,
+      newData: artefact.serialize(),
+    );
+  }
 }

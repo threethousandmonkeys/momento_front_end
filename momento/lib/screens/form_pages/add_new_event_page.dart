@@ -24,6 +24,9 @@ class _AddNewEventPageState extends State<AddNewEventPage> {
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   final _snackBarService = SnackBarService();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _nameController = TextEditingController();
+  final _dateController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +56,7 @@ class _AddNewEventPageState extends State<AddNewEventPage> {
                 onChanged: (value) {
                   _bloc.name = value;
                 },
+                controller: _nameController,
               ),
               FormDateField(
                 title: "Date",
@@ -61,6 +65,7 @@ class _AddNewEventPageState extends State<AddNewEventPage> {
                     _bloc.date = value;
                   });
                 },
+                controller: _dateController,
               ),
               MultiSelect(
                 autovalidate: false,
@@ -86,12 +91,14 @@ class _AddNewEventPageState extends State<AddNewEventPage> {
                 onChanged: (value) {
                   _bloc.description = value;
                 },
+                controller: _descriptionController,
               ),
               ImageSelector(
                 defaultImage: AssetImage("assets/images/default_event.jpg"),
                 onChange: (value) {
                   _bloc.photo = value;
                 },
+                selected: _bloc.photo,
               ),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10.0),

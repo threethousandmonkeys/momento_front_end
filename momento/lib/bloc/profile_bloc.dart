@@ -6,6 +6,7 @@ import 'package:momento/models/artefact.dart';
 import 'package:momento/models/event.dart';
 import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
+import 'package:momento/repositories/artefact_repository.dart';
 import 'package:momento/repositories/event_repository.dart';
 import 'package:momento/repositories/family_repository.dart';
 import 'package:momento/repositories/member_repository.dart';
@@ -19,6 +20,7 @@ class ProfileBloc {
   final _auth = FirebaseAuth.instance;
   final _familyRepository = FamilyRepository();
   final _memberRepository = MemberRepository();
+  final _artefactRepository = ArtefactRepository();
   final _cloudStorageService = CloudStorageService();
   final _secureStorage = FlutterSecureStorage();
   final _eventRepository = EventRepository();
@@ -75,30 +77,35 @@ class ProfileBloc {
     _setMembers(members);
   }
 
-  final _thumbnailsController = BehaviorSubject<List<String>>();
-  Function(List<String>) get _setThumbnails => _thumbnailsController.add;
-  Stream<List<String>> get getThumbnails => _thumbnailsController.stream;
+  final _artefactsController = BehaviorSubject<List<Artefact>>();
+  Function(List<Artefact>) get _setArtefacts => _artefactsController.add;
+  Stream<List<Artefact>> get getArtefacts => _artefactsController.stream;
 
-  Future<Null> _updateThumbnails() async {
-    List<String> thumbnails = [];
-    for (String artefactId in family.artefacts) {
-      String url =
-          await _cloudStorageService.getPhoto("${family.id}/artefacts/thumbnails/$artefactId.jpg");
-      if (url == null) {
-        url =
-            await _cloudStorageService.getPhoto("${family.id}/artefacts/original/$artefactId.jpg");
-      }
-      thumbnails.add(url);
-    }
-    _setThumbnails(thumbnails);
+  Future<Null> _getArtefacts() async {
+    List<Future<Artefact>> futureArtefacts =
+        family.artefacts.map((id) => _artefactRepository.getArtefactById(id)).toList();
+    List<Artefact> artefacts = await Future.wait(futureArtefacts);
+    _setArtefacts(artefacts);
   }
 
-  Future<Null> addArtefact(Artefact artefact) async {
+  void updateArtefact(Artefact updatedArtefact) {
+    // update locally
+    final newArtefacts = List<Artefact>.from(_artefactsController.value);
+    final index = newArtefacts.indexWhere((artefact) {
+      return artefact.id == updatedArtefact.id;
+    });
+    newArtefacts.removeAt(index);
+    newArtefacts.insert(index, updatedArtefact);
+    _setArtefacts(newArtefacts);
+  }
+
+  void addArtefact(Artefact artefact) {
+    // update locally
     family.artefacts.add(artefact.id);
-    List<String> newThumbnails = List<String>.from(_thumbnailsController.value);
-    newThumbnails.add(
-        await _cloudStorageService.getPhoto("${family.id}/artefacts/original/${artefact.id}.jpg"));
-    _setThumbnails(newThumbnails);
+    List<Artefact> newArtefacts = List<Artefact>.from(_artefactsController.value);
+    newArtefacts.add(artefact);
+    // push to the stream
+    _setArtefacts(newArtefacts);
   }
 
   final _eventsController = BehaviorSubject<List<Event>>();
@@ -123,7 +130,7 @@ class ProfileBloc {
   // close sinks
   void close() {
     _photosController.close();
-    _thumbnailsController.close();
+    _artefactsController.close();
     _descriptionController.close();
     _membersController.close();
     _eventsController.close();
@@ -137,8 +144,8 @@ class ProfileBloc {
     _getFamily().then((_) {
       _setDescription(family.description);
       _setPhotos(family.photos);
+      _getArtefacts();
       _updateMembers();
-      _updateThumbnails();
       _updateEvents();
     });
   }

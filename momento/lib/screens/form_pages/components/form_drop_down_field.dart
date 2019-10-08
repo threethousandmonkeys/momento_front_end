@@ -22,7 +22,7 @@ class _FormDropDownFieldState extends State<FormDropDownField> {
 
   @override
   void initState() {
-    if (widget.itemKey != null) {
+    if (widget.itemKey != "") {
       selectedValue = widget.itemKey;
     }
     super.initState();

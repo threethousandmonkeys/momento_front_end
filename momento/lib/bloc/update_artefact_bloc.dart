@@ -12,9 +12,8 @@ class UpdateArtefactBloc {
   final _familyRepository = FamilyRepository();
 
   Artefact artefact;
-  Future<String> getPhoto;
 
-  UpdateArtefactBloc(Family family, Artefact oldArtefact) {
+  UpdateArtefactBloc(Artefact oldArtefact) {
     // a hacky way to clone (deep copy), amazing
     artefact = Artefact.parseArtefact(oldArtefact.id, oldArtefact.serialize());
   }
@@ -25,26 +24,36 @@ class UpdateArtefactBloc {
     if (artefact.name == "") {
       return "name";
     }
-    if (photo == null) {
-      return "photo";
-    }
     return "";
   }
 
-//  Future<Artefact> addNewArtefact(Family family) async {
-//    /// upload photo to cloud, return a retrieval path
-//    Artefact newArtefact = Artefact(
-//      id: null,
-//      name: name,
-//      dateCreated: dateCreated,
-//      originalOwnerId: originalOwner,
-//      currentOwnerId: currentOwner,
-//      description: description,
-//    );
-//    final artefactId = await _artefactRepository.createArtefact(newArtefact);
-//    await _cloudStorageService.uploadPhotoAt("${family.id}/artefacts/original/", artefactId, photo);
-//    await _familyRepository.addArtefact(family, artefactId);
-//    newArtefact.id = artefactId;
-//    return newArtefact;
-//  }
+  Future<Artefact> updateArtefact(Family family) async {
+    // update photo
+    String photoUrl = artefact.photo;
+    String thumbnailUrl = artefact.thumbnail;
+    if (photo != null) {
+      // delete old photo
+      _cloudStorageService.deletePhoto(artefact.photo);
+      if (artefact.thumbnail != null) {
+        _cloudStorageService.deletePhoto(artefact.thumbnail);
+      }
+      // upload new photo
+      final fileName = "artefact_${DateTime.now().millisecondsSinceEpoch}";
+      photoUrl = await _cloudStorageService.uploadPhotoAt("${family.id}/", fileName, photo);
+      thumbnailUrl = null;
+    }
+
+    Artefact newArtefact = Artefact(
+      id: artefact.id,
+      name: artefact.name,
+      dateCreated: artefact.dateCreated,
+      originalOwnerId: artefact.originalOwnerId,
+      currentOwnerId: artefact.currentOwnerId,
+      description: artefact.description,
+      photo: photoUrl,
+      thumbnail: thumbnailUrl,
+    );
+    await _artefactRepository.updateArtefact(newArtefact);
+    return newArtefact;
+  }
 }

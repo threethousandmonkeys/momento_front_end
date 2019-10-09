@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:momento/screens/components/entry.dart';
 
 import '../../constants.dart';
 import '../../models/member.dart';
@@ -71,32 +72,6 @@ class MemberDetailPage extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class Entry extends StatelessWidget {
-  final String title;
-  final String content;
-  Entry({this.title, this.content});
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(title + ": ",
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-        ),
-        Text(content,
-          style: TextStyle(
-            fontSize: 16
-          ),
-        ),
-      ],
     );
   }
 }

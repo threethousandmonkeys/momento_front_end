@@ -1,325 +1,56 @@
-import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class ImagePost extends StatefulWidget {
-  const ImagePost(
-      {this.mediaUrl,
-        this.username,
-        this.location,
-        this.description,
-        this.likes,
-        this.postId,
-        this.ownerId});
+import '../../constants.dart';
+import '../../models/member.dart';
+import '../components/ugly_button.dart';
 
-  factory ImagePost.fromDocument(DocumentSnapshot document) {
-    return ImagePost(
-      username: document['username'],
-      location: document['location'],
-      mediaUrl: document['mediaUrl'],
-      likes: document['likes'],
-      description: document['description'],
-      postId: document.documentID,
-      ownerId: document['ownerId'],
-    );
-  }
+class MemberDetailPage extends StatelessWidget {
 
-  factory ImagePost.fromJSON(Map data) {
-    return ImagePost(
-      username: data['username'],
-      location: data['location'],
-      mediaUrl: data['mediaUrl'],
-      likes: data['likes'],
-      description: data['description'],
-      ownerId: data['ownerId'],
-      postId: data['postId'],
-    );
-  }
-
-  int getLikeCount(var likes) {
-    if (likes == null) {
-      return 0;
-    }
-// issue is below
-    var vals = likes.values;
-    int count = 0;
-    for (var val in vals) {
-      if (val == true) {
-        count = count + 1;
-      }
-    }
-
-    return count;
-  }
-
-  final String mediaUrl;
-  final String username;
-  final String location;
-  final String description;
-  final likes;
-  final String postId;
-  final String ownerId;
-
-  _MemberDetailPage createState() => _MemberDetailPage(
-    mediaUrl: this.mediaUrl,
-    username: this.username,
-    location: this.location,
-    description: this.description,
-    likes: this.likes,
-    likeCount: getLikeCount(this.likes),
-    ownerId: this.ownerId,
-    postId: this.postId,
-  );
-}
-
-class _MemberDetailPage extends State<ImagePost> {
-  final String mediaUrl;
-  final String username;
-  final String location;
-  final String description;
-  Map likes;
-  int likeCount;
-  final String postId;
-  bool liked;
-  final String ownerId;
-
-  bool showHeart = false;
-
-  TextStyle boldStyle = TextStyle(
-    color: Colors.black,
-    fontWeight: FontWeight.bold,
-  );
-
-  var reference = Firestore.instance.collection('insta_posts');
-
-  _MemberDetailPage(
-      {this.mediaUrl,
-        this.username,
-        this.location,
-        this.description,
-        this.likes,
-        this.postId,
-        this.likeCount,
-        this.ownerId});
-
-  GestureDetector buildLikeIcon() {
-    Color color;
-    IconData icon;
-
-    if (liked) {
-      color = Colors.pink;
-      icon = FontAwesomeIcons.solidHeart;
-    } else {
-      icon = FontAwesomeIcons.heart;
-    }
-
-    return GestureDetector(
-        child: Icon(
-          icon,
-          size: 25.0,
-          color: color,
+  final Member member;
+  MemberDetailPage(this.member);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: kBackgroundDecoration,
+        child: ListView(
+          padding: EdgeInsets.all(0),
+          children: <Widget>[
+            CachedNetworkImage(
+              imageUrl: member.photo,
+              placeholder: (context, url) => SpinKitCircle(
+                color: Colors.purple,
+              ),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(0),
+                child: Text(member.firstName,
+                    style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 50,
+                  fontWeight: FontWeight.bold,
+                ),
+                ),
+              ),
+            ),
+            Text(member.description),
+            Text(member.gender),
+            Text(member.birthday.toString().split(' ')[0]),
+            Text(member.deathday.toString().split(' ')[0]),
+            UglyButton(
+              text: "Edit Your Profile",
+              height: 10,
+              onPressed: (){
+                print("aha");
+              },
+            ),
+          ],
         ),
-        onTap: () {
-          _likePost(postId);
-        });
-  }
-
-  GestureDetector buildLikeableImage() {
-    return GestureDetector(
-      onDoubleTap: () => _likePost(postId),
-      child: Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-//          FadeInImage.memoryNetwork(placeholder: kTransparentImage, image: mediaUrl),
-          CachedNetworkImage(
-            imageUrl: mediaUrl,
-            fit: BoxFit.fitWidth,
-            placeholder: (context, url) => loadingPlaceHolder,
-            errorWidget: (context, url, error) => Icon(Icons.error),
-          ),
-          showHeart
-              ? Positioned(
-            child: Opacity(
-                opacity: 0.85,
-                child: Icon(
-                  FontAwesomeIcons.solidHeart,
-                  size: 80.0,
-                  color: Colors.white,
-                )),
-          )
-              : Container()
-        ],
       ),
     );
   }
-
-  buildPostHeader({String ownerId}) {
-    if (ownerId == null) {
-      return Text("owner error");
-    }
-
-    return FutureBuilder(
-        future: Firestore.instance
-            .collection('insta_users')
-            .document(ownerId)
-            .get(),
-        builder: (context, snapshot) {
-          String imageUrl = " ";
-          String username = "  ";
-
-          if (snapshot.data != null) {
-            imageUrl = snapshot.data.data['photoUrl'];
-            username = snapshot.data.data['username'];
-          }
-
-          return ListTile(
-            leading: CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(imageUrl),
-              backgroundColor: Colors.grey,
-            ),
-            title: GestureDetector(
-              child: Text(username, style: boldStyle),
-              onTap: () {
-              },
-            ),
-            subtitle: Text(this.location),
-            trailing: const Icon(Icons.more_vert),
-          );
-        });
-  }
-
-  Container loadingPlaceHolder = Container(
-    height: 400.0,
-    child: Center(child: CircularProgressIndicator()),
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    liked = true;
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        buildPostHeader(ownerId: ownerId),
-        buildLikeableImage(),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Padding(padding: const EdgeInsets.only(left: 20.0, top: 40.0)),
-            buildLikeIcon(),
-            Padding(padding: const EdgeInsets.only(right: 20.0)),
-            GestureDetector(
-                child: const Icon(
-                  FontAwesomeIcons.comment,
-                  size: 25.0,
-                ),
-                ),
-          ],
-        ),
-        Row(
-          children: <Widget>[
-            Container(
-              margin: const EdgeInsets.only(left: 20.0),
-              child: Text(
-                "$likeCount likes",
-                style: boldStyle,
-              ),
-            )
-          ],
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-                margin: const EdgeInsets.only(left: 20.0),
-                child: Text(
-                  "$username ",
-                  style: boldStyle,
-                )),
-            Expanded(child: Text(description)),
-          ],
-        )
-      ],
-    );
-  }
-
-  void _likePost(String postId2) {
-    var userId = 0;
-    bool _liked = likes[userId] == true;
-
-    if (_liked) {
-      print('removing like');
-      reference.document(postId).updateData({
-        'likes.$userId': false
-        //firestore plugin doesnt support deleting, so it must be nulled / falsed
-      });
-
-      setState(() {
-        likeCount = likeCount - 1;
-        liked = false;
-        likes[userId] = false;
-      });
-
-      removeActivityFeedItem();
-    }
-
-    if (!_liked) {
-      print('liking');
-      reference.document(postId).updateData({'likes.$userId': true});
-
-
-      setState(() {
-        likeCount = likeCount + 1;
-        liked = true;
-        likes[userId] = true;
-        showHeart = true;
-      });
-      Timer(const Duration(milliseconds: 500), () {
-        setState(() {
-          showHeart = false;
-        });
-      });
-    }
-  }
-
-
-  void removeActivityFeedItem() {
-    Firestore.instance
-        .collection("insta_a_feed")
-        .document(ownerId)
-        .collection("items")
-        .document(postId)
-        .delete();
-  }
 }
-
-class MemberDetailPage extends StatelessWidget {
-  final String id;
-
-  const MemberDetailPage({this.id});
-
-  getImagePost() async {
-    var document =
-    await Firestore.instance.collection('insta_posts').document(id).get();
-    return ImagePost.fromDocument(document);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: getImagePost(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData)
-            return Container(
-                alignment: FractionalOffset.center,
-                padding: const EdgeInsets.only(top: 10.0),
-                child: CircularProgressIndicator());
-          return snapshot.data;
-        });
-  }
-}
-
-
-

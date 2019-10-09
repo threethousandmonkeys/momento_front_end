@@ -36,7 +36,7 @@ class _FamilyTreeState extends State<FamilyTree> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                MemberDetailPage(),
+                                MemberDetailPage(member),
                           ),
                         );
                         if (updatedMember != null) {

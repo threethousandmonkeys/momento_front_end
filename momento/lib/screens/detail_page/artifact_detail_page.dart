@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:momento/screens/components/entry.dart';
 
 import '../../constants.dart';
 import '../../models/artefact.dart';
@@ -27,24 +28,48 @@ class ArtefactDetailPage extends StatelessWidget {
             ),
             Center(
               child: Padding(
-                padding: const EdgeInsets.all(0),
+                padding: const EdgeInsets.all(20),
                 child: Text(artefact.name,
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 50,
+                    fontSize: 40,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
-            Text("Description: " + artefact.description),
-            Text(artefact.currentOwnerId.toString().split(' ')[0]),
-            UglyButton(
-              text: "Edit Your Profile",
-              height: 10,
-              onPressed: (){
-                print("aha");
-              },
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 0),
+              child: Column(
+                children: <Widget>[
+                  Entry(
+                    title: "Description",
+                    content: artefact.description,
+                  ),
+
+                  Entry(
+                    title: "Original Owner",
+                    content: artefact.originalOwnerId,
+                  ),
+
+                  Entry(
+                    title: "Current Owner",
+                    content: artefact.currentOwnerId,
+                  ),
+                ],
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+              child: UglyButton(
+                text: "Edit Your Profile",
+                height: 10,
+                onPressed: (){
+                  print("aha");
+                },
+              ),
             ),
           ],
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/models/event.dart';
+import 'package:momento/screens/detail_page/event_detail_page.dart';
 import 'package:momento/screens/form_pages/add_new_event_page.dart';
 import 'package:provider/provider.dart';
 import 'package:timeline_list/timeline.dart';
@@ -22,6 +23,8 @@ class _TimeLineState extends State<TimeLine>
   List<TimelineModel> createTimelineModels(List<Event> events) {
     TimelineItemPosition position = TimelineItemPosition.right;
     int year = -1;
+    TextStyle textStyle = TextStyle(
+        fontFamily: 'Mansalva', fontSize: 25, color: Colors.brown[700]);
 
     // sort the events based on date
     if (events.isEmpty == false) {
@@ -38,7 +41,10 @@ class _TimeLineState extends State<TimeLine>
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Text(year.toString()),
+                Text(
+                  year.toString(),
+                  style: textStyle,
+                ),
               ],
             ),
             position: TimelineItemPosition.left,
@@ -46,36 +52,48 @@ class _TimeLineState extends State<TimeLine>
             icon: Icon(Icons.star)));
       }
       timelineModels.add(TimelineModel(
-          GestureDetector(
-            onTap: () async {
-              final updatedArtefact = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      AddNewEventPage(_bloc.family, _bloc.getLatestMembers),
-                ),
-              );
-              if (updatedArtefact != null) {
-                _bloc.updateArtefact(updatedArtefact);
-              }
-            },
-            child: Column(
-              children: <Widget>[
-                Text(events[i].date.toString().split(' ')[0]),
-                Container(
-                  height: 200,
-                  child: FractionallySizedBox(
-                    heightFactor: 0.75,
-                    widthFactor: 1,
-                    child: FadeInImage.assetNetwork(
-                      placeholder: "assets/images/loading_image.gif",
-                      image: events[i].thumbnail ?? events[i].photo,
-                      fit: BoxFit.cover,
+          Card(
+            color: Color(0xFFFAFAFA),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: GestureDetector(
+              onTap: () async {
+                final updatedArtefact = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        AddNewEventPage(_bloc.family, _bloc.getLatestMembers),
+                  ),
+                );
+                if (updatedArtefact != null) {
+                  _bloc.updateArtefact(updatedArtefact);
+                }
+              },
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    events[i].date.toString().split(' ')[0],
+                    style: textStyle,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FractionallySizedBox(
+                      widthFactor: 1,
+                      child: FadeInImage.assetNetwork(
+                        height: 150,
+                        placeholder: "assets/images/loading_image.gif",
+                        image: events[i].thumbnail ?? events[i].photo,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                ),
-                Text(events[i].name),
-              ],
+                  Text(
+                    events[i].name,
+                    style: textStyle,
+                  ),
+                ],
+              ),
             ),
           ),
           position: position,
@@ -89,7 +107,10 @@ class _TimeLineState extends State<TimeLine>
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            Text("Now"),
+            Text(
+              "Now",
+              style: textStyle,
+            ),
           ],
         ),
         position: TimelineItemPosition.left,

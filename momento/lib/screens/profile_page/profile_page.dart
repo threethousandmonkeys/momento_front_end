@@ -21,8 +21,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 /// _ProfilePageState: the state control of family profile page
-class _ProfilePageState extends State<ProfilePage>
-    with TickerProviderStateMixin {
+class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
   final _bloc = ProfileBloc();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
@@ -126,12 +125,10 @@ class _ProfilePageState extends State<ProfilePage>
                                   widthFactor: 1,
                                   child: CachedNetworkImage(
                                     imageUrl: url,
-                                    placeholder: (context, url) =>
-                                        SpinKitCircle(
+                                    placeholder: (context, url) => SpinKitCircle(
                                       color: Colors.purple,
                                     ),
-                                    errorWidget: (context, url, error) =>
-                                        Icon(Icons.error),
+                                    errorWidget: (context, url, error) => Icon(Icons.error),
                                   ),
                                 ),
                               )
@@ -143,16 +140,14 @@ class _ProfilePageState extends State<ProfilePage>
                               child: GestureDetector(
                                 behavior: HitTestBehavior.translucent,
                                 onTap: () async {
-                                  selectedUpload = await ImagePicker.pickImage(
-                                      source: ImageSource.gallery);
+                                  selectedUpload =
+                                      await ImagePicker.pickImage(source: ImageSource.gallery);
                                   if (selectedUpload != null) {
                                     setState(() {});
-                                    Dialogs.showLoadingDialog(
-                                        context, _keyLoader);
+                                    Dialogs.showLoadingDialog(context, _keyLoader);
                                     await _bloc.uploadPhoto(selectedUpload);
                                     selectedUpload = null;
-                                    Navigator.of(_keyLoader.currentContext,
-                                            rootNavigator: true)
+                                    Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                                         .pop();
                                   }
                                 },
@@ -161,8 +156,7 @@ class _ProfilePageState extends State<ProfilePage>
                                   children: <Widget>[
                                     Image(
                                       image: selectedUpload == null
-                                          ? AssetImage(
-                                              "assets/images/login_logo.png")
+                                          ? AssetImage("assets/images/login_logo.png")
                                           : FileImage(selectedUpload),
                                     ),
                                     Icon(
@@ -236,8 +230,7 @@ class _ProfilePageState extends State<ProfilePage>
                           );
                         },
                       );
-                      if (newDescription != null &&
-                          newDescription != snapshot.data) {
+                      if (newDescription != null && newDescription != snapshot.data) {
                         _bloc.updateDescription(newDescription);
                       }
                     },
@@ -254,21 +247,13 @@ class _ProfilePageState extends State<ProfilePage>
               },
             ),
 
-            /// logout button (testing only)
-            UglyButton(
-              text: "LOG OUT",
-              height: 10,
-              onPressed: () async {
-                await _bloc.signOut();
-                _futureProfile = _bloc.init(context);
-              },
-            ),
-
             /// tab to switch among 3 main components
             Container(
-              color: Colors.white24,
+              color: Colors.black12,
               child: TabBar(
-                indicatorColor: Colors.grey,
+                labelColor: Colors.black12,
+                unselectedLabelColor: Colors.black87,
+                indicatorColor: Colors.black,
                 controller: _tabController,
                 tabs: [
                   Tab(icon: Icon(Icons.people_outline)),
@@ -291,6 +276,19 @@ class _ProfilePageState extends State<ProfilePage>
                     TimeLine(),
                   ],
                 ),
+              ),
+            ),
+
+            /// logout button (testing only)
+            Padding(
+              padding: EdgeInsets.all(20.0),
+              child: UglyButton(
+                text: "LOG OUT",
+                height: 10,
+                onPressed: () async {
+                  await _bloc.signOut();
+                  _futureProfile = _bloc.init(context);
+                },
               ),
             ),
           ],

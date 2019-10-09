@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/models/artefact.dart';
+import 'package:momento/screens/detail_page/artifact_detail_page.dart';
 import 'package:momento/screens/form_pages//add_new_artefact_page.dart';
 import 'package:momento/screens/form_pages/update_artefact_page.dart';
 import 'package:provider/provider.dart';
@@ -12,8 +13,7 @@ class ArtefactGallery extends StatefulWidget {
   _ArtefactGalleryState createState() => _ArtefactGalleryState();
 }
 
-class _ArtefactGalleryState extends State<ArtefactGallery>
-    with AutomaticKeepAliveClientMixin {
+class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAliveClientMixin {
   ProfileBloc _bloc;
 
   @override
@@ -42,17 +42,13 @@ class _ArtefactGalleryState extends State<ArtefactGallery>
     List<Widget> grids = artefacts
         .map(
           (artefact) => GestureDetector(
-            onTap: () async {
-              final updatedArtefact = await Navigator.push(
+            onTap: () {
+              Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => UpdateArtefactPage(
-                      _bloc.family, artefact, _bloc.getLatestMembers),
+                  builder: (context) => ArtefactDetailPage(artefact),
                 ),
               );
-              if (updatedArtefact != null) {
-                _bloc.updateArtefact(updatedArtefact);
-              }
             },
             child: FadeInImage.assetNetwork(
               placeholder: "assets/images/loading_image.gif",
@@ -65,7 +61,7 @@ class _ArtefactGalleryState extends State<ArtefactGallery>
     grids.add(
       GestureDetector(
         child: Container(
-          color: Colors.white38,
+          color: Colors.white,
           child: Icon(
             Icons.add,
             size: 60,
@@ -75,8 +71,7 @@ class _ArtefactGalleryState extends State<ArtefactGallery>
           final newArtefact = await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  AddNewArtefactPage(_bloc.family, _bloc.getLatestMembers),
+              builder: (context) => AddNewArtefactPage(_bloc.family, _bloc.getLatestMembers),
             ),
           );
           if (newArtefact != null) {

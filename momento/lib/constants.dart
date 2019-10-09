@@ -43,3 +43,5 @@ const kBackgroundDecoration = BoxDecoration(
   end: FractionalOffset(1.0, 1.0),
   tileMode: TileMode.clamp,
 ));
+
+const kDarkRedMoranti = Color(0xFF421910);

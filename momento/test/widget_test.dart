@@ -30,14 +30,15 @@ void main() {
     );
   }
 
-  testWidgets('email or password is empty, does not sign in',
-      (WidgetTester tester) async {
-    SignInPage signIn = SignInPage();
-//    MockAuthService mockAuth = MockAuthService();
+//   testWidgets('email or password is empty, does not sign in',
+//       (WidgetTester tester) async {
+//     SignInPage signIn = SignInPage();
+// //    MockAuthService mockAuth = MockAuthService();
 
-    await tester.pumpWidget(makeTestableWidget(child: signIn));
-//    final emailFind = find.text('description');
-//    expect(emailFind, findsOneWidget);
-    //await tester.tap(find.text("LOGIN"));
-  });
+//     await tester.pumpWidget(makeTestableWidget(child: signIn));
+// //    final emailFind = find.text('description');
+// //    expect(emailFind, findsOneWidget);
+//     //await tester.tap(find.text("LOGIN"));
+//   });
+
 }

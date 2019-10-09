@@ -24,6 +24,7 @@ dependencies:
   flutter_spinkit: ^4.0.0
   cached_network_image: ^1.1.1
   timeline_list: ^0.0.5
+  circular_profile_avatar: ^1.0.2
 
 
 dev_dependencies:
@@ -49,3 +50,12 @@ flutter:
     - family: WorkSansMedium
       fonts:
         - asset: assets/fonts/Work_Sans/WorkSans-Medium.ttf
+
+    - family: Mansalva
+      fonts:
+        - asset: assets/fonts/Mansalva/Mansalva-Regular.ttf
+
+    - family: Lobster
+      fonts:
+        - asset: assets/fonts/Lobster/Lobster-Regular.ttf
+

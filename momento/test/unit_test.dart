@@ -1,6 +1,8 @@
-// import 'package:momento/services/auth_service.dart';
+import 'package:momento/services/auth_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:momento/repositories/family_repository.dart';
 
 void main() {
   // final _auth = AuthService();
@@ -23,7 +25,12 @@ void main() {
 //      expect(e.code, "ERROR_INVALID_EMAIL");
     }
   });
-}
 
-//  String a = 'askjfkjsksjfk   ';
-//  print(a.trim());
+  final _familyRepository = FamilyRepository();
+
+  test("Create family", () async {
+      await _familyRepository.createFamily("siI6RP184bgk1Orvb9Zo8lN7phO2", "test", "test@mail.com");
+      expect(_familyRepository.getFamily("siI6RP184bgk1Orvb9Zo8lN7phO2"), !null);
+  });
+
+}

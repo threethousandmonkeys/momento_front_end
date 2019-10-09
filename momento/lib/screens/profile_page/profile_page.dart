@@ -21,7 +21,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 /// _ProfilePageState: the state control of family profile page
-class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
+class _ProfilePageState extends State<ProfilePage>
+    with TickerProviderStateMixin {
   final _bloc = ProfileBloc();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
@@ -125,10 +126,12 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                                   widthFactor: 1,
                                   child: CachedNetworkImage(
                                     imageUrl: url,
-                                    placeholder: (context, url) => SpinKitCircle(
+                                    placeholder: (context, url) =>
+                                        SpinKitCircle(
                                       color: Colors.purple,
                                     ),
-                                    errorWidget: (context, url, error) => Icon(Icons.error),
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.error),
                                   ),
                                 ),
                               )
@@ -140,14 +143,16 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                               child: GestureDetector(
                                 behavior: HitTestBehavior.translucent,
                                 onTap: () async {
-                                  selectedUpload =
-                                      await ImagePicker.pickImage(source: ImageSource.gallery);
+                                  selectedUpload = await ImagePicker.pickImage(
+                                      source: ImageSource.gallery);
                                   if (selectedUpload != null) {
                                     setState(() {});
-                                    Dialogs.showLoadingDialog(context, _keyLoader);
+                                    Dialogs.showLoadingDialog(
+                                        context, _keyLoader);
                                     await _bloc.uploadPhoto(selectedUpload);
                                     selectedUpload = null;
-                                    Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                                    Navigator.of(_keyLoader.currentContext,
+                                            rootNavigator: true)
                                         .pop();
                                   }
                                 },
@@ -156,7 +161,8 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                                   children: <Widget>[
                                     Image(
                                       image: selectedUpload == null
-                                          ? AssetImage("assets/images/login_logo.png")
+                                          ? AssetImage(
+                                              "assets/images/login_logo.png")
                                           : FileImage(selectedUpload),
                                     ),
                                     Icon(
@@ -219,14 +225,16 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                               FlatButton(
                                 child: Text("DONE"),
                                 onPressed: () {
-                                  Navigator.pop(context, descriptionController.text);
+                                  Navigator.pop(
+                                      context, descriptionController.text);
                                 },
                               )
                             ],
                           );
                         },
                       );
-                      if (newDescription != null && newDescription != snapshot.data) {
+                      if (newDescription != null &&
+                          newDescription != snapshot.data) {
                         _bloc.updateDescription(newDescription);
                       }
                     },

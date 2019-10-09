@@ -8,7 +8,6 @@ import '../../models/artefact.dart';
 import '../components/ugly_button.dart';
 
 class ArtefactDetailPage extends StatelessWidget {
-
   final Artefact artefact;
   ArtefactDetailPage(this.artefact);
   @override
@@ -29,16 +28,16 @@ class ArtefactDetailPage extends StatelessWidget {
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(20),
-                child: Text(artefact.name,
+                child: Text(
+                  artefact.name,
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Color(0xFF6B5152),
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 0),
               child: Column(
@@ -47,12 +46,10 @@ class ArtefactDetailPage extends StatelessWidget {
                     title: "Description",
                     content: artefact.description,
                   ),
-
                   Entry(
                     title: "Original Owner",
                     content: artefact.originalOwnerId,
                   ),
-
                   Entry(
                     title: "Current Owner",
                     content: artefact.currentOwnerId,
@@ -60,13 +57,12 @@ class ArtefactDetailPage extends StatelessWidget {
                 ],
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
               child: UglyButton(
                 text: "Edit Your Profile",
                 height: 10,
-                onPressed: (){
+                onPressed: () {
                   print("aha");
                 },
               ),

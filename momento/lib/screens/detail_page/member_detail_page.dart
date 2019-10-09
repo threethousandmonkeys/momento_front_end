@@ -8,7 +8,6 @@ import '../../models/member.dart';
 import '../components/ugly_button.dart';
 
 class MemberDetailPage extends StatelessWidget {
-
   final Member member;
   MemberDetailPage(this.member);
   @override
@@ -33,12 +32,13 @@ class MemberDetailPage extends StatelessWidget {
             Center(
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 20),
-                child: Text(member.firstName,
-                    style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 50,
-                  fontWeight: FontWeight.bold,
-                ),
+                child: Text(
+                  member.firstName,
+                  style: TextStyle(
+                    color: Color(0xFF421910),
+                    fontSize: 50,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -58,13 +58,12 @@ class MemberDetailPage extends StatelessWidget {
               title: "Date of Death",
               content: member.deathday.toString().split(' ')[0],
             ),
-
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
               child: UglyButton(
                 text: "Edit Your Profile",
                 height: 10,
-                onPressed: (){
+                onPressed: () {
                   print("aha");
                 },
               ),

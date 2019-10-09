@@ -13,8 +13,7 @@ class ArtefactGallery extends StatefulWidget {
   _ArtefactGalleryState createState() => _ArtefactGalleryState();
 }
 
-class _ArtefactGalleryState extends State<ArtefactGallery>
-    with AutomaticKeepAliveClientMixin {
+class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAliveClientMixin {
   ProfileBloc _bloc;
 
   @override
@@ -43,14 +42,13 @@ class _ArtefactGalleryState extends State<ArtefactGallery>
     List<Widget> grids = artefacts
         .map(
           (artefact) => GestureDetector(
-            onTap: ()  {
+            onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => ArtefactDetailPage(artefact),
                 ),
               );
-
             },
             child: FadeInImage.assetNetwork(
               placeholder: "assets/images/loading_image.gif",
@@ -73,8 +71,7 @@ class _ArtefactGalleryState extends State<ArtefactGallery>
           final newArtefact = await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  AddNewArtefactPage(_bloc.family, _bloc.getLatestMembers),
+              builder: (context) => AddNewArtefactPage(_bloc.family, _bloc.getLatestMembers),
             ),
           );
           if (newArtefact != null) {

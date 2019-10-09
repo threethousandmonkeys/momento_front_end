@@ -26,14 +26,29 @@ class SignInBloc {
 
   Future<AuthUser> signUp({String email, String password, String name}) async {
     AuthUser authUser;
-    authUser = await _auth.signUp(
-      email: email,
-      password: password,
-    );
-    await _familyRepository.createFamily(authUser.uid, name, email);
-    await _secureStorage.write(key: "uid", value: authUser.uid);
-    await _secureStorage.write(key: "familyName", value: name);
-
+    try {
+      authUser = await _auth.signUp(
+        email: email,
+        password: password,
+      );
+      await _familyRepository.createFamily(authUser.uid, name, email);
+      await _secureStorage.write(key: "uid", value: authUser.uid);
+      await _secureStorage.write(key: "familyName", value: name);
+    } catch (e) {
+      switch (e.code) {
+        case "ERROR_WEAK_PASSWORD":
+          _snackBarService.showInSnackBar(scaffoldKey, "Password is too weak! Min 6 chars");
+          break;
+        case "ERROR_INVALID_EMAIL":
+          _snackBarService.showInSnackBar(scaffoldKey, "Invalid Email Format");
+          break;
+        case "ERROR_EMAIL_ALREADY_IN_USE":
+          _snackBarService.showInSnackBar(scaffoldKey, "Email is already in use");
+          break;
+        default:
+          break;
+      }
+    }
     return authUser;
   }
 

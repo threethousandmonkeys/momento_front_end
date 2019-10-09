@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../constants.dart';
+
 class Entry extends StatelessWidget {
   final String title;
   final String content;
@@ -9,15 +11,17 @@ class Entry extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(title + ": ",
+        Text(
+          title + ": ",
           style: TextStyle(
-            color: Colors.black,
+            color: kDarkRedMoranti,
             fontSize: 16,
           ),
         ),
-        Text(content,
+        Text(
+          content,
           style: TextStyle(
-              fontSize: 16,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),

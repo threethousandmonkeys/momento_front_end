@@ -11,20 +11,26 @@ class MemberDetailPage extends StatelessWidget {
   MemberDetailPage(this.member);
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width / 2.7;
     return Scaffold(
       body: Container(
         decoration: kBackgroundDecoration,
         child: SafeArea(
-          child: Column(
+          child: ListView(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(left: 50.0, right: 50, top: 200),
-                child: CircularProfileAvatar(
-                  member.photo,
-                  radius: MediaQuery.of(context).size.width / 3,
-                  borderWidth: 15,
-                  borderColor: Color(0x30FFFFFF),
-                  cacheImage: true,
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.1,
+                ),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: CircularProfileAvatar(
+                    member.photo,
+                    radius: width,
+                    borderWidth: 15,
+                    borderColor: Color(0x20BFBFBF),
+                    cacheImage: true,
+                  ),
                 ),
               ),
               Center(
@@ -33,31 +39,43 @@ class MemberDetailPage extends StatelessWidget {
                   child: Text(
                     member.firstName,
                     style: TextStyle(
-                      color: Color(0xFF421910),
+                      color: kDarkRedMoranti,
                       fontSize: 50,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
-              Entry(
-                title: "Description",
-                content: member.description,
-              ),
-              Entry(
-                title: "Gender",
-                content: member.gender,
-              ),
-              Entry(
-                title: "Date of Birth",
-                content: member.birthday.toString().split(' ')[0],
-              ),
-              Entry(
-                title: "Date of Death",
-                content: member.deathday.toString().split(' ')[0],
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: (MediaQuery.of(context).size.width - width) * 0.25,
+                ),
+                child: Column(
+                  children: <Widget>[
+                    Entry(
+                      title: "Description",
+                      content: member.description,
+                    ),
+                    Entry(
+                      title: "Gender",
+                      content: member.gender,
+                    ),
+                    Entry(
+                      title: "Date of Birth",
+                      content: member.birthday.toString().split(' ')[0],
+                    ),
+                    Entry(
+                      title: "Date of Death",
+                      content: member.deathday.toString().split(' ')[0],
+                    ),
+                  ],
+                ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 15.0),
+                padding: EdgeInsets.symmetric(
+                  vertical: 40,
+                  horizontal: (MediaQuery.of(context).size.width - width) * 0.25,
+                ),
                 child: UglyButton(
                   text: "Edit Your Profile",
                   height: 10,

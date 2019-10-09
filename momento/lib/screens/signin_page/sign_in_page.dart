@@ -207,9 +207,9 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
           onPressed: () async {
             if (_bloc.signInEmailController.text == "" ||
                 _bloc.signInPasswordController.text == "") {
-              _snackBarService.showInSnackBar(_bloc.scaffoldKey, "please enter email/password");
+              _snackBarService.showInSnackBar(_bloc.scaffoldKey, "Please enter email/password");
             } else {
-              _snackBarService.showInSnackBar(_bloc.scaffoldKey, "logging in");
+              _snackBarService.showInSnackBar(_bloc.scaffoldKey, "Logging In");
               final authUser = await _bloc.signIn(
                 email: _bloc.signInEmailController.text.trim(),
                 password: _bloc.signInPasswordController.text,
@@ -317,15 +317,15 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
                 _bloc.signupEmailController.text == "" ||
                 _bloc.signupPasswordController.text == "" ||
                 _bloc.signupConfirmPasswordController.text == "")
-              _snackBarService.showInSnackBar(_bloc.scaffoldKey, "Please fill all the fields");
+              _snackBarService.showInSnackBar(_bloc.scaffoldKey, "Please fill in all the fields");
             else if (_bloc.signupPasswordController.text !=
                 _bloc.signupConfirmPasswordController.text)
-              _snackBarService.showInSnackBar(_bloc.scaffoldKey, "passwords do not match");
+              _snackBarService.showInSnackBar(_bloc.scaffoldKey, "Passwords do not match");
             else {
-              _snackBarService.showInSnackBar(_bloc.scaffoldKey, "signing up");
+              _snackBarService.showInSnackBar(_bloc.scaffoldKey, "Signing Up");
               final authUser = await _bloc.signUp(
-                name: _bloc.familyNameController.text,
-                email: _bloc.signupEmailController.text,
+                name: _bloc.familyNameController.text.trim(),
+                email: _bloc.signupEmailController.text.trim(),
                 password: _bloc.signupPasswordController.text,
               );
               Navigator.pop(context, authUser.uid);

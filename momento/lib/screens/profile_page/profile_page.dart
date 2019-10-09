@@ -225,8 +225,11 @@ class _ProfilePageState extends State<ProfilePage>
                               FlatButton(
                                 child: Text("DONE"),
                                 onPressed: () {
+                                  if (descriptionController.text.trim() == "") {
+                                    descriptionController.text = "This family is too lazy to write any description.";
+                                  }
                                   Navigator.pop(
-                                      context, descriptionController.text);
+                                      context, descriptionController.text.trim());
                                 },
                               )
                             ],

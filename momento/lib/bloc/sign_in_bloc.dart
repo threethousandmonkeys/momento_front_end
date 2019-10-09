@@ -24,7 +24,7 @@ class SignInBloc {
 
   AuthUser authUser;
 
-  Future<AuthUser> signUp(String s, {String email, String password, String name}) async {
+  Future<AuthUser> signUp({String email, String password, String name}) async {
     AuthUser authUser;
     try {
       authUser = await _auth.signUp(

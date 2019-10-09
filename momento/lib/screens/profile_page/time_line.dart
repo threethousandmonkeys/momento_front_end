@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/models/event.dart';
+import 'package:momento/screens/detail_page/event_detail_page.dart';
 import 'package:momento/screens/form_pages/add_new_event_page.dart';
 import 'package:provider/provider.dart';
 import 'package:timeline_list/timeline.dart';
@@ -53,16 +54,13 @@ class _TimeLineState extends State<TimeLine>
       timelineModels.add(TimelineModel(
           GestureDetector(
             onTap: () async {
-              final updatedArtefact = await Navigator.push(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      AddNewEventPage(_bloc.family, _bloc.getLatestMembers),
+                      EventDetailPage(events[i]),
                 ),
               );
-              if (updatedArtefact != null) {
-                _bloc.updateArtefact(updatedArtefact);
-              }
             },
             child: Column(
               children: <Widget>[

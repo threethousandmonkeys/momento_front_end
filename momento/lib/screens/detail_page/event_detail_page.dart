@@ -39,12 +39,15 @@ class EventDetailPage extends StatelessWidget {
             ),
             Text(event.date.toString().split(' ')[0]),
             Text("Description: " + event.description),
-            UglyButton(
-              text: "Edit Event",
-              height: 10,
-              onPressed: (){
-                print("aha");
-              },
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+              child: UglyButton(
+                text: "Edit Event",
+                height: 10,
+                onPressed: (){
+                  print("aha");
+                },
+              ),
             ),
           ],
         ),

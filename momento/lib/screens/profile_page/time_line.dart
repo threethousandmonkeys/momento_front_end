@@ -32,8 +32,9 @@ class _TimeLineState extends State<TimeLine>
 
   List<TimelineModel> createTimelineModels(List<Event> events) {
     TimelineItemPosition position = TimelineItemPosition.right;
-
-    events.sort((a, b) => a.date.compareTo(b.date));
+    if (events.isEmpty == false) {
+      events.sort((a, b) => a.date.compareTo(b.date));
+    }
     List<TimelineModel> timelineModels = [];
     for (var i = 0; i < events.length; i++) {
       timelineModels.add(TimelineModel(

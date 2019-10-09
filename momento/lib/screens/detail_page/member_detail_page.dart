@@ -16,7 +16,7 @@ class MemberDetailPage extends StatelessWidget {
       body: Container(
         decoration: kBackgroundDecoration,
         child: ListView(
-          padding: EdgeInsets.all(0),
+          padding: EdgeInsets.all(20),
           children: <Widget>[
             CachedNetworkImage(
               imageUrl: member.photo,
@@ -37,10 +37,56 @@ class MemberDetailPage extends StatelessWidget {
                 ),
               ),
             ),
-            Text(member.description),
-            Text(member.gender),
-            Text(member.birthday.toString().split(' ')[0]),
-            Text(member.deathday.toString().split(' ')[0]),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text("Description: ",
+                    style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)),
+                Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: Text(member.description),
+                )
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Text("Gender: ",
+                    style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold)),
+                Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: Text(member.gender),
+                )
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Text("Date of Birth: ",
+                style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold)),
+                Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: Text(member.birthday.toString().split(' ')[0]),
+                )
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Text("Date of Death: ",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold)),
+                Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: Text(member.deathday.toString().split(' ')[0]),
+                )
+              ],
+            ),
+
             UglyButton(
               text: "Edit Your Profile",
               height: 10,

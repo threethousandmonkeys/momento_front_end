@@ -52,36 +52,48 @@ class _TimeLineState extends State<TimeLine>
             icon: Icon(Icons.star)));
       }
       timelineModels.add(TimelineModel(
-          GestureDetector(
-            onTap: () async {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      EventDetailPage(events[i]),
-                ),
-              );
-            },
-            child: Column(
-              children: <Widget>[
-                Text(
-                  events[i].date.toString().split(' ')[0],
-                  style: textStyle,
-                ),
-                FractionallySizedBox(
-                  widthFactor: 1,
-                  child: FadeInImage.assetNetwork(
-                    height: 150,
-                    placeholder: "assets/images/loading_image.gif",
-                    image: events[i].thumbnail ?? events[i].photo,
-                    fit: BoxFit.cover,
+          Card(
+            color: Color(0xFFFAFAFA),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: GestureDetector(
+              onTap: () async {
+                final updatedArtefact = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        AddNewEventPage(_bloc.family, _bloc.getLatestMembers),
                   ),
-                ),
-                Text(
-                  events[i].name,
-                  style: textStyle,
-                ),
-              ],
+                );
+                if (updatedArtefact != null) {
+                  _bloc.updateArtefact(updatedArtefact);
+                }
+              },
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    events[i].date.toString().split(' ')[0],
+                    style: textStyle,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FractionallySizedBox(
+                      widthFactor: 1,
+                      child: FadeInImage.assetNetwork(
+                        height: 150,
+                        placeholder: "assets/images/loading_image.gif",
+                        image: events[i].thumbnail ?? events[i].photo,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    events[i].name,
+                    style: textStyle,
+                  ),
+                ],
+              ),
             ),
           ),
           position: position,

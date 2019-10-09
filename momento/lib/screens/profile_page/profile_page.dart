@@ -247,8 +247,8 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
             Container(
               color: Colors.black12,
               child: TabBar(
-                labelColor: Colors.black12,
-                unselectedLabelColor: Colors.black87,
+                labelColor: Colors.black87,
+                unselectedLabelColor: Colors.black12,
                 indicatorColor: Colors.black,
                 controller: _tabController,
                 tabs: [

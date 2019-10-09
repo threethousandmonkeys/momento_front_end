@@ -18,60 +18,65 @@ class FamilyTree extends StatefulWidget {
 class _FamilyTreeState extends State<FamilyTree> {
   ProfileBloc _bloc;
 
+  void _displayDetail(Member member) async {
+    final updatedMember = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MemberDetailPage(_bloc.family, member, _bloc.getLatestMembers),
+      ),
+    );
+    if (updatedMember != null) {
+      _bloc.updateMember(updatedMember);
+      _displayDetail(updatedMember);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _bloc = Provider.of<ProfileBloc>(context);
     return StreamBuilder<List<Member>>(
-        stream: _bloc.getMembers,
-        initialData: [],
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.active) {
-            return Column(
-              children: <Widget>[
-                Column(
-                  children: snapshot.data.map((member) {
-                    return GestureDetector(
-                      onTap: () async {
-                        final updatedMember = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                MemberDetailPage(member),
-                          ),
-                        );
-                        if (updatedMember != null) {
-                          _bloc.updateMember(updatedMember);
-                        }
-                      },
-                      child: Text(
-                        member.firstName,
-                        style: TextStyle(fontSize: 30),
-                      ),
-                    );
-                  }).toList(),
+      stream: _bloc.getMembers,
+      initialData: [],
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.active) {
+          return Column(
+            children: <Widget>[
+              Column(
+                children: snapshot.data.map((member) {
+                  return GestureDetector(
+                    onTap: () async {
+                      _displayDetail(member);
+                    },
+                    child: Text(
+                      member.firstName,
+                      style: TextStyle(fontSize: 30),
+                    ),
+                  );
+                }).toList(),
+              ),
+              GestureDetector(
+                onTap: () async {
+                  final newMember = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddNewMemberPage(_bloc.family, snapshot.data),
+                    ),
+                  );
+                  if (newMember != null) {
+                    _bloc.addMember(newMember);
+                  }
+                },
+                child: Icon(
+                  Icons.add_circle_outline,
+                  size: 50,
                 ),
-                GestureDetector(
-                  onTap: () async {
-                    final newMember = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddNewMemberPage(_bloc.family, snapshot.data),
-                      ),
-                    );
-                    if (newMember != null) {
-                      _bloc.addMember(newMember);
-                    }
-                  },
-                  child: Icon(
-                    Icons.add_circle_outline,
-                    size: 50,
-                  ),
-                ),
-              ],
-            );
-          } else {
-            return LoadingPage();
-          }
-        });
+              ),
+            ],
+          );
+        } else {
+          return LoadingPage();
+        }
+      },
+    );
   }
 }

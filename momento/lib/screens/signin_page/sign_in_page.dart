@@ -38,7 +38,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
       key: _bloc.scaffoldKey,
       body: Container(
         height: contentHeight,
-        decoration: kBackgroundDecoration,
+        decoration: kLoginDecoration,
         child: ListView(
           children: <Widget>[
             SizedBox(

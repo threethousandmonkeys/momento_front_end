@@ -33,11 +33,22 @@ const kLoginPageRatios = [1, 3, 1, 5];
 
 const kDividerRatio = 0.9;
 
-const kBackgroundDecoration = BoxDecoration(
+const kLoginDecoration = BoxDecoration(
     gradient: LinearGradient(
   colors: [
     Theme.Colors.loginGradientStart,
     Theme.Colors.loginGradientEnd,
+  ],
+  begin: FractionalOffset(0.0, 0.0),
+  end: FractionalOffset(1.0, 1.0),
+  tileMode: TileMode.clamp,
+));
+
+const kBackgroundDecoration = BoxDecoration(
+    gradient: LinearGradient(
+  colors: [
+    Theme.Colors.backgroundGradientStart,
+    Theme.Colors.backgroundGradientEnd,
   ],
   begin: FractionalOffset(0.0, 0.0),
   end: FractionalOffset(1.0, 1.0),

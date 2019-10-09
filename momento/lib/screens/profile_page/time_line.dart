@@ -22,6 +22,8 @@ class _TimeLineState extends State<TimeLine>
   List<TimelineModel> createTimelineModels(List<Event> events) {
     TimelineItemPosition position = TimelineItemPosition.right;
     int year = -1;
+    TextStyle textStyle = TextStyle(
+        fontFamily: 'Mansalva', fontSize: 25, color: Colors.brown[700]);
 
     // sort the events based on date
     if (events.isEmpty == false) {
@@ -38,7 +40,10 @@ class _TimeLineState extends State<TimeLine>
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Text(year.toString()),
+                Text(
+                  year.toString(),
+                  style: textStyle,
+                ),
               ],
             ),
             position: TimelineItemPosition.left,
@@ -61,20 +66,23 @@ class _TimeLineState extends State<TimeLine>
             },
             child: Column(
               children: <Widget>[
-                Text(events[i].date.toString().split(' ')[0]),
-                Container(
-                  height: 200,
-                  child: FractionallySizedBox(
-                    heightFactor: 0.75,
-                    widthFactor: 1,
-                    child: FadeInImage.assetNetwork(
-                      placeholder: "assets/images/loading_image.gif",
-                      image: events[i].thumbnail ?? events[i].photo,
-                      fit: BoxFit.cover,
-                    ),
+                Text(
+                  events[i].date.toString().split(' ')[0],
+                  style: textStyle,
+                ),
+                FractionallySizedBox(
+                  widthFactor: 1,
+                  child: FadeInImage.assetNetwork(
+                    height: 150,
+                    placeholder: "assets/images/loading_image.gif",
+                    image: events[i].thumbnail ?? events[i].photo,
+                    fit: BoxFit.cover,
                   ),
                 ),
-                Text(events[i].name),
+                Text(
+                  events[i].name,
+                  style: textStyle,
+                ),
               ],
             ),
           ),
@@ -89,7 +97,10 @@ class _TimeLineState extends State<TimeLine>
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            Text("Now"),
+            Text(
+              "Now",
+              style: textStyle,
+            ),
           ],
         ),
         position: TimelineItemPosition.left,

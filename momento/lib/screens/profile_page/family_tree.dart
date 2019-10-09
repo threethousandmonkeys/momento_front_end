@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/models/member.dart';
+import 'package:momento/screens/detail_page/member_detail_page.dart';
 import 'package:momento/screens/form_pages//add_new_member_page.dart';
 import 'package:momento/screens/components/loading_page.dart';
 import 'package:momento/screens/form_pages/update_member_page.dart';
@@ -35,7 +36,7 @@ class _FamilyTreeState extends State<FamilyTree> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                UpdateMemberPage(_bloc.family, member, _bloc.getLatestMembers),
+                                MemberDetailPage(),
                           ),
                         );
                         if (updatedMember != null) {

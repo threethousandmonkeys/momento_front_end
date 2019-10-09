@@ -65,7 +65,7 @@ class _ArtefactGalleryState extends State<ArtefactGallery>
     grids.add(
       GestureDetector(
         child: Container(
-          color: Colors.white38,
+          color: Colors.white,
           child: Icon(
             Icons.add,
             size: 60,

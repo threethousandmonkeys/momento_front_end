@@ -3,8 +3,11 @@ import 'package:momento/bloc/add_new_artefact_bloc.dart';
 import 'package:momento/constants.dart';
 import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
+import 'package:momento/repositories/artefact_repository.dart';
+import 'package:momento/repositories/family_repository.dart';
 import 'package:momento/screens/form_pages//components/form_image_selector.dart';
 import 'package:momento/screens/components/ugly_button.dart';
+import 'package:momento/services/cloud_storage_service.dart';
 import 'package:momento/services/dialogs.dart';
 import 'package:momento/services/snack_bar_service.dart';
 import 'components/form_drop_down_field.dart';
@@ -30,7 +33,7 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
 
   @override
   void initState() {
-    _bloc = AddNewArtefactBloc();
+    _bloc = AddNewArtefactBloc(ArtefactRepository(), CloudStorageService(), FamilyRepository());
     super.initState();
   }
 

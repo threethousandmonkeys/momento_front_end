@@ -2,14 +2,13 @@ import 'dart:io';
 
 import 'package:momento/models/artefact.dart';
 import 'package:momento/models/family.dart';
-import 'package:momento/repositories/artefact_repository.dart';
-import 'package:momento/repositories/family_repository.dart';
-import 'package:momento/services/cloud_storage_service.dart';
 
 class AddNewArtefactBloc {
-  final _artefactRepository = ArtefactRepository();
-  final _cloudStorageService = CloudStorageService();
-  final _familyRepository = FamilyRepository();
+  final artefactRepository;
+  final cloudStorageService;
+  final familyRepository;
+
+  AddNewArtefactBloc(this.artefactRepository, this.cloudStorageService, this.familyRepository);
 
   String name = "";
   DateTime dateCreated;
@@ -34,7 +33,7 @@ class AddNewArtefactBloc {
   /// upload photo to cloud, return a retrieval path
   Future<Artefact> addNewArtefact(Family family) async {
     final fileName = "artefact_${DateTime.now().millisecondsSinceEpoch}";
-    final url = await _cloudStorageService.uploadPhotoAt("${family.id}/", fileName, photo);
+    final url = await cloudStorageService.uploadPhotoAt("${family.id}/", fileName, photo);
     Artefact newArtefact = Artefact(
       id: null,
       name: name,
@@ -45,8 +44,8 @@ class AddNewArtefactBloc {
       photo: url,
       thumbnail: null,
     );
-    final artefactId = await _artefactRepository.createArtefact(newArtefact);
-    await _familyRepository.addArtefact(family, artefactId);
+    final artefactId = await artefactRepository.createArtefact(newArtefact);
+    await familyRepository.addArtefact(family, artefactId);
     newArtefact.id = artefactId;
     return newArtefact;
   }

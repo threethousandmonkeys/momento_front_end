@@ -25,6 +25,8 @@ dependencies:
   cached_network_image: ^1.1.1
   timeline_list: ^0.0.5
   circular_profile_avatar: ^1.0.2
+  mockito: ^4.1.1
+
 
 
 dev_dependencies:

@@ -3,8 +3,11 @@ import 'package:momento/bloc/add_new_member_bloc.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/constants.dart';
 import 'package:momento/models/member.dart';
+import 'package:momento/repositories/family_repository.dart';
+import 'package:momento/repositories/member_repository.dart';
 import 'package:momento/screens/form_pages//components/form_image_selector.dart';
 import 'package:momento/screens/components/ugly_button.dart';
+import 'package:momento/services/cloud_storage_service.dart';
 import 'package:momento/services/dialogs.dart';
 import 'package:momento/services/snack_bar_service.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +36,12 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
 
   @override
   void initState() {
-    _bloc = AddNewMemberBloc(widget.members);
+    _bloc = AddNewMemberBloc(
+      MemberRepository(),
+      FamilyRepository(),
+      CloudStorageService(),
+      widget.members,
+    );
     super.initState();
   }
 

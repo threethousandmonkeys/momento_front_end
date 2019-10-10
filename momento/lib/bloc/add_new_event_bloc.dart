@@ -2,14 +2,13 @@ import 'dart:io';
 
 import 'package:momento/models/event.dart';
 import 'package:momento/models/family.dart';
-import 'package:momento/repositories/event_repository.dart';
-import 'package:momento/repositories/family_repository.dart';
-import 'package:momento/services/cloud_storage_service.dart';
 
 class AddNewEventBloc {
-  final _familyRepository = FamilyRepository();
-  final _eventRepository = EventRepository();
-  final _cloudStorageService = CloudStorageService();
+  final familyRepository;
+  final eventRepository;
+  final cloudStorageService;
+
+  AddNewEventBloc(this.eventRepository, this.familyRepository, this.cloudStorageService);
 
   String name = "";
   DateTime date;
@@ -37,7 +36,7 @@ class AddNewEventBloc {
   Future<Event> addNewEvent(Family family) async {
     /// upload to cloud, wait for download url
     final fileName = "event_${DateTime.now().millisecondsSinceEpoch}";
-    final url = await _cloudStorageService.uploadPhotoAt("${family.id}/", fileName, photo);
+    final url = await cloudStorageService.uploadPhotoAt("${family.id}/", fileName, photo);
 
     Event newEvent = Event(
       id: null,
@@ -48,8 +47,8 @@ class AddNewEventBloc {
       photo: url,
       thumbnail: null,
     );
-    final eventId = await _eventRepository.createEvent(newEvent);
-    await _familyRepository.addEvent(family, eventId);
+    final eventId = await eventRepository.createEvent(newEvent);
+    await familyRepository.addEvent(family, eventId);
     newEvent.id = eventId;
     return newEvent;
   }

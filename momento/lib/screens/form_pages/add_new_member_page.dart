@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/add_new_member_bloc.dart';
+import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/constants.dart';
-import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
 import 'package:momento/screens/form_pages//components/form_image_selector.dart';
 import 'package:momento/screens/components/ugly_button.dart';
 import 'package:momento/services/dialogs.dart';
 import 'package:momento/services/snack_bar_service.dart';
+import 'package:provider/provider.dart';
 import 'components/form_drop_down_field.dart';
 import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
 
 class AddNewMemberPage extends StatefulWidget {
-  final Family family;
   final List<Member> members;
-  AddNewMemberPage(this.family, this.members);
+  AddNewMemberPage(this.members);
   @override
   _AddNewMemberPageState createState() => _AddNewMemberPageState();
 }
@@ -166,7 +166,9 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                         final validation = _bloc.validate();
                         if (validation == "") {
                           Dialogs.showLoadingDialog(context, _keyLoader);
-                          final newMember = await _bloc.addNewMember(widget.family);
+                          final newMember = await _bloc.addNewMember(
+                            Provider.of<ProfileBloc>(context).family,
+                          );
                           Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
                           Navigator.pop(context, newMember);
                         } else {

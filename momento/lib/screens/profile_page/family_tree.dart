@@ -4,7 +4,6 @@ import 'package:momento/models/member.dart';
 import 'package:momento/screens/detail_page/member_detail_page.dart';
 import 'package:momento/screens/form_pages//add_new_member_page.dart';
 import 'package:momento/screens/components/loading_page.dart';
-import 'package:momento/screens/form_pages/update_member_page.dart';
 import 'package:provider/provider.dart';
 
 /// FamilyTree: the widget to build family tree
@@ -17,19 +16,6 @@ class FamilyTree extends StatefulWidget {
 /// (not fully implement)
 class _FamilyTreeState extends State<FamilyTree> {
   ProfileBloc _bloc;
-
-  void _displayDetail(Member member) async {
-    final updatedMember = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MemberDetailPage(_bloc.family, member, _bloc.getLatestMembers),
-      ),
-    );
-    if (updatedMember != null) {
-      _bloc.updateMember(updatedMember);
-      _displayDetail(updatedMember);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +30,13 @@ class _FamilyTreeState extends State<FamilyTree> {
               Column(
                 children: snapshot.data.map((member) {
                   return GestureDetector(
-                    onTap: () async {
-                      _displayDetail(member);
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MemberDetailPage(member),
+                        ),
+                      );
                     },
                     child: Text(
                       member.firstName,
@@ -59,7 +50,7 @@ class _FamilyTreeState extends State<FamilyTree> {
                   final newMember = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AddNewMemberPage(_bloc.family, snapshot.data),
+                      builder: (context) => AddNewMemberPage(snapshot.data),
                     ),
                   );
                   if (newMember != null) {

@@ -22,7 +22,6 @@ class ProfilePage extends StatefulWidget {
 
 /// _ProfilePageState: the state control of family profile page
 class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
-  final _bloc = ProfileBloc();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   TabController _tabController;
@@ -32,10 +31,11 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
   double _height;
   double _tabHeight = 1000;
 
+  ProfileBloc _bloc;
+
   // initializations
   @override
   void initState() {
-    _futureProfile = _bloc.init(context);
     _tabController = TabController(vsync: this, length: 3);
     _tabController.addListener(_handleTabChange);
     super.initState();
@@ -73,6 +73,10 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
   /// build function of profile_page widget
   @override
   Widget build(BuildContext context) {
+    if (_bloc == null) {
+      _bloc = Provider.of<ProfileBloc>(context);
+      _futureProfile = _bloc.init(context);
+    }
     // get device dimensions
     if (_width == null || _height == null) {
       _width = MediaQuery.of(context).size.width;
@@ -181,7 +185,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                 "The ${_bloc.name}s",
                 style: TextStyle(
                   fontSize: 40,
-                  fontFamily: "WorkSansSemiBold",
+                  fontFamily: "Anton",
                 ),
               ),
             ),
@@ -234,9 +238,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                       snapshot.data,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 5,
-                      style: TextStyle(
-                        fontSize: 16.0,
-                      ),
+                      style: TextStyle(fontSize: 18.0, fontFamily: "Lobster"),
                     ),
                   ),
                 );
@@ -262,16 +264,13 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
             /// the display of 3 main components
             Container(
               height: _tabHeight,
-              child: Provider<ProfileBloc>(
-                builder: (_) => _bloc,
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    FamilyTree(),
-                    ArtefactGallery(),
-                    TimeLine(),
-                  ],
-                ),
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  FamilyTree(),
+                  ArtefactGallery(),
+                  TimeLine(),
+                ],
               ),
             ),
 

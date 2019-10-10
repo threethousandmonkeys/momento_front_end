@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
 import 'package:momento/repositories/member_repository.dart';
 import 'package:momento/services/cloud_storage_service.dart';
@@ -50,7 +49,7 @@ class UpdateMemberBloc {
     return "";
   }
 
-  Future<Member> updateMember(Family family) async {
+  Future<Member> updateMember(String familyId) async {
     // update photo
     if (photo != null) {
       // delete old photo
@@ -60,7 +59,7 @@ class UpdateMemberBloc {
       }
       // upload new photo
       final fileName = "member_${DateTime.now().millisecondsSinceEpoch}";
-      member.photo = await _cloudStorageService.uploadPhotoAt("${family.id}/", fileName, photo);
+      member.photo = await _cloudStorageService.uploadPhotoAt("$familyId/", fileName, photo);
       member.thumbnail = null;
     }
 

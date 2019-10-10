@@ -53,9 +53,10 @@ class ProfileBloc {
     final id = "profile_photo_" + DateTime.now().millisecondsSinceEpoch.toString();
     final url = await _cloudStorageService.uploadPhotoAt("${family.id}/", id, photo);
     // update locally
-    final photos = List.from(_photosController.value)..add(url);
+    final photos = List<String>.from(_photosController.value);
+    photos.add(url);
     _setPhotos(photos);
-    family.photos.add(id);
+    family.photos.add(url);
     // update the database entry
     _familyRepository.addPhoto(family, url);
   }

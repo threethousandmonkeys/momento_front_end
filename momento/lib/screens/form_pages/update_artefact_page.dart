@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/bloc/update_artefact_bloc.dart';
 import 'package:momento/constants.dart';
 import 'package:momento/models/artefact.dart';
-import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
 import 'package:momento/screens/form_pages//components/form_image_selector.dart';
 import 'package:momento/screens/components/ugly_button.dart';
 import 'package:momento/services/dialogs.dart';
 import 'package:momento/services/snack_bar_service.dart';
+import 'package:provider/provider.dart';
 import 'components/form_drop_down_field.dart';
 import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
 
 class UpdateArtefactPage extends StatefulWidget {
-  final Family family;
   final Artefact artefact;
   final List<Member> members;
-  UpdateArtefactPage(this.family, this.artefact, this.members);
+  UpdateArtefactPage(this.artefact, this.members);
   @override
   _UpdateArtefactPageState createState() => _UpdateArtefactPageState();
 }
@@ -137,7 +137,9 @@ class _UpdateArtefactPageState extends State<UpdateArtefactPage> {
                         final validation = _bloc.validate();
                         if (validation == "") {
                           Dialogs.showLoadingDialog(context, _keyLoader);
-                          final newArtefact = await _bloc.updateArtefact(widget.family);
+                          final newArtefact = await _bloc.updateArtefact(
+                            Provider.of<ProfileBloc>(context).family.id,
+                          );
                           Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
                           Navigator.pop(context, newArtefact);
                         } else {

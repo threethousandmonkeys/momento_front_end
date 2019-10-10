@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:momento/models/event.dart';
-import 'package:momento/models/family.dart';
 import 'package:momento/repositories/event_repository.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 
@@ -28,7 +27,7 @@ class UpdateEventBloc {
     return "";
   }
 
-  Future<Event> updateEvent(Family family) async {
+  Future<Event> updateEvent(String familyId) async {
     // update photo
     if (photo != null) {
       // delete old photo
@@ -38,7 +37,7 @@ class UpdateEventBloc {
       }
       // upload new photo
       final fileName = "event_${DateTime.now().millisecondsSinceEpoch}";
-      event.photo = await _cloudStorageService.uploadPhotoAt("${family.id}/", fileName, photo);
+      event.photo = await _cloudStorageService.uploadPhotoAt("$familyId/", fileName, photo);
       event.thumbnail = null;
     }
 

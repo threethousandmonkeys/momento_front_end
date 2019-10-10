@@ -14,8 +14,7 @@ class TimeLine extends StatefulWidget {
 }
 
 /// _TimeLineState: the state control of timeline
-class _TimeLineState extends State<TimeLine>
-    with AutomaticKeepAliveClientMixin {
+class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin {
   ProfileBloc _bloc;
 
   ///create all the models need to display on the timeline based on a list
@@ -23,8 +22,7 @@ class _TimeLineState extends State<TimeLine>
   List<TimelineModel> createTimelineModels(List<Event> events) {
     TimelineItemPosition position = TimelineItemPosition.right;
     int year = -1;
-    TextStyle textStyle = TextStyle(
-        fontFamily: 'Mansalva', fontSize: 25, color: Colors.brown[700]);
+    TextStyle textStyle = TextStyle(fontFamily: 'Mansalva', fontSize: 25, color: Colors.brown[700]);
 
     // sort the events based on date
     if (events.isEmpty == false) {
@@ -59,16 +57,12 @@ class _TimeLineState extends State<TimeLine>
             ),
             child: GestureDetector(
               onTap: () async {
-                final updatedArtefact = await Navigator.push(
+                Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        AddNewEventPage(_bloc.family, _bloc.getLatestMembers),
+                    builder: (context) => EventDetailPage(events[i]),
                   ),
                 );
-                if (updatedArtefact != null) {
-                  _bloc.updateArtefact(updatedArtefact);
-                }
               },
               child: Column(
                 children: <Widget>[
@@ -148,8 +142,8 @@ class _TimeLineState extends State<TimeLine>
                       final newEvent = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AddNewEventPage(
-                              _bloc.family, _bloc.getLatestMembers),
+                          builder: (context) =>
+                              AddNewEventPage(_bloc.family, _bloc.getLatestMembers),
                         ),
                       );
                       if (newEvent != null) {

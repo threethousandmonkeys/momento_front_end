@@ -1,15 +1,31 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/screens/components/entry.dart';
+import 'package:momento/screens/form_pages/update_artefact_page.dart';
+import 'package:provider/provider.dart';
 
 import '../../constants.dart';
 import '../../models/artefact.dart';
 import '../components/ugly_button.dart';
 
-class ArtefactDetailPage extends StatelessWidget {
+class ArtefactDetailPage extends StatefulWidget {
   final Artefact artefact;
   ArtefactDetailPage(this.artefact);
+
+  @override
+  _ArtefactDetailPageState createState() => _ArtefactDetailPageState();
+}
+
+class _ArtefactDetailPageState extends State<ArtefactDetailPage> {
+  Artefact currentArtefact;
+  @override
+  void initState() {
+    currentArtefact = widget.artefact;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +35,7 @@ class ArtefactDetailPage extends StatelessWidget {
           padding: EdgeInsets.all(0),
           children: <Widget>[
             CachedNetworkImage(
-              imageUrl: artefact.photo,
+              imageUrl: currentArtefact.photo,
               placeholder: (context, url) => SpinKitCircle(
                 color: Colors.purple,
               ),
@@ -29,7 +45,7 @@ class ArtefactDetailPage extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Text(
-                  artefact.name,
+                  currentArtefact.name,
                   style: TextStyle(
                     color: Color(0xFF6B5152),
                     fontSize: 40,
@@ -44,15 +60,15 @@ class ArtefactDetailPage extends StatelessWidget {
                 children: <Widget>[
                   Entry(
                     title: "Description",
-                    content: artefact.description,
+                    content: currentArtefact.description,
                   ),
                   Entry(
                     title: "Original Owner",
-                    content: artefact.originalOwnerId,
+                    content: currentArtefact.originalOwnerId,
                   ),
                   Entry(
                     title: "Current Owner",
-                    content: artefact.currentOwnerId,
+                    content: currentArtefact.currentOwnerId,
                   ),
                 ],
               ),
@@ -62,8 +78,20 @@ class ArtefactDetailPage extends StatelessWidget {
               child: UglyButton(
                 text: "Edit Your Profile",
                 height: 10,
-                onPressed: () {
-                  print("aha");
+                onPressed: () async {
+                  final updatedArtefact = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UpdateArtefactPage(
+                        currentArtefact,
+                        Provider.of<ProfileBloc>(context).getLatestMembers,
+                      ),
+                    ),
+                  );
+                  if (updatedArtefact != null) {
+                    currentArtefact = updatedArtefact;
+                    Provider.of<ProfileBloc>(context).updateArtefact(updatedArtefact);
+                  }
                 },
               ),
             ),

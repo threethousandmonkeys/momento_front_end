@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:momento/models/artefact.dart';
-import 'package:momento/models/family.dart';
 import 'package:momento/repositories/artefact_repository.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 
@@ -25,7 +24,7 @@ class UpdateArtefactBloc {
     return "";
   }
 
-  Future<Artefact> updateArtefact(Family family) async {
+  Future<Artefact> updateArtefact(String familyId) async {
     // update photo
     if (photo != null) {
       // delete old photo
@@ -35,7 +34,7 @@ class UpdateArtefactBloc {
       }
       // upload new photo
       final fileName = "artefact_${DateTime.now().millisecondsSinceEpoch}";
-      artefact.photo = await _cloudStorageService.uploadPhotoAt("${family.id}/", fileName, photo);
+      artefact.photo = await _cloudStorageService.uploadPhotoAt("$familyId/", fileName, photo);
       artefact.thumbnail = null;
     }
 

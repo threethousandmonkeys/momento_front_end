@@ -1,18 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:momento/models/family.dart';
+import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/screens/components/entry.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:momento/screens/form_pages/update_member_page.dart';
+import 'package:provider/provider.dart';
 
 import '../../constants.dart';
 import '../../models/member.dart';
 import '../components/ugly_button.dart';
 
-class MemberDetailPage extends StatelessWidget {
-  final Family family;
+class MemberDetailPage extends StatefulWidget {
   final Member member;
-  final List<Member> members;
-  MemberDetailPage(this.family, this.member, this.members);
+  MemberDetailPage(this.member);
+
+  @override
+  _MemberDetailPageState createState() => _MemberDetailPageState();
+}
+
+class _MemberDetailPageState extends State<MemberDetailPage> {
+  Member currentMember;
+
+  @override
+  void initState() {
+    currentMember = widget.member;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width / 2.7;
@@ -33,7 +46,7 @@ class MemberDetailPage extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.center,
                         child: CircularProfileAvatar(
-                          member.photo,
+                          currentMember.photo,
                           radius: width,
                           borderWidth: 15,
                           borderColor: Color(0x20BFBFBF),
@@ -45,7 +58,7 @@ class MemberDetailPage extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 20),
                         child: Text(
-                          "${member.firstName} ${member.middleName}",
+                          "${currentMember.firstName} ${currentMember.middleName}",
                           style: TextStyle(
                             color: kDarkRedMoranti,
                             fontSize: 42,
@@ -62,19 +75,19 @@ class MemberDetailPage extends StatelessWidget {
                         children: <Widget>[
                           Entry(
                             title: "Description",
-                            content: member.description,
+                            content: currentMember.description,
                           ),
                           Entry(
                             title: "Gender",
-                            content: member.gender,
+                            content: currentMember.gender,
                           ),
                           Entry(
                             title: "Date of Birth",
-                            content: member.birthday.toString().split(' ')[0],
+                            content: currentMember.birthday.toString().split(' ')[0],
                           ),
                           Entry(
                             title: "Date of Death",
-                            content: member.deathday.toString().split(' ')[0],
+                            content: currentMember.deathday.toString().split(' ')[0],
                           ),
                         ],
                       ),
@@ -95,11 +108,13 @@ class MemberDetailPage extends StatelessWidget {
                       final updatedMember = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => UpdateMemberPage(family, member, members),
+                          builder: (context) => UpdateMemberPage(
+                              currentMember, Provider.of<ProfileBloc>(context).getLatestMembers),
                         ),
                       );
                       if (updatedMember != null) {
-                        Navigator.pop(context, updatedMember);
+                        currentMember = updatedMember;
+                        Provider.of<ProfileBloc>(context).updateMember(updatedMember);
                       }
                     },
                   ),

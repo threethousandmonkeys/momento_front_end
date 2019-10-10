@@ -59,3 +59,7 @@ flutter:
       fonts:
         - asset: assets/fonts/Lobster/Lobster-Regular.ttf
 
+    - family: Anton
+      fonts:
+        - asset: assets/fonts/Anton/Anton-Regular.ttf
+

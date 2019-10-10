@@ -223,7 +223,11 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                               FlatButton(
                                 child: Text("DONE"),
                                 onPressed: () {
-                                  Navigator.pop(context, descriptionController.text);
+                                  if (descriptionController.text.trim() == "") {
+                                    descriptionController.text = "This family is too lazy to write any description.";
+                                  }
+                                  Navigator.pop(
+                                      context, descriptionController.text.trim());
                                 },
                               )
                             ],

@@ -56,7 +56,7 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
               borderRadius: BorderRadius.circular(8.0),
             ),
             child: GestureDetector(
-              onTap: () async {
+              onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(

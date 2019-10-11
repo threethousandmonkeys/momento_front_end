@@ -22,7 +22,8 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
   List<TimelineModel> createTimelineModels(List<Event> events) {
     TimelineItemPosition position = TimelineItemPosition.right;
     int year = -1;
-    TextStyle textStyle = TextStyle(fontFamily: 'Mansalva', fontSize: 25, color: Colors.brown[700]);
+    TextStyle textStyle =
+        TextStyle(fontFamily: 'WorkSansMedium', fontSize: 20, color: Colors.brown[700]);
 
     // sort the events based on date
     if (events.isEmpty == false) {
@@ -35,7 +36,8 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
       // events happened in that year
       if (events[i].date.year != year) {
         year = events[i].date.year;
-        timelineModels.add(TimelineModel(
+        timelineModels.add(
+          TimelineModel(
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
@@ -46,8 +48,10 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
               ],
             ),
             position: TimelineItemPosition.left,
-            iconBackground: Colors.lightGreen,
-            icon: Icon(Icons.star)));
+            iconBackground: Color(0xFF7CA9DF),
+            icon: Icon(Icons.star),
+          ),
+        );
       }
       timelineModels.add(TimelineModel(
           Card(
@@ -91,7 +95,7 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
             ),
           ),
           position: position,
-          iconBackground: Colors.lightBlue,
+          iconBackground: Color(0xFFB395D4),
           icon: Icon(Icons.date_range)));
       position = changePosition(position);
     }
@@ -108,7 +112,7 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
           ],
         ),
         position: TimelineItemPosition.left,
-        iconBackground: Colors.lightGreen,
+        iconBackground: Color(0xFF7CA9DF),
         icon: Icon(Icons.mood)));
     return timelineModels;
   }

@@ -63,14 +63,12 @@ class FamilyRepository {
     );
   }
 
-  Future<Null> addPhoto(Family family, String photo) async {
-    final newPhotos = List<String>.from(family.photos);
-    newPhotos.add(photo);
+  Future<Null> updatePhotos(Family family) async {
     await _firestore.updateDocumentByField(
       collection: "family",
       documentId: family.id,
       field: "photos",
-      newData: newPhotos,
+      newData: family.photos,
     );
   }
 

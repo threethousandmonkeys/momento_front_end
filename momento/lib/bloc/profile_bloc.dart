@@ -58,7 +58,7 @@ class ProfileBloc {
     _setPhotos(photos);
     family.photos.add(url);
     // update the database entry
-    _familyRepository.addPhoto(family, url);
+    _familyRepository.updatePhotos(family);
   }
 
   final _membersController = BehaviorSubject<List<Member>>();

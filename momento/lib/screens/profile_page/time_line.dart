@@ -14,16 +14,17 @@ class TimeLine extends StatefulWidget {
 }
 
 /// _TimeLineState: the state control of timeline
-class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin {
+class _TimeLineState extends State<TimeLine>
+    with AutomaticKeepAliveClientMixin {
   ProfileBloc _bloc;
 
   ///create all the models need to display on the timeline based on a list
   ///of given events
-  List<TimelineModel> createTimelineModels(List<Event> events) {
+  List<TimelineModel> _createTimelineModels(List<Event> events) {
     TimelineItemPosition position = TimelineItemPosition.right;
     int year = -1;
-    TextStyle textStyle =
-        TextStyle(fontFamily: 'WorkSansMedium', fontSize: 20, color: Colors.brown[700]);
+    TextStyle textStyle = TextStyle(
+        fontFamily: 'WorkSansMedium', fontSize: 20, color: Colors.brown[700]);
 
     // sort the events based on date
     if (events.isEmpty == false) {
@@ -146,8 +147,8 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
                       final newEvent = await Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              AddNewEventPage(_bloc.family, _bloc.getLatestMembers),
+                          builder: (context) => AddNewEventPage(
+                              _bloc.family, _bloc.getLatestMembers),
                         ),
                       );
                       if (newEvent != null) {
@@ -162,7 +163,7 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
                   Flexible(
                     child: Timeline(
                       physics: NeverScrollableScrollPhysics(),
-                      children: createTimelineModels(snapshot.data),
+                      children: _createTimelineModels(snapshot.data),
                       position: TimelinePosition.Center,
                     ),
                   ),

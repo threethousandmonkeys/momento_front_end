@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/models/event.dart';
+import 'package:momento/screens/components/lib/timeline.dart';
+import 'package:momento/screens/components/lib/timeline_model.dart';
 import 'package:momento/screens/detail_page/event_detail_page.dart';
-import 'package:momento/screens/form_pages/add_new_event_page.dart';
 import 'package:provider/provider.dart';
-import 'package:timeline_list/timeline.dart';
-import 'package:timeline_list/timeline_model.dart';
 
 /// TimeLine: the widget of timeline
 class TimeLine extends StatefulWidget {
@@ -14,8 +13,7 @@ class TimeLine extends StatefulWidget {
 }
 
 /// _TimeLineState: the state control of timeline
-class _TimeLineState extends State<TimeLine>
-    with AutomaticKeepAliveClientMixin {
+class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin {
   ProfileBloc _bloc;
 
   ///create all the models need to display on the timeline based on a list
@@ -23,8 +21,8 @@ class _TimeLineState extends State<TimeLine>
   List<TimelineModel> _createTimelineModels(List<Event> events) {
     TimelineItemPosition position = TimelineItemPosition.right;
     int year = -1;
-    TextStyle textStyle = TextStyle(
-        fontFamily: 'WorkSansMedium', fontSize: 20, color: Colors.brown[700]);
+    TextStyle textStyle =
+        TextStyle(fontFamily: 'WorkSansMedium', fontSize: 20, color: Colors.brown[700]);
 
     // sort the events based on date
     if (events.isEmpty == false) {
@@ -54,7 +52,8 @@ class _TimeLineState extends State<TimeLine>
           ),
         );
       }
-      timelineModels.add(TimelineModel(
+      timelineModels.add(
+        TimelineModel(
           Card(
             color: Color(0xFFFAFAFA),
             shape: RoundedRectangleBorder(
@@ -76,7 +75,7 @@ class _TimeLineState extends State<TimeLine>
                     style: textStyle,
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(8.0),
                     child: FractionallySizedBox(
                       widthFactor: 1,
                       child: FadeInImage.assetNetwork(
@@ -97,7 +96,9 @@ class _TimeLineState extends State<TimeLine>
           ),
           position: position,
           iconBackground: Color(0xFFB395D4),
-          icon: Icon(Icons.date_range)));
+          icon: Icon(Icons.date_range),
+        ),
+      );
       position = changePosition(position);
     }
 
@@ -133,47 +134,23 @@ class _TimeLineState extends State<TimeLine>
       _bloc = Provider.of<ProfileBloc>(context);
     }
 //    return Timeline(children: items, position: TimelinePosition.Center);
-    return StreamBuilder<List<Event>>(
-        stream: _bloc.getEvents,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.active) {
-//            return Timeline(children: items, position: TimelinePosition.Center);
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Column(
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () async {
-                      final newEvent = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddNewEventPage(
-                              _bloc.family, _bloc.getLatestMembers),
-                        ),
-                      );
-                      if (newEvent != null) {
-                        _bloc.addEvent(newEvent);
-                      }
-                    },
-                    child: Icon(
-                      Icons.add_circle_outline,
-                      size: 50,
-                    ),
-                  ),
-                  Flexible(
-                    child: Timeline(
-                      physics: NeverScrollableScrollPhysics(),
-                      children: _createTimelineModels(snapshot.data),
-                      position: TimelinePosition.Center,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return Scaffold();
-          }
-        });
+    return SafeArea(
+      top: false,
+      bottom: false,
+      child: StreamBuilder<List<Event>>(
+          stream: _bloc.getEvents,
+          initialData: null,
+          builder: (context, snapshot) {
+            if (snapshot.data != null) {
+              return Timeline(
+                children: _createTimelineModels(snapshot.data),
+                position: TimelinePosition.Center,
+              );
+            } else {
+              return Scaffold();
+            }
+          }),
+    );
   }
 
   @override

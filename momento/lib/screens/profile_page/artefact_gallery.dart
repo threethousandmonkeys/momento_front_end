@@ -48,22 +48,27 @@ class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAli
     if (_bloc == null) {
       _bloc = Provider.of<ProfileBloc>(context);
     }
-    return StreamBuilder<List<Artefact>>(
-      stream: _bloc.getArtefacts,
-      initialData: null,
-      builder: (context, snapshot) {
-        if (snapshot.data == null) {
-          return Text("Loading");
-        }
-        return GridView.count(
-          physics: NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.only(top: 0),
-          crossAxisCount: 3,
-          crossAxisSpacing: 1,
-          mainAxisSpacing: 1,
-          children: _buildGrids(snapshot.data)..add(_addButton),
-        );
-      },
+    return SafeArea(
+      top: false,
+      bottom: false,
+      child: StreamBuilder<List<Artefact>>(
+        stream: _bloc.getArtefacts,
+        initialData: null,
+        builder: (context, snapshot) {
+          if (snapshot.data == null) {
+            return Text("Loading");
+          }
+          return GridView.count(
+            key: PageStorageKey("gallery"),
+            physics: NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.only(top: 0),
+            crossAxisCount: 3,
+            crossAxisSpacing: 1,
+            mainAxisSpacing: 1,
+            children: _buildGrids(snapshot.data)..add(_addButton),
+          );
+        },
+      ),
     );
   }
 

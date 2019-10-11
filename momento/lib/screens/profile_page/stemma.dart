@@ -6,19 +6,18 @@ import 'package:momento/screens/detail_page/member_detail_page.dart';
 import 'package:momento/screens/form_pages//add_new_member_page.dart';
 import 'package:provider/provider.dart';
 
-/// FamilyTree: the widget to build family tree
-class FamilyTree extends StatefulWidget {
+/// Stemma: the widget to build family members list
+class Stemma extends StatefulWidget {
   @override
-  _FamilyTreeState createState() => _FamilyTreeState();
+  _StemmaState createState() => _StemmaState();
 }
 
-/// _FamilyTreeState: the state control of family tree feature
+/// _StemmaState: the state control of family tree feature
 /// (not fully implement)
-class _FamilyTreeState extends State<FamilyTree> {
+class _StemmaState extends State<Stemma> with AutomaticKeepAliveClientMixin {
   ProfileBloc _bloc;
 
-  List<GestureDetector> _createFamilyMemberCard(
-      List<Member> members, double width) {
+  List<GestureDetector> _createFamilyMemberCard(List<Member> members, double width) {
     List<Color> colors = [Color(0xFFC9C0D3), Color(0xFFC1CBD7)];
     List<GestureDetector> output = [];
     if (members.isEmpty == false) {
@@ -76,37 +75,47 @@ class _FamilyTreeState extends State<FamilyTree> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     _bloc = Provider.of<ProfileBloc>(context);
-    return StreamBuilder<List<Member>>(
-      stream: _bloc.getMembers,
-      initialData: null,
-      builder: (context, snapshot) {
-        if (snapshot.data != null) {
-          return Column(
-              children: _createFamilyMemberCard(snapshot.data, width) +
-                  [
-                    GestureDetector(
-                      onTap: () async {
-                        final newMember = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                AddNewMemberPage(snapshot.data),
-                          ),
-                        );
-                        if (newMember != null) {
-                          _bloc.addMember(newMember);
-                        }
-                      },
-                      child: Icon(
-                        Icons.add_circle_outline,
-                        size: 50,
-                      ),
+    return SafeArea(
+      top: false,
+      bottom: false,
+      child: StreamBuilder<List<Member>>(
+        stream: _bloc.getMembers,
+        initialData: null,
+        builder: (context, snapshot) {
+          if (snapshot.data != null) {
+            return ListView(
+              key: PageStorageKey<String>("members"),
+              padding: EdgeInsets.all(0.0),
+              children: _createFamilyMemberCard(snapshot.data, width)
+                ..add(
+                  GestureDetector(
+                    onTap: () async {
+                      final newMember = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddNewMemberPage(snapshot.data),
+                        ),
+                      );
+                      if (newMember != null) {
+                        _bloc.addMember(newMember);
+                      }
+                    },
+                    child: Icon(
+                      Icons.add_circle_outline,
+                      size: 50,
                     ),
-                  ]);
-        } else {
-          return Text("Loading");
-        }
-      },
+                  ),
+                ),
+            );
+          } else {
+            return Text("Loading");
+          }
+        },
+      ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

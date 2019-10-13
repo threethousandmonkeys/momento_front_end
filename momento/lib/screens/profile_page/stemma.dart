@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/constants.dart';
@@ -13,7 +14,6 @@ class Stemma extends StatefulWidget {
 }
 
 /// _StemmaState: the state control of family tree feature
-/// (not fully implement)
 class _StemmaState extends State<Stemma> with AutomaticKeepAliveClientMixin {
   ProfileBloc _bloc;
 
@@ -46,9 +46,8 @@ class _StemmaState extends State<Stemma> with AutomaticKeepAliveClientMixin {
                     heightFactor: 1,
                     child: Container(
                       width: width * kGoldenRatio * kGoldenRatio,
-                      child: FadeInImage.assetNetwork(
-                        placeholder: "assets/images/loading_image.gif",
-                        image: members[i].thumbnail ?? members[i].photo,
+                      child: CachedNetworkImage(
+                        imageUrl: members[i].thumbnail ?? members[i].photo,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -73,45 +72,44 @@ class _StemmaState extends State<Stemma> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     double width = MediaQuery.of(context).size.width;
-    _bloc = Provider.of<ProfileBloc>(context);
-    return SafeArea(
-      top: false,
-      bottom: false,
-      child: StreamBuilder<List<Member>>(
-        stream: _bloc.getMembers,
-        initialData: null,
-        builder: (context, snapshot) {
-          if (snapshot.data != null) {
-            return ListView(
-              key: PageStorageKey<String>("members"),
-              padding: EdgeInsets.all(0.0),
-              children: _createFamilyMemberCard(snapshot.data, width)
-                ..add(
-                  GestureDetector(
-                    onTap: () async {
-                      final newMember = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddNewMemberPage(snapshot.data),
-                        ),
-                      );
-                      if (newMember != null) {
-                        _bloc.addMember(newMember);
-                      }
-                    },
-                    child: Icon(
-                      Icons.add_circle_outline,
-                      size: 50,
-                    ),
+    if (_bloc == null) {
+      _bloc = Provider.of<ProfileBloc>(context);
+    }
+    return StreamBuilder<List<Member>>(
+      stream: _bloc.getMembers,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.active) {
+          return ListView(
+            key: PageStorageKey<String>("members"),
+            padding: EdgeInsets.all(0.0),
+            children: _createFamilyMemberCard(snapshot.data, width)
+              ..add(
+                GestureDetector(
+                  onTap: () async {
+                    final newMember = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddNewMemberPage(snapshot.data),
+                      ),
+                    );
+                    if (newMember != null) {
+                      _bloc.addMember(newMember);
+                    }
+                  },
+                  child: Icon(
+                    Icons.add_circle_outline,
+                    size: 50,
                   ),
                 ),
-            );
-          } else {
-            return Text("Loading");
-          }
-        },
-      ),
+              ),
+          );
+        } else {
+          return Container();
+        }
+      },
     );
   }
 

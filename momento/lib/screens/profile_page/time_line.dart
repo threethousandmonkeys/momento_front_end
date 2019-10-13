@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/models/event.dart';
@@ -78,10 +79,9 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
                     padding: EdgeInsets.all(8.0),
                     child: FractionallySizedBox(
                       widthFactor: 1,
-                      child: FadeInImage.assetNetwork(
+                      child: CachedNetworkImage(
                         height: 150,
-                        placeholder: "assets/images/loading_image.gif",
-                        image: events[i].thumbnail ?? events[i].photo,
+                        imageUrl: events[i].thumbnail ?? events[i].photo,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -130,27 +130,23 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     if (_bloc == null) {
       _bloc = Provider.of<ProfileBloc>(context);
     }
-//    return Timeline(children: items, position: TimelinePosition.Center);
-    return SafeArea(
-      top: false,
-      bottom: false,
-      child: StreamBuilder<List<Event>>(
-          stream: _bloc.getEvents,
-          initialData: null,
-          builder: (context, snapshot) {
-            if (snapshot.data != null) {
-              return Timeline(
-                children: _createTimelineModels(snapshot.data),
-                position: TimelinePosition.Center,
-              );
-            } else {
-              return Scaffold();
-            }
-          }),
-    );
+    return StreamBuilder<List<Event>>(
+        stream: _bloc.getEvents,
+        initialData: null,
+        builder: (context, snapshot) {
+          if (snapshot.data != null) {
+            return Timeline(
+              children: _createTimelineModels(snapshot.data),
+              position: TimelinePosition.Center,
+            );
+          } else {
+            return Scaffold();
+          }
+        });
   }
 
   @override

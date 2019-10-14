@@ -34,10 +34,10 @@ class FamilyRepository {
     final newMembers = List<String>.from(family.members);
     newMembers.add(memberId);
     await _firestore.updateDocumentByField(
-      collection: "family",
-      documentId: family.id,
-      field: "members",
-      newData: newMembers,
+      "family",
+      family.id,
+      "members",
+      newMembers,
     );
   }
 
@@ -45,10 +45,10 @@ class FamilyRepository {
     final newArtefacts = List<String>.from(family.artefacts);
     newArtefacts.add(artefactId);
     await _firestore.updateDocumentByField(
-      collection: "family",
-      documentId: family.id,
-      field: "artefacts",
-      newData: newArtefacts,
+      "family",
+      family.id,
+      "artefacts",
+      newArtefacts,
     );
   }
 
@@ -56,28 +56,28 @@ class FamilyRepository {
     final newEvents = List<String>.from(family.events);
     newEvents.add(eventId);
     await _firestore.updateDocumentByField(
-      collection: "family",
-      documentId: family.id,
-      field: "events",
-      newData: newEvents,
+      "family",
+      family.id,
+      "events",
+      newEvents,
     );
   }
 
   Future<Null> updatePhotos(Family family) async {
     await _firestore.updateDocumentByField(
-      collection: "family",
-      documentId: family.id,
-      field: "photos",
-      newData: family.photos,
+      "family",
+      family.id,
+      "photos",
+      family.photos,
     );
   }
 
   Future<Null> updateDescription(Family family, String description) async {
     await _firestore.updateDocumentByField(
-      collection: "family",
-      documentId: family.id,
-      field: "description",
-      newData: description,
+      "family",
+      family.id,
+      "description",
+      description,
     );
   }
 }

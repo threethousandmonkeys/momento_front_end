@@ -17,9 +17,9 @@ class Stemma extends StatefulWidget {
 class _StemmaState extends State<Stemma> with AutomaticKeepAliveClientMixin {
   ProfileBloc _bloc;
 
-  List<GestureDetector> _createFamilyMemberCard(List<Member> members, double width) {
+  List<Widget> _createFamilyMemberCard(List<Member> members, double width) {
     List<Color> colors = [Color(0xFFC9C0D3), Color(0xFFC1CBD7)];
-    List<GestureDetector> output = [];
+    List<Widget> output = [];
     if (members.isEmpty == false) {
       members.sort((a, b) => a.birthday.compareTo(b.birthday));
     }
@@ -83,8 +83,7 @@ class _StemmaState extends State<Stemma> with AutomaticKeepAliveClientMixin {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           return ListView(
-            key: PageStorageKey<String>("members"),
-            padding: EdgeInsets.all(0.0),
+            key: const PageStorageKey<String>("members"),
             children: _createFamilyMemberCard(snapshot.data, width)
               ..add(
                 GestureDetector(

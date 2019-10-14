@@ -37,9 +37,9 @@ class MemberRepository {
 
   Future<Null> updateMember(Member member) async {
     await _firestore.updateDocument(
-      collection: "member",
-      documentId: member.id,
-      newData: member.serialize(),
+      "member",
+      member.id,
+      member.serialize(),
     );
   }
 

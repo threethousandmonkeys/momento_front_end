@@ -41,7 +41,7 @@ class Timeline extends StatelessWidget {
       this.controller,
       this.position = TimelinePosition.Center,
       this.physics,
-      this.shrinkWrap = false,
+      this.shrinkWrap = true,
       this.reverse = false})
       : itemCount = children.length,
         properties =
@@ -68,24 +68,25 @@ class Timeline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        physics: physics,
-        shrinkWrap: shrinkWrap,
-        itemCount: itemCount,
-        controller: controller,
-        reverse: reverse,
-        itemBuilder: (context, i) {
-          final TimelineModel model = itemBuilder(context, i);
-          model.isFirst = reverse ? i == (itemCount - 1) : i == 0;
-          model.isLast = reverse ? i == 0 : i == (itemCount - 1);
-          switch (position) {
-            case TimelinePosition.Left:
-              return TimelineItemLeft(properties: properties, model: model);
-            case TimelinePosition.Right:
-              return TimelineItemRight(properties: properties, model: model);
-            case TimelinePosition.Center:
-            default:
-              return TimelineItemCenter(properties: properties, model: model);
-          }
-        });
+      physics: physics,
+      shrinkWrap: shrinkWrap,
+      itemCount: itemCount,
+      controller: controller,
+      reverse: reverse,
+      itemBuilder: (context, i) {
+        final TimelineModel model = itemBuilder(context, i);
+        model.isFirst = reverse ? i == (itemCount - 1) : i == 0;
+        model.isLast = reverse ? i == 0 : i == (itemCount - 1);
+        switch (position) {
+          case TimelinePosition.Left:
+            return TimelineItemLeft(properties: properties, model: model);
+          case TimelinePosition.Right:
+            return TimelineItemRight(properties: properties, model: model);
+          case TimelinePosition.Center:
+          default:
+            return TimelineItemCenter(properties: properties, model: model);
+        }
+      },
+    );
   }
 }

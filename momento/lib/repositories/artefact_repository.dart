@@ -19,9 +19,9 @@ class ArtefactRepository {
 
   Future<Null> updateArtefact(Artefact artefact) async {
     await _firestore.updateDocument(
-      collection: "artefact",
-      documentId: artefact.id,
-      newData: artefact.serialize(),
+      "artefact",
+      artefact.id,
+      artefact.serialize(),
     );
   }
 }

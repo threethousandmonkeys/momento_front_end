@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart' hide NestedScrollView;
+import 'package:flutter/material.dart' as prefix0;
 import 'package:image_picker/image_picker.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:momento/screens/components/carousel_with_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:momento/constants.dart';
 import 'package:momento/bloc/profile_bloc.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 
 const kTabBarHeight = 46.0;
+const kNumTabs = 3;
 
 /// ProfilePage: the widget of family profile page(home page)
 class ProfilePage extends StatefulWidget {
@@ -27,18 +29,16 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
 
   TabController _tabController;
   Future<Null> _futureProfile;
-
-  double _width;
-  double _height;
-
   ProfileBloc _bloc;
-
   File selectedUpload;
 
   // initializations
   @override
   void initState() {
-    _tabController = TabController(vsync: this, length: 3);
+    _tabController = TabController(
+      vsync: this,
+      length: kNumTabs,
+    );
     super.initState();
   }
 
@@ -46,7 +46,6 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
   @override
   void dispose() {
     _tabController.dispose();
-    _bloc.close();
     super.dispose();
   }
 
@@ -58,62 +57,55 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
       _futureProfile = _bloc.init(context);
     }
     // get device dimensions
-    if (_width == null || _height == null) {
-      _width = MediaQuery.of(context).size.width;
-      _height = MediaQuery.of(context).size.height;
-    }
+    double height = MediaQuery.of(context).size.height;
+    double pinnedHeaderHeight = MediaQuery.of(context).padding.top + kToolbarHeight + kTabBarHeight;
     return Scaffold(
-      body: Container(
-        decoration: kBackgroundDecoration,
-        child: FutureBuilder<Null>(
-          future: _futureProfile,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              double pinnedHeaderHeight =
-                  MediaQuery.of(context).padding.top + kToolbarHeight + kTabBarHeight;
-              return NestedScrollView(
-                pinnedHeaderSliverHeightBuilder: () => pinnedHeaderHeight,
-                headerSliverBuilder: (context, innerBoxIsScrolled) {
-                  return [
-                    SliverAppBar(
-                      pinned: true,
-                      elevation: 0.0,
-                      backgroundColor: Color(0xFFBFBFBF),
-                      expandedHeight: _height * (1 - kGoldenRatio),
-                      actions: <Widget>[
-                        IconButton(
-                          onPressed: () async {
-                            await _bloc.signOut();
-                            _futureProfile = _bloc.init(context);
-                          },
-                          icon: Icon(
-                            Icons.power,
-                          ),
-                        )
-                      ],
-                      flexibleSpace: FlexibleSpaceBar(
-                        titlePadding: EdgeInsets.all(0),
-                        title: Text(
-                          "The ${_bloc.name}s",
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontFamily: "Anton",
-                          ),
+      backgroundColor: const Color(0xFFFFFAF4),
+      body: FutureBuilder<Null>(
+        future: _futureProfile,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return NestedScrollView(
+              pinnedHeaderSliverHeightBuilder: () => pinnedHeaderHeight,
+              headerSliverBuilder: (context, innerBoxIsScrolled) {
+                return [
+                  SliverAppBar(
+                    pinned: true,
+                    elevation: 0.0,
+                    backgroundColor: Color(0xFFBFBFBF),
+                    expandedHeight: height * (1 - kGoldenRatio),
+                    actions: <Widget>[
+                      IconButton(
+                        padding: EdgeInsets.all(0.0),
+                        onPressed: () async {
+                          await _bloc.signOut();
+                          _futureProfile = _bloc.init(context);
+                        },
+                        icon: Icon(
+                          Icons.power,
                         ),
-                        background: StreamBuilder<List<String>>(
+                      )
+                    ],
+                    flexibleSpace: FlexibleSpaceBar(
+                      titlePadding: EdgeInsets.all(0),
+                      title: Text(
+                        "The ${_bloc.name}s",
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontFamily: "Anton",
+                        ),
+                      ),
+                      background: Container(
+                        child: StreamBuilder<List<String>>(
                           stream: _bloc.getPhotos,
-                          initialData: null,
+                          initialData: [],
                           builder: (context, snapshot) {
-                            if (snapshot.data == null) {
-                              return Container();
-                            } else {
+                            if (snapshot.connectionState == ConnectionState.active) {
                               return Container(
                                 color: Colors.black,
-                                height: _height * (1 - kGoldenRatio),
-                                child: CarouselSlider(
-                                  height: _height,
-                                  enableInfiniteScroll: false,
-                                  viewportFraction: 1.0,
+                                height: height * (1 - kGoldenRatio),
+                                child: CarouselWithIndicator(
+                                  height: height * (1 - kGoldenRatio) + 100,
                                   items: snapshot.data
                                           .map(
                                             (url) => FractionallySizedBox(
@@ -170,106 +162,120 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                                       ],
                                 ),
                               );
+                            } else {
+                              return Container();
                             }
                           },
                         ),
                       ),
                     ),
-                    SliverToBoxAdapter(
-                      child: StreamBuilder<String>(
-                        stream: _bloc.getDescription,
-                        initialData: "",
-                        builder: (context, snapshot) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-                            child: GestureDetector(
-                              onTap: () async {
-                                final newDescription = await showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    final descriptionController = TextEditingController();
-                                    descriptionController.text = snapshot.data;
-                                    return AlertDialog(
-                                      title: Text("Description:"),
-                                      content: TextField(
-                                        controller: descriptionController,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(),
-                                        ),
-                                        maxLines: 5,
+                  ),
+                  SliverToBoxAdapter(
+                    child: StreamBuilder<String>(
+                      stream: _bloc.getDescription,
+                      initialData: "Loading Description",
+                      builder: (context, snapshot) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                          child: GestureDetector(
+                            onTap: () async {
+                              final newDescription = await showDialog(
+                                context: context,
+                                builder: (context) {
+                                  final descriptionController = TextEditingController();
+                                  descriptionController.text = snapshot.data;
+                                  return AlertDialog(
+                                    title: Text("Description:"),
+                                    content: TextField(
+                                      controller: descriptionController,
+                                      decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
                                       ),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          child: Text("CANCEL"),
-                                          onPressed: () {
-                                            Navigator.pop(context, null);
-                                          },
-                                        ),
-                                        FlatButton(
-                                          child: Text("DONE"),
-                                          onPressed: () {
-                                            if (descriptionController.text.trim() == "") {
-                                              descriptionController.text =
-                                                  "This family is too lazy to write any description.";
-                                            }
-                                            Navigator.pop(
-                                                context, descriptionController.text.trim());
-                                          },
-                                        )
-                                      ],
-                                    );
-                                  },
-                                );
-                                if (newDescription != null && newDescription != snapshot.data) {
-                                  _bloc.updateDescription(newDescription);
-                                }
-                              },
-                              child: Text(
-                                snapshot.data,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 5,
-                                style: TextStyle(fontSize: 18.0, fontFamily: "Lobster"),
-                              ),
+                                      maxLines: 5,
+                                    ),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        child: Text("CANCEL"),
+                                        onPressed: () {
+                                          Navigator.pop(context, null);
+                                        },
+                                      ),
+                                      FlatButton(
+                                        child: Text("DONE"),
+                                        onPressed: () {
+                                          if (descriptionController.text.trim() == "") {
+                                            descriptionController.text =
+                                                "This family is too lazy to write any description.";
+                                          }
+                                          Navigator.pop(context, descriptionController.text.trim());
+                                        },
+                                      )
+                                    ],
+                                  );
+                                },
+                              );
+                              if (newDescription != null && newDescription != snapshot.data) {
+                                _bloc.updateDescription(newDescription);
+                              }
+                            },
+                            child: Text(
+                              snapshot.data,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 5,
+                              style: TextStyle(fontSize: 18.0, fontFamily: "Lobster"),
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                    SliverPersistentHeader(
-                      pinned: true,
-                      delegate: SliverTabBarDelegate(
-                        child: Container(
-                          color: Color(0xFFBFBFBF),
-                          child: TabBar(
-                            labelColor: Colors.black87,
-                            unselectedLabelColor: Colors.black12,
-                            indicatorColor: Colors.black,
-                            controller: _tabController,
-                            tabs: [
-                              Tab(icon: Icon(Icons.people_outline)),
-                              Tab(icon: Icon(Icons.photo_library)),
-                              Tab(icon: Icon(Icons.timeline)),
-                            ],
                           ),
+                        );
+                      },
+                    ),
+                  ),
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: SliverTabBarDelegate(
+                      child: Container(
+                        color: Color(0xFFBFBFBF),
+                        child: TabBar(
+                          labelColor: Colors.black87,
+                          unselectedLabelColor: Colors.black12,
+                          indicatorColor: Colors.black,
+                          controller: _tabController,
+                          tabs: [
+                            Tab(icon: Icon(Icons.people_outline)),
+                            Tab(icon: Icon(Icons.photo_library)),
+                            Tab(icon: Icon(Icons.timeline)),
+                          ],
                         ),
                       ),
                     ),
-                  ];
-                },
-                body: TabBarView(
-                  controller: _tabController,
-                  children: [
+                  ),
+                ];
+              },
+              body: TabBarView(
+                controller: _tabController,
+                children: [
+                  NestedScrollViewInnerScrollPositionKeyWidget(
+                    Key("Tab0"),
                     Stemma(),
+                  ),
+                  NestedScrollViewInnerScrollPositionKeyWidget(
+                    Key("Tab1"),
                     ArtefactGallery(),
+                  ),
+                  NestedScrollViewInnerScrollPositionKeyWidget(
+                    Key("Tab2"),
                     TimeLine(),
-                  ],
-                ),
-              );
-            } else {
-              return Container();
-            }
-          },
-        ),
+                  ),
+                ],
+              ),
+              innerScrollPositionKeyBuilder: () {
+                var index = "Tab" + _tabController.index.toString();
+                return Key(index);
+              },
+            );
+          } else {
+            return Container();
+          }
+        },
       ),
     );
   }

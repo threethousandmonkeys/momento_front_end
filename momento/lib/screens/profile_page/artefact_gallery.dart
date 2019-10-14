@@ -14,66 +14,66 @@ class ArtefactGallery extends StatefulWidget {
 }
 
 class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAliveClientMixin {
-  ProfileBloc _bloc;
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    if (_bloc == null) {
-      _bloc = Provider.of<ProfileBloc>(context);
-    }
     return StreamBuilder<List<Artefact>>(
-      stream: _bloc.getArtefacts,
-      initialData: [],
+      stream: Provider.of<ProfileBloc>(context).getArtefacts,
       builder: (context, snapshot) {
-        return GridView.count(
-          key: PageStorageKey("gallery"),
-          padding: EdgeInsets.only(top: 0),
-          crossAxisCount: 3,
-          crossAxisSpacing: 2,
-          mainAxisSpacing: 2,
-          children: snapshot.data
-              .map(
-                (artefact) => GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ArtefactDetailPage(artefact),
-                      ),
-                    );
-                  },
-                  child: CachedNetworkImage(
-                    imageUrl: artefact.thumbnail ?? artefact.photo,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              )
-              .toList()
-                ..add(
-                  GestureDetector(
-                    child: Container(
-                      color: Colors.white,
-                      child: Icon(
-                        Icons.add,
-                        size: 60,
-                      ),
-                    ),
-                    onTap: () async {
-                      final newArtefact = await Navigator.push(
+        if (snapshot.connectionState == ConnectionState.active) {
+          return GridView.count(
+            key: PageStorageKey("gallery"),
+            crossAxisCount: 3,
+            crossAxisSpacing: 2,
+            mainAxisSpacing: 2,
+            padding: EdgeInsets.all(0.0),
+            children: snapshot.data
+                .map(
+                  (artefact) => GestureDetector(
+                    onTap: () {
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              AddNewArtefactPage(_bloc.family, _bloc.getLatestMembers),
+                          builder: (context) => ArtefactDetailPage(artefact),
                         ),
                       );
-                      if (newArtefact != null) {
-                        _bloc.addArtefact(newArtefact);
-                      }
                     },
+                    child: CachedNetworkImage(
+                      imageUrl: artefact.thumbnail ?? artefact.photo,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-        );
+                )
+                .toList()
+                  ..add(
+                    GestureDetector(
+                      child: Container(
+                        color: Colors.white,
+                        child: Icon(
+                          Icons.add,
+                          size: 60,
+                        ),
+                      ),
+                      onTap: () async {
+                        final newArtefact = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddNewArtefactPage(
+                              Provider.of<ProfileBloc>(context).family,
+                              Provider.of<ProfileBloc>(context).getLatestMembers,
+                            ),
+                          ),
+                        );
+                        if (newArtefact != null) {
+                          Provider.of<ProfileBloc>(context).addArtefact(newArtefact);
+                        }
+                      },
+                    ),
+                  ),
+          );
+        } else {
+          return Container();
+        }
       },
     );
   }

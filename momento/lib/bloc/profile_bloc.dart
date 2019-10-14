@@ -48,6 +48,23 @@ class ProfileBloc {
   Function(List<String>) get _setPhotos => _photosController.add;
   Stream<List<String>> get getPhotos => _photosController.stream;
 
+  Future<void> _getPhotos() async {
+    final numPhotos = int.parse(await _secureStorage.read(key: "numPhotos"));
+    List<String> photos = [];
+    for (int i = 0; i < numPhotos; i++) {
+      photos.add(await _secureStorage.read(key: "photo$i"));
+    }
+    _setPhotos(photos);
+  }
+
+  Future<void> _updatePhotos() async {
+    _setPhotos(family.photos);
+    await _secureStorage.write(key: "numPhotos", value: family.photos.length.toString());
+    for (int i = 0; i < family.photos.length; i++) {
+      await _secureStorage.write(key: "photo$i", value: family.photos[i]);
+    }
+  }
+
   Future<Null> uploadPhoto(File photo) async {
     // upload photo to cloud and get url
     final id = "profile_photo_" + DateTime.now().millisecondsSinceEpoch.toString();
@@ -57,6 +74,8 @@ class ProfileBloc {
     photos.add(url);
     _setPhotos(photos);
     family.photos.add(url);
+    await _secureStorage.write(key: "numPhotos", value: family.photos.length.toString());
+    await _secureStorage.write(key: "photo${family.photos.length - 1}", value: url);
     // update the database entry
     _familyRepository.updatePhotos(family);
   }
@@ -164,16 +183,19 @@ class ProfileBloc {
   Future<Null> init(BuildContext context) async {
     await _authenticate(context);
     name = await _secureStorage.read(key: "familyName");
+    await _getPhotos();
     _getFamily().then((_) {
       _setDescription(family.description);
-      _setPhotos(family.photos);
+      if (_photosController.value.length == 0) {
+        _updatePhotos();
+      }
       _getArtefacts();
       _getMembers();
       _getEvents();
     });
   }
 
-  Future<Null> _authenticate(BuildContext context) async {
+  Future<void> _authenticate(BuildContext context) async {
     uid = await _secureStorage.read(key: "uid");
     if (uid == null) {
       uid = await Navigator.push(
@@ -188,7 +210,6 @@ class ProfileBloc {
 
   Future<Null> signOut() async {
     await _auth.signOut();
-    await _secureStorage.delete(key: "uid");
-    await _secureStorage.delete(key: "familyName");
+    await _secureStorage.deleteAll();
   }
 }

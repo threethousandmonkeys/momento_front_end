@@ -19,9 +19,9 @@ class EventRepository {
 
   Future<Null> updateEvent(Event event) async {
     await _firestore.updateDocument(
-      collection: "event",
-      documentId: event.id,
-      newData: event.serialize(),
+      "event",
+      event.id,
+      event.serialize(),
     );
   }
 }

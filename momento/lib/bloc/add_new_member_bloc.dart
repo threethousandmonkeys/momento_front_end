@@ -69,8 +69,8 @@ class AddNewMemberBloc {
       photo: url,
       thumbnail: null,
     );
-    final memberId = await memberRepository.createMember(id, newMember);
-    await familyRepository.addMember(family, memberId);
+    await memberRepository.createMember(id, newMember);
+    await familyRepository.addMember(family, id);
     return newMember;
   }
 

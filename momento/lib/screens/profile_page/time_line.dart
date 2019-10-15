@@ -5,6 +5,7 @@ import 'package:momento/models/event.dart';
 import 'package:momento/screens/components/lib/timeline.dart';
 import 'package:momento/screens/components/lib/timeline_model.dart';
 import 'package:momento/screens/detail_page/event_detail_page.dart';
+import 'package:momento/screens/form_pages/add_new_event_page.dart';
 import 'package:provider/provider.dart';
 
 /// TimeLine: the widget of timeline
@@ -99,7 +100,7 @@ class _TimeLineState extends State<TimeLine> {
           icon: Icon(Icons.date_range),
         ),
       );
-      position = changePosition(position);
+      position = _changePosition(position);
     }
 
     // create a timeline item showing "now" at the end of the timeline
@@ -120,7 +121,7 @@ class _TimeLineState extends State<TimeLine> {
   }
 
   /// alternating the display position of timeline items
-  TimelineItemPosition changePosition(TimelineItemPosition position) {
+  TimelineItemPosition _changePosition(TimelineItemPosition position) {
     if (position == TimelineItemPosition.right) {
       return (TimelineItemPosition.left);
     } else {
@@ -138,10 +139,38 @@ class _TimeLineState extends State<TimeLine> {
         initialData: null,
         builder: (context, snapshot) {
           if (snapshot.data != null) {
-            return Timeline(
+            return ListView(
               key: const PageStorageKey<String>("timeline"),
-              children: _createTimelineModels(snapshot.data),
-              position: TimelinePosition.Center,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () async {
+                    final newEvent = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddNewEventPage(
+                          Provider.of<ProfileBloc>(context).family,
+                          Provider.of<ProfileBloc>(context).getLatestMembers,
+                        ),
+                      ),
+                    );
+                    if (newEvent != null) {
+                      Provider.of<ProfileBloc>(context).addEvent(newEvent);
+                    }
+                  },
+                  child: Icon(
+                    Icons.add,
+                    size: 50,
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Timeline(
+                  physics: NeverScrollableScrollPhysics(),
+                  children: _createTimelineModels(snapshot.data),
+                  position: TimelinePosition.Center,
+                ),
+              ],
             );
           } else {
             return Scaffold();

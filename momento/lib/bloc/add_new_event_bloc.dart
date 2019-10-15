@@ -53,7 +53,7 @@ class AddNewEventBloc {
       photo: url,
       thumbnail: null,
     );
-    final eventId = await eventRepository.createEvent(id, newEvent);
+    await eventRepository.createEvent(id, newEvent);
     await familyRepository.addEvent(family, id);
     return newEvent;
   }

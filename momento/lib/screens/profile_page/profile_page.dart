@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart' hide NestedScrollView;
 import 'package:image_picker/image_picker.dart';
 import 'package:momento/screens/components/carousel_with_indicator.dart';
+import 'package:momento/screens/components/viewable_image.dart';
 import 'package:provider/provider.dart';
 import 'package:momento/constants.dart';
 import 'package:momento/bloc/profile_bloc.dart';
@@ -9,8 +10,6 @@ import 'package:momento/screens/profile_page/artefact_gallery.dart';
 import 'package:momento/screens/profile_page/stemma.dart';
 import 'package:momento/screens/profile_page/time_line.dart';
 import 'package:momento/services/dialogs.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 
 const kTabBarHeight = 46.0;
@@ -102,30 +101,17 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                             if (snapshot.connectionState == ConnectionState.active) {
                               return Container(
                                 color: Colors.black,
-                                height: height * (1 - kGoldenRatio),
                                 child: CarouselWithIndicator(
-                                  height: height * (1 - kGoldenRatio) + 100,
+                                  height: height * (1 - kGoldenRatio),
                                   items: snapshot.data
                                           .map(
-                                            (url) => FractionallySizedBox(
-                                              heightFactor: 1,
-                                              widthFactor: 1,
-                                              child: CachedNetworkImage(
-                                                fit: BoxFit.fitHeight,
-                                                imageUrl: url,
-                                                placeholder: (context, url) => SpinKitCircle(
-                                                  color: Colors.purple,
-                                                ),
-                                                errorWidget: (context, url, error) =>
-                                                    Icon(Icons.error),
-                                              ),
+                                            (url) => Container(
+                                              child: ViewableImage(url),
                                             ),
                                           )
                                           .toList() +
                                       [
-                                        FractionallySizedBox(
-                                          widthFactor: 1,
-                                          heightFactor: 1,
+                                        Container(
                                           child: GestureDetector(
                                             behavior: HitTestBehavior.translucent,
                                             onTap: () async {

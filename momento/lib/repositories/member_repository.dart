@@ -1,4 +1,3 @@
-import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 import 'package:momento/services/firestore_service.dart';

@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_image/extended_image.dart';
 import "package:flutter/material.dart";
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/models/artefact.dart';
@@ -13,28 +13,33 @@ class ArtefactGallery extends StatefulWidget {
   _ArtefactGalleryState createState() => _ArtefactGalleryState();
 }
 
-class _ArtefactGalleryState extends State<ArtefactGallery> {
+class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAliveClientMixin {
   List<Artefact> currentArtefacts;
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<Artefact>>(
-      stream: Provider.of<ProfileBloc>(context).getArtefacts,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.active) {
-          if (currentArtefacts == snapshot.data) {}
-          return GridView.count(
-            key: PageStorageKey("gallery"),
-            crossAxisCount: 3,
-            crossAxisSpacing: 2,
-            mainAxisSpacing: 2,
-            padding: EdgeInsets.all(0.0),
-            children: _buildGrids(context, snapshot.data),
-          );
-        } else {
-          return Container();
-        }
-      },
+    return SafeArea(
+      top: false,
+      bottom: false,
+      child: StreamBuilder<List<Artefact>>(
+        stream: Provider.of<ProfileBloc>(context).getArtefacts,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
+            if (currentArtefacts == snapshot.data) {}
+            return GridView.count(
+              physics: ClampingScrollPhysics(),
+              key: PageStorageKey("gallery"),
+              crossAxisCount: 3,
+              crossAxisSpacing: 2,
+              mainAxisSpacing: 2,
+              padding: EdgeInsets.all(0.0),
+              children: _buildGrids(context, snapshot.data),
+            );
+          } else {
+            return Container();
+          }
+        },
+      ),
     );
   }
 
@@ -50,9 +55,10 @@ class _ArtefactGalleryState extends State<ArtefactGallery> {
                 ),
               );
             },
-            child: CachedNetworkImage(
-              imageUrl: artefact.thumbnail ?? artefact.photo,
+            child: ExtendedImage.network(
+              artefact.thumbnail ?? artefact.photo,
               fit: BoxFit.cover,
+              cache: true,
             ),
           ),
         )
@@ -83,4 +89,7 @@ class _ArtefactGalleryState extends State<ArtefactGallery> {
             ),
           );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

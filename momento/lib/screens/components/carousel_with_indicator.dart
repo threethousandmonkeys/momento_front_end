@@ -32,7 +32,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
           left: 0.0,
           right: 0.0,
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 3.0),
+            padding: const EdgeInsets.only(bottom: 5.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: _buildIndicators(),

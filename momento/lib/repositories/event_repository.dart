@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:momento/models/event.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 import 'package:momento/services/firestore_service.dart';

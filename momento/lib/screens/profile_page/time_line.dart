@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/models/event.dart';
@@ -15,7 +15,7 @@ class TimeLine extends StatefulWidget {
 }
 
 /// _TimeLineState: the state control of timeline
-class _TimeLineState extends State<TimeLine> {
+class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin {
   ProfileBloc _bloc;
 
   ///create all the models need to display on the timeline based on a list
@@ -80,10 +80,11 @@ class _TimeLineState extends State<TimeLine> {
                     padding: EdgeInsets.all(8.0),
                     child: FractionallySizedBox(
                       widthFactor: 1,
-                      child: CachedNetworkImage(
+                      child: ExtendedImage.network(
+                        events[i].thumbnail ?? events[i].photo,
                         height: 150,
-                        imageUrl: events[i].thumbnail ?? events[i].photo,
                         fit: BoxFit.cover,
+                        cache: true,
                       ),
                     ),
                   ),
@@ -134,47 +135,56 @@ class _TimeLineState extends State<TimeLine> {
     if (_bloc == null) {
       _bloc = Provider.of<ProfileBloc>(context);
     }
-    return StreamBuilder<List<Event>>(
-        stream: _bloc.getEvents,
-        initialData: null,
-        builder: (context, snapshot) {
-          if (snapshot.data != null) {
-            return ListView(
-              key: const PageStorageKey<String>("timeline"),
-              children: <Widget>[
-                GestureDetector(
-                  onTap: () async {
-                    final newEvent = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddNewEventPage(
-                          Provider.of<ProfileBloc>(context).family,
-                          Provider.of<ProfileBloc>(context).getLatestMembers,
-                        ),
+    return SafeArea(
+      top: false,
+      bottom: false,
+      child: StreamBuilder<List<Event>>(
+          stream: _bloc.getEvents,
+          initialData: null,
+          builder: (context, snapshot) {
+            if (snapshot.data != null) {
+              return CustomScrollView(
+                key: const PageStorageKey<String>("timeline"),
+                physics: ClampingScrollPhysics(),
+                slivers: <Widget>[
+                  SliverToBoxAdapter(
+                    child: GestureDetector(
+                      onTap: () async {
+                        final newEvent = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddNewEventPage(
+                              Provider.of<ProfileBloc>(context).family,
+                              Provider.of<ProfileBloc>(context).getLatestMembers,
+                            ),
+                          ),
+                        );
+                        if (newEvent != null) {
+                          Provider.of<ProfileBloc>(context).addEvent(newEvent);
+                        }
+                      },
+                      child: Icon(
+                        Icons.add,
+                        size: 50,
                       ),
-                    );
-                    if (newEvent != null) {
-                      Provider.of<ProfileBloc>(context).addEvent(newEvent);
-                    }
-                  },
-                  child: Icon(
-                    Icons.add,
-                    size: 50,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Timeline(
-                  physics: NeverScrollableScrollPhysics(),
-                  children: _createTimelineModels(snapshot.data),
-                  position: TimelinePosition.Center,
-                ),
-              ],
-            );
-          } else {
-            return Scaffold();
-          }
-        });
+                  SliverToBoxAdapter(
+                    child: Timeline(
+                      physics: NeverScrollableScrollPhysics(),
+                      children: _createTimelineModels(snapshot.data),
+                      position: TimelinePosition.Center,
+                    ),
+                  ),
+                ],
+              );
+            } else {
+              return Scaffold();
+            }
+          }),
+    );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

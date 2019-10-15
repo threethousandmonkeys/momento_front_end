@@ -14,6 +14,7 @@ import 'package:momento/screens/signin_page/sign_in_page.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ProfileBloc {
@@ -202,9 +203,9 @@ class ProfileBloc {
     if (uid == null) {
       uid = await Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (context) => SignInPage(),
-          fullscreenDialog: true,
+        PageTransition(
+          type: PageTransitionType.downToUp,
+          child: SignInPage(),
         ),
       );
     }

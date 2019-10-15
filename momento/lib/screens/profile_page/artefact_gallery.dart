@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import "package:flutter/material.dart";
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/models/artefact.dart';
@@ -13,32 +14,37 @@ class ArtefactGallery extends StatefulWidget {
 }
 
 class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAliveClientMixin {
-  ProfileBloc _bloc;
+  List<Artefact> currentArtefacts;
 
   @override
   Widget build(BuildContext context) {
-    _bloc = Provider.of<ProfileBloc>(context);
-    return StreamBuilder<List<Artefact>>(
-      stream: _bloc.getArtefacts,
-      initialData: null,
-      builder: (context, snapshot) {
-        if (snapshot.data == null) {
-          return Text("Loading");
-        }
-        return GridView.count(
-          physics: NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.only(top: 0),
-          crossAxisCount: 3,
-          crossAxisSpacing: 1,
-          mainAxisSpacing: 1,
-          children: _buildGrids(snapshot.data),
-        );
-      },
+    return SafeArea(
+      top: false,
+      bottom: false,
+      child: StreamBuilder<List<Artefact>>(
+        stream: Provider.of<ProfileBloc>(context).getArtefacts,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
+            if (currentArtefacts == snapshot.data) {}
+            return GridView.count(
+              physics: ClampingScrollPhysics(),
+              key: PageStorageKey("gallery"),
+              crossAxisCount: 3,
+              crossAxisSpacing: 2,
+              mainAxisSpacing: 2,
+              padding: EdgeInsets.all(0.0),
+              children: _buildGrids(context, snapshot.data),
+            );
+          } else {
+            return Container();
+          }
+        },
+      ),
     );
   }
 
-  List<Widget> _buildGrids(List<Artefact> artefacts) {
-    List<Widget> grids = artefacts
+  List<Widget> _buildGrids(BuildContext context, List<Artefact> artefacts) {
+    return artefacts
         .map(
           (artefact) => GestureDetector(
             onTap: () {
@@ -49,37 +55,39 @@ class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAli
                 ),
               );
             },
-            child: FadeInImage.assetNetwork(
-              placeholder: "assets/images/loading_image.gif",
-              image: artefact.thumbnail ?? artefact.photo,
+            child: ExtendedImage.network(
+              artefact.thumbnail ?? artefact.photo,
               fit: BoxFit.cover,
+              cache: true,
             ),
           ),
         )
-        .toList();
-    grids.add(
-      GestureDetector(
-        child: Container(
-          color: Colors.white,
-          child: Icon(
-            Icons.add,
-            size: 60,
-          ),
-        ),
-        onTap: () async {
-          final newArtefact = await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddNewArtefactPage(_bloc.family, _bloc.getLatestMembers),
+        .toList()
+          ..add(
+            GestureDetector(
+              child: Container(
+                color: Colors.white,
+                child: Icon(
+                  Icons.add,
+                  size: 60,
+                ),
+              ),
+              onTap: () async {
+                final newArtefact = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddNewArtefactPage(
+                      Provider.of<ProfileBloc>(context).family,
+                      Provider.of<ProfileBloc>(context).getLatestMembers,
+                    ),
+                  ),
+                );
+                if (newArtefact != null) {
+                  Provider.of<ProfileBloc>(context).addArtefact(newArtefact);
+                }
+              },
             ),
           );
-          if (newArtefact != null) {
-            _bloc.addArtefact(newArtefact);
-          }
-        },
-      ),
-    );
-    return grids;
   }
 
   @override

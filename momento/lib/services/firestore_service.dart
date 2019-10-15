@@ -22,22 +22,26 @@ class FirestoreService {
     return dr.documentID;
   }
 
-  Future<Null> updateDocumentByField({
+  Future<Null> updateDocumentByField(
     String collection,
     String documentId,
     String field,
     dynamic newData,
-  }) async {
+  ) async {
     await _firestore.collection(collection).document(documentId).updateData({
       field: newData,
     });
   }
 
-  Future<Null> updateDocument({
+  Future<void> updateDocument(
     String collection,
     String documentId,
     Map<String, dynamic> newData,
-  }) async {
+  ) async {
     await _firestore.collection(collection).document(documentId).setData(newData);
+  }
+
+  Future<void> deleteDocument(String collection, String documentId) async {
+    await _firestore.collection(collection).document(documentId).delete();
   }
 }

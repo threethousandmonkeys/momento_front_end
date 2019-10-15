@@ -4,8 +4,11 @@ import 'package:momento/bloc/add_new_event_bloc.dart';
 import 'package:momento/constants.dart';
 import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
+import 'package:momento/repositories/event_repository.dart';
+import 'package:momento/repositories/family_repository.dart';
 import 'package:momento/screens/form_pages//components/form_image_selector.dart';
 import 'package:momento/screens/components/ugly_button.dart';
+import 'package:momento/services/cloud_storage_service.dart';
 import 'package:momento/services/dialogs.dart';
 import 'package:momento/services/snack_bar_service.dart';
 import 'components/form_date_field.dart';
@@ -20,7 +23,11 @@ class AddNewEventPage extends StatefulWidget {
 }
 
 class _AddNewEventPageState extends State<AddNewEventPage> {
-  final _bloc = AddNewEventBloc();
+  final _bloc = AddNewEventBloc(
+    EventRepository(),
+    FamilyRepository(),
+    CloudStorageService(),
+  );
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   final _snackBarService = SnackBarService();
   final _scaffoldKey = GlobalKey<ScaffoldState>();

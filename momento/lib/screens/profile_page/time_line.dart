@@ -1,11 +1,12 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/models/event.dart';
+import 'package:momento/screens/components/lib/timeline.dart';
+import 'package:momento/screens/components/lib/timeline_model.dart';
 import 'package:momento/screens/detail_page/event_detail_page.dart';
 import 'package:momento/screens/form_pages/add_new_event_page.dart';
 import 'package:provider/provider.dart';
-import 'package:timeline_list/timeline.dart';
-import 'package:timeline_list/timeline_model.dart';
 
 /// TimeLine: the widget of timeline
 class TimeLine extends StatefulWidget {
@@ -19,10 +20,11 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
 
   ///create all the models need to display on the timeline based on a list
   ///of given events
-  List<TimelineModel> createTimelineModels(List<Event> events) {
+  List<TimelineModel> _createTimelineModels(List<Event> events) {
     TimelineItemPosition position = TimelineItemPosition.right;
     int year = -1;
-    TextStyle textStyle = TextStyle(fontFamily: 'Mansalva', fontSize: 25, color: Colors.brown[700]);
+    TextStyle textStyle =
+        TextStyle(fontFamily: 'WorkSansMedium', fontSize: 20, color: Colors.brown[700]);
 
     // sort the events based on date
     if (events.isEmpty == false) {
@@ -35,7 +37,8 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
       // events happened in that year
       if (events[i].date.year != year) {
         year = events[i].date.year;
-        timelineModels.add(TimelineModel(
+        timelineModels.add(
+          TimelineModel(
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
@@ -46,17 +49,20 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
               ],
             ),
             position: TimelineItemPosition.left,
-            iconBackground: Colors.lightGreen,
-            icon: Icon(Icons.star)));
+            iconBackground: Color(0xFF7CA9DF),
+            icon: Icon(Icons.star),
+          ),
+        );
       }
-      timelineModels.add(TimelineModel(
+      timelineModels.add(
+        TimelineModel(
           Card(
             color: Color(0xFFFAFAFA),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),
             ),
             child: GestureDetector(
-              onTap: () async {
+              onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -71,14 +77,14 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
                     style: textStyle,
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(8.0),
                     child: FractionallySizedBox(
                       widthFactor: 1,
-                      child: FadeInImage.assetNetwork(
+                      child: ExtendedImage.network(
+                        events[i].thumbnail ?? events[i].photo,
                         height: 150,
-                        placeholder: "assets/images/loading_image.gif",
-                        image: events[i].thumbnail ?? events[i].photo,
                         fit: BoxFit.cover,
+                        cache: true,
                       ),
                     ),
                   ),
@@ -91,9 +97,11 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
             ),
           ),
           position: position,
-          iconBackground: Colors.lightBlue,
-          icon: Icon(Icons.date_range)));
-      position = changePosition(position);
+          iconBackground: Color(0xFFB395D4),
+          icon: Icon(Icons.date_range),
+        ),
+      );
+      position = _changePosition(position);
     }
 
     // create a timeline item showing "now" at the end of the timeline
@@ -108,13 +116,13 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
           ],
         ),
         position: TimelineItemPosition.left,
-        iconBackground: Colors.lightGreen,
+        iconBackground: Color(0xFF7CA9DF),
         icon: Icon(Icons.mood)));
     return timelineModels;
   }
 
   /// alternating the display position of timeline items
-  TimelineItemPosition changePosition(TimelineItemPosition position) {
+  TimelineItemPosition _changePosition(TimelineItemPosition position) {
     if (position == TimelineItemPosition.right) {
       return (TimelineItemPosition.left);
     } else {
@@ -127,51 +135,56 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
     if (_bloc == null) {
       _bloc = Provider.of<ProfileBloc>(context);
     }
-//    return Timeline(children: items, position: TimelinePosition.Center);
-    return StreamBuilder<List<Event>>(
-        stream: _bloc.getEvents,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.active) {
-//            return Timeline(children: items, position: TimelinePosition.Center);
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Column(
-                children: <Widget>[
-                  GestureDetector(
-                    onTap: () async {
-                      final newEvent = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              AddNewEventPage(_bloc.family, _bloc.getLatestMembers),
-                        ),
-                      );
-                      if (newEvent != null) {
-                        _bloc.addEvent(newEvent);
-                      }
-                    },
-                    child: Icon(
-                      Icons.add_circle_outline,
-                      size: 50,
+    return SafeArea(
+      top: false,
+      bottom: false,
+      child: StreamBuilder<List<Event>>(
+          stream: _bloc.getEvents,
+          initialData: null,
+          builder: (context, snapshot) {
+            if (snapshot.data != null) {
+              return CustomScrollView(
+                key: const PageStorageKey<String>("timeline"),
+                physics: ClampingScrollPhysics(),
+                slivers: <Widget>[
+                  SliverToBoxAdapter(
+                    child: GestureDetector(
+                      onTap: () async {
+                        final newEvent = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddNewEventPage(
+                              Provider.of<ProfileBloc>(context).family,
+                              Provider.of<ProfileBloc>(context).getLatestMembers,
+                            ),
+                          ),
+                        );
+                        if (newEvent != null) {
+                          Provider.of<ProfileBloc>(context).addEvent(newEvent);
+                        }
+                      },
+                      child: Icon(
+                        Icons.add,
+                        size: 50,
+                      ),
                     ),
                   ),
-                  Flexible(
+                  SliverToBoxAdapter(
                     child: Timeline(
                       physics: NeverScrollableScrollPhysics(),
-                      children: createTimelineModels(snapshot.data),
+                      children: _createTimelineModels(snapshot.data),
                       position: TimelinePosition.Center,
                     ),
                   ),
                 ],
-              ),
-            );
-          } else {
-            return Scaffold();
-          }
-        });
+              );
+            } else {
+              return Scaffold();
+            }
+          }),
+    );
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

@@ -19,7 +19,7 @@ class Entry extends StatelessWidget {
           ),
         ),
         Text(
-          content,
+          content ?? "",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,

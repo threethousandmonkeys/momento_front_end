@@ -2,14 +2,24 @@ import 'dart:io';
 
 import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
-import 'package:momento/repositories/member_repository.dart';
 import 'package:momento/repositories/family_repository.dart';
+import 'package:momento/repositories/member_repository.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 
 class AddNewMemberBloc {
-  final _memberRepository = MemberRepository();
-  final _familyRepository = FamilyRepository();
-  final _cloudStorageService = CloudStorageService();
+  final MemberRepository memberRepository;
+  final FamilyRepository familyRepository;
+  final CloudStorageService cloudStorageService;
+
+  AddNewMemberBloc(
+    this.memberRepository,
+    this.familyRepository,
+    this.cloudStorageService,
+    this.members,
+  ) {
+    updateFathers();
+    updateMothers();
+  }
 
   final List<Member> members;
 
@@ -25,11 +35,6 @@ class AddNewMemberBloc {
 
   List<Member> fathers;
   List<Member> mothers;
-
-  AddNewMemberBloc(this.members) {
-    updateFathers();
-    updateMothers();
-  }
 
   String validate() {
     if (firstName == "") {
@@ -49,10 +54,10 @@ class AddNewMemberBloc {
 
   /// upload photo to cloud, return a retrieval path
   Future<Member> addNewMember(Family family) async {
-    final fileName = "member_${DateTime.now().millisecondsSinceEpoch}";
-    final url = await _cloudStorageService.uploadPhotoAt("${family.id}/", fileName, photo);
+    final id = DateTime.now().millisecondsSinceEpoch.toString();
+    final url = await cloudStorageService.uploadPhotoAt("${family.id}/", "member_$id", photo);
     Member newMember = Member(
-      id: null,
+      id: id,
       firstName: firstName,
       middleName: middleName,
       gender: gender,
@@ -64,9 +69,8 @@ class AddNewMemberBloc {
       photo: url,
       thumbnail: null,
     );
-    final memberId = await _memberRepository.createMember(newMember);
-    await _familyRepository.addMember(family, memberId);
-    newMember.id = memberId;
+    await memberRepository.createMember(id, newMember);
+    await familyRepository.addMember(family, id);
     return newMember;
   }
 

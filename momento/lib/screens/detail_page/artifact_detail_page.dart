@@ -1,9 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/screens/components/entry.dart';
 import 'package:momento/screens/form_pages/update_artefact_page.dart';
+import 'package:momento/screens/components/viewable_image.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants.dart';
@@ -34,13 +33,7 @@ class _ArtefactDetailPageState extends State<ArtefactDetailPage> {
         child: ListView(
           padding: EdgeInsets.all(0),
           children: <Widget>[
-            CachedNetworkImage(
-              imageUrl: currentArtefact.photo,
-              placeholder: (context, url) => SpinKitCircle(
-                color: Colors.purple,
-              ),
-              errorWidget: (context, url, error) => Icon(Icons.error),
-            ),
+            ViewableImage(currentArtefact.photo),
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(20),

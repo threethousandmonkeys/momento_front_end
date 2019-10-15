@@ -31,6 +31,10 @@ class SignInBloc {
         email: email,
         password: password,
       );
+      await _familyRepository.createFamily(authUser.uid, name, email);
+      await _secureStorage.write(key: "uid", value: authUser.uid);
+      await _secureStorage.write(key: "familyName", value: name);
+      await _secureStorage.write(key: "numPhotos", value: '0');
     } catch (e) {
       switch (e.code) {
         case "ERROR_WEAK_PASSWORD":
@@ -78,17 +82,15 @@ class SignInBloc {
       }
       return null;
     }
-    if (authUser!=null) {
-      await _secureStorage.write(key: "uid", value: authUser.uid);
-      final family = await _familyRepository.getFamily(authUser.uid);
-      await _secureStorage.write(key: "familyName", value: family.name);
-    }
+    await _secureStorage.write(key: "uid", value: authUser.uid);
+    final family = await _familyRepository.getFamily(authUser.uid);
+    await _secureStorage.write(key: "familyName", value: family.name);
+    await _secureStorage.write(key: "numPhotos", value: '0');
     return authUser;
   }
 
   Future<Null> signOut() async {
     await _auth.signOut();
-    await _secureStorage.delete(key: "uid");
-    await _secureStorage.delete(key: "familyName");
+    await _secureStorage.deleteAll();
   }
 }

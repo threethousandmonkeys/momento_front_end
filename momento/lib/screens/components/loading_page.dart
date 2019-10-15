@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../constants.dart';
 
 class LoadingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: kBackgroundDecoration,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 30.0),
+    return Scaffold(
+      body: Container(
+        decoration: kBackgroundDecoration,
         child: Center(
-          child: Image(
-            image: AssetImage(
-              'assets/images/loading.gif',
-            ),
-          ),
-        ),
+            child: SpinKitPulse(
+          color: Colors.black12,
+        )),
       ),
     );
   }

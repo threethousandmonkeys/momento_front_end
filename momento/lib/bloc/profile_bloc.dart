@@ -14,6 +14,7 @@ import 'package:momento/screens/signin_page/sign_in_page.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:rxdart/rxdart.dart';
 
 class ProfileBloc {
@@ -48,6 +49,23 @@ class ProfileBloc {
   Function(List<String>) get _setPhotos => _photosController.add;
   Stream<List<String>> get getPhotos => _photosController.stream;
 
+  Future<void> _getPhotos() async {
+    final numPhotos = int.parse(await _secureStorage.read(key: "numPhotos"));
+    List<String> photos = [];
+    for (int i = 0; i < numPhotos; i++) {
+      photos.add(await _secureStorage.read(key: "photo$i"));
+    }
+    _setPhotos(photos);
+  }
+
+  Future<void> _updatePhotos() async {
+    _setPhotos(family.photos);
+    await _secureStorage.write(key: "numPhotos", value: family.photos.length.toString());
+    for (int i = 0; i < family.photos.length; i++) {
+      await _secureStorage.write(key: "photo$i", value: family.photos[i]);
+    }
+  }
+
   Future<Null> uploadPhoto(File photo) async {
     // upload photo to cloud and get url
     final id = "profile_photo_" + DateTime.now().millisecondsSinceEpoch.toString();
@@ -57,8 +75,10 @@ class ProfileBloc {
     photos.add(url);
     _setPhotos(photos);
     family.photos.add(url);
+    await _secureStorage.write(key: "numPhotos", value: family.photos.length.toString());
+    await _secureStorage.write(key: "photo${family.photos.length - 1}", value: url);
     // update the database entry
-    _familyRepository.addPhoto(family, url);
+    _familyRepository.updatePhotos(family);
   }
 
   final _membersController = BehaviorSubject<List<Member>>();
@@ -74,7 +94,9 @@ class ProfileBloc {
   }
 
   Future<Null> _getMembers() async {
-    final members = await _memberRepository.getFamilyMembers(family);
+    final futureMembers =
+        family.members.map((id) => _memberRepository.getMemberById(family.id, id));
+    final members = await Future.wait(futureMembers);
     _setMembers(members);
   }
 
@@ -94,8 +116,8 @@ class ProfileBloc {
   Stream<List<Artefact>> get getArtefacts => _artefactsController.stream;
 
   Future<Null> _getArtefacts() async {
-    List<Future<Artefact>> futureArtefacts =
-        family.artefacts.map((id) => _artefactRepository.getArtefactById(id)).toList();
+    final futureArtefacts =
+        family.artefacts.map((id) => _artefactRepository.getArtefactById(family.id, id)).toList();
     List<Artefact> artefacts = await Future.wait(futureArtefacts);
     _setArtefacts(artefacts);
   }
@@ -134,7 +156,7 @@ class ProfileBloc {
 
   Future<Null> _getEvents() async {
     List<Future<Event>> futureEvents =
-        family.events.map((id) => _eventRepository.getEventById(id)).toList();
+        family.events.map((id) => _eventRepository.getEventById(family.id, id)).toList();
     List<Event> events = await Future.wait(futureEvents);
     _setEvents(events);
   }
@@ -164,23 +186,26 @@ class ProfileBloc {
   Future<Null> init(BuildContext context) async {
     await _authenticate(context);
     name = await _secureStorage.read(key: "familyName");
+    await _getPhotos();
     _getFamily().then((_) {
       _setDescription(family.description);
-      _setPhotos(family.photos);
+      if (_photosController.value.length == 0) {
+        _updatePhotos();
+      }
       _getArtefacts();
       _getMembers();
       _getEvents();
     });
   }
 
-  Future<Null> _authenticate(BuildContext context) async {
+  Future<void> _authenticate(BuildContext context) async {
     uid = await _secureStorage.read(key: "uid");
     if (uid == null) {
       uid = await Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (context) => SignInPage(),
-          fullscreenDialog: true,
+        PageTransition(
+          type: PageTransitionType.downToUp,
+          child: SignInPage(),
         ),
       );
     }
@@ -188,7 +213,6 @@ class ProfileBloc {
 
   Future<Null> signOut() async {
     await _auth.signOut();
-    await _secureStorage.delete(key: "uid");
-    await _secureStorage.delete(key: "familyName");
+    await _secureStorage.deleteAll();
   }
 }

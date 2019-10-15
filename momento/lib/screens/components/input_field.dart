@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:momento/constants.dart';
 import 'package:flutter/cupertino.dart';
 
-
-
 class InputField extends StatelessWidget {
   InputField({
     this.controller,
@@ -42,6 +40,7 @@ class InputField extends StatelessWidget {
             keyboardType: inputType,
             obscureText: obscureText ?? false,
             style: kTextFieldTextStyle,
+            autocorrect: false,
             decoration: InputDecoration(
               border: InputBorder.none,
               icon: Icon(

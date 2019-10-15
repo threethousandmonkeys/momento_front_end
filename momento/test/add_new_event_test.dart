@@ -19,8 +19,8 @@ void main() {
   setUp(() {
     addNewEventBloc = AddNewEventBloc(
       MockEventRepository(),
-      MockCloudStorageService(),
       MockFamilyRepository(),
+      MockCloudStorageService(),
     );
   });
 

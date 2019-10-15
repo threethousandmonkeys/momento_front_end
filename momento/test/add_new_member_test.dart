@@ -19,7 +19,7 @@ void main() {
 
   setUp(() {
     addNewArtefactBloc = AddNewMemberBloc(
-        MockMemberRepository(), MockCloudStorageService(), MockFamilyRepository(), []);
+        MockMemberRepository(), MockFamilyRepository(), MockCloudStorageService(), []);
   });
 
   test("intial page state", () {

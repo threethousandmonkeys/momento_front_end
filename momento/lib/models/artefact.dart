@@ -45,7 +45,7 @@ class Artefact {
       "current_owner": this.currentOwnerId,
       "description": this.description,
       "photo": this.photo,
-      "thumbnial": this.thumbnail,
+      "thumbnail": this.thumbnail,
     };
   }
 }

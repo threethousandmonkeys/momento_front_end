@@ -29,12 +29,14 @@ class Timeline extends StatelessWidget {
   final ScrollPhysics physics;
   final bool shrinkWrap;
   final bool reverse;
+  final Key key;
 
   /// Creates a scrollable timeline of widgets that are created befirehand.
   /// Note: [TimelineModel.icon]'s size is ignored when `position` is not
   /// [TimelinePosition.Center].
   Timeline(
-      {List<TimelineModel> children,
+      {this.key,
+      List<TimelineModel> children,
       Color lineColor,
       double lineWidth,
       double iconSize,
@@ -53,6 +55,7 @@ class Timeline extends StatelessWidget {
   /// when `position` is not [TimelinePosition.Center].
   Timeline.builder(
       {@required this.itemBuilder,
+      this.key,
       this.itemCount,
       this.controller,
       Color lineColor,
@@ -68,6 +71,7 @@ class Timeline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      key: key,
       physics: physics,
       shrinkWrap: shrinkWrap,
       itemCount: itemCount,

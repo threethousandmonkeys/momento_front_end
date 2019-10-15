@@ -14,7 +14,7 @@ class TimeLine extends StatefulWidget {
 }
 
 /// _TimeLineState: the state control of timeline
-class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin {
+class _TimeLineState extends State<TimeLine> {
   ProfileBloc _bloc;
 
   ///create all the models need to display on the timeline based on a list
@@ -130,7 +130,6 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     if (_bloc == null) {
       _bloc = Provider.of<ProfileBloc>(context);
     }
@@ -140,6 +139,7 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
         builder: (context, snapshot) {
           if (snapshot.data != null) {
             return Timeline(
+              key: const PageStorageKey<String>("timeline"),
               children: _createTimelineModels(snapshot.data),
               position: TimelinePosition.Center,
             );
@@ -148,8 +148,4 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
           }
         });
   }
-
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
 }

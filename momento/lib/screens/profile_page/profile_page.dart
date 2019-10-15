@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart' hide NestedScrollView;
-import 'package:flutter/material.dart' as prefix0;
 import 'package:image_picker/image_picker.dart';
 import 'package:momento/screens/components/carousel_with_indicator.dart';
 import 'package:provider/provider.dart';

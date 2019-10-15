@@ -14,7 +14,7 @@ class Stemma extends StatefulWidget {
 }
 
 /// _StemmaState: the state control of family tree feature
-class _StemmaState extends State<Stemma> with AutomaticKeepAliveClientMixin {
+class _StemmaState extends State<Stemma> {
   ProfileBloc _bloc;
 
   List<Widget> _createFamilyMemberCard(List<Member> members, double width) {
@@ -72,8 +72,6 @@ class _StemmaState extends State<Stemma> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
     double width = MediaQuery.of(context).size.width;
     if (_bloc == null) {
       _bloc = Provider.of<ProfileBloc>(context);
@@ -111,8 +109,4 @@ class _StemmaState extends State<Stemma> with AutomaticKeepAliveClientMixin {
       },
     );
   }
-
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
 }

@@ -2,11 +2,14 @@ import 'dart:io';
 
 import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
+import 'package:momento/repositories/family_repository.dart';
+import 'package:momento/repositories/member_repository.dart';
+import 'package:momento/services/cloud_storage_service.dart';
 
 class AddNewMemberBloc {
-  final memberRepository;
-  final familyRepository;
-  final cloudStorageService;
+  final MemberRepository memberRepository;
+  final FamilyRepository familyRepository;
+  final CloudStorageService cloudStorageService;
 
   AddNewMemberBloc(
     this.memberRepository,
@@ -51,10 +54,10 @@ class AddNewMemberBloc {
 
   /// upload photo to cloud, return a retrieval path
   Future<Member> addNewMember(Family family) async {
-    final fileName = "member_${DateTime.now().millisecondsSinceEpoch}";
-    final url = await cloudStorageService.uploadPhotoAt("${family.id}/", fileName, photo);
+    final id = DateTime.now().millisecondsSinceEpoch.toString();
+    final url = await cloudStorageService.uploadPhotoAt("${family.id}/", "member_$id", photo);
     Member newMember = Member(
-      id: null,
+      id: id,
       firstName: firstName,
       middleName: middleName,
       gender: gender,
@@ -66,9 +69,8 @@ class AddNewMemberBloc {
       photo: url,
       thumbnail: null,
     );
-    final memberId = await memberRepository.createMember(newMember);
+    final memberId = await memberRepository.createMember(id, newMember);
     await familyRepository.addMember(family, memberId);
-    newMember.id = memberId;
     return newMember;
   }
 

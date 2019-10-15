@@ -82,10 +82,12 @@ class SignInBloc {
       }
       return null;
     }
-    await _secureStorage.write(key: "uid", value: authUser.uid);
-    final family = await _familyRepository.getFamily(authUser.uid);
-    await _secureStorage.write(key: "familyName", value: family.name);
-    await _secureStorage.write(key: "numPhotos", value: '0');
+    if (authUser != null) {
+      await _secureStorage.write(key: "uid", value: authUser.uid);
+      final family = await _familyRepository.getFamily(authUser.uid);
+      await _secureStorage.write(key: "familyName", value: family.name);
+      await _secureStorage.write(key: "numPhotos", value: '0');
+    }
     return authUser;
   }
 

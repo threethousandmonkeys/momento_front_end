@@ -6,6 +6,11 @@ import 'package:momento/repositories/family_repository.dart';
 import 'package:momento/repositories/member_repository.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 
+/** Business logical：
+ *     For add new members. Including upload the photos into
+ *     cloud and return a path for later use.
+ **/
+
 class AddNewMemberBloc {
   final MemberRepository memberRepository;
   final FamilyRepository familyRepository;
@@ -23,15 +28,16 @@ class AddNewMemberBloc {
 
   final List<Member> members;
 
-  String firstName = "";
-  String middleName = "";
-  String gender = "";
-  DateTime birthday;
   DateTime deathday;
   String description = "";
   String father;
   String mother;
   File photo;
+  String firstName = "";
+  String middleName = "";
+  String gender = "";
+  DateTime birthday;
+
 
   List<Member> fathers;
   List<Member> mothers;
@@ -75,6 +81,15 @@ class AddNewMemberBloc {
     return newMember;
   }
 
+  void updateMothers() {
+    List<Member> possibleMothers = List<Member>.from(members);
+    possibleMothers.retainWhere((f) => f.gender == "Female");
+    if (birthday != null) {
+      possibleMothers.retainWhere((f) => f.birthday.isBefore(birthday));
+    }
+    mothers = possibleMothers;
+  }
+
   void updateFathers() {
     List<Member> possibleFathers = List<Member>.from(members);
     possibleFathers.retainWhere((f) => f.gender == "Male");
@@ -84,12 +99,4 @@ class AddNewMemberBloc {
     fathers = possibleFathers;
   }
 
-  void updateMothers() {
-    List<Member> possibleMothers = List<Member>.from(members);
-    possibleMothers.retainWhere((f) => f.gender == "Female");
-    if (birthday != null) {
-      possibleMothers.retainWhere((f) => f.birthday.isBefore(birthday));
-    }
-    mothers = possibleMothers;
-  }
 }

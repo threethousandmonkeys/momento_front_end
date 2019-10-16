@@ -17,6 +17,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:rxdart/rxdart.dart';
 
+/** Business logical：
+ *     For edit and update profile page.
+ **/
+
 class ProfileBloc {
   final _auth = FirebaseAuth.instance;
   final _familyRepository = FamilyRepository();

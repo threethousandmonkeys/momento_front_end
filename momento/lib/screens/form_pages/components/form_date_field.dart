@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'form_text_field.dart';
 
@@ -45,18 +48,47 @@ class _FormDateFieldState extends State<FormDateField> {
   }
 
   Future<Null> _selectDate(BuildContext context) async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate ?? widget.lastDate ?? DateTime.now(),
-      firstDate: widget.firstDate ?? DateTime(1000),
-      lastDate: widget.lastDate ?? DateTime.now(),
-    );
-    if (picked != null && picked != _selectedDate)
+    DateTime initialDate = _selectedDate ?? widget.lastDate ?? DateTime.now();
+    DateTime firstDate = widget.firstDate ?? DateTime(1000);
+    DateTime lastDate = widget.lastDate ?? DateTime.now();
+
+    if (Platform.isIOS) {
+      showModalBottomSheet(
+        context: context,
+        builder: (BuildContext builder) {
+          return Container(
+            height: MediaQuery.of(context).copyWith().size.height / 3,
+            child: CupertinoDatePicker(
+              mode: CupertinoDatePickerMode.date,
+              initialDateTime: initialDate,
+              minimumYear: firstDate.year,
+              maximumYear: lastDate.year,
+              onDateTimeChanged: (DateTime picked) {
+                _updateSelected(picked);
+              },
+            ),
+          );
+        },
+      );
+    } else {
+      final picked = await showDatePicker(
+        context: context,
+        initialDate: initialDate,
+        firstDate: firstDate,
+        lastDate: lastDate,
+      );
+      _updateSelected(picked);
+    }
+  }
+
+  void _updateSelected(DateTime picked) {
+    if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
-        // keep only date, discard time
-        widget.controller.text = _selectedDate.toString().split(" ")[0];
-        widget.onChange(picked);
       });
+      // keep only date, discard time
+      widget.controller.text = _selectedDate.toString().split(" ")[0];
+      widget.onChange(picked);
+    }
   }
 }

@@ -12,6 +12,12 @@ import 'components/form_drop_down_field.dart';
 import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
 
+const genders = {
+  "0": "Male",
+  "1": "Female",
+  "2": "Others",
+};
+
 /// UI part for update new member pages
 class UpdateMemberPage extends StatefulWidget {
   final Member member;

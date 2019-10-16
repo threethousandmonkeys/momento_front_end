@@ -29,14 +29,14 @@ class _UpdateMemberPageState extends State<UpdateMemberPage> {
   @override
   void initState() {
     _firstNameController.text = widget.member.firstName;
-    _middleNameController.text = widget.member.middleName;
+    _lastNameController.text = widget.member.lastName;
     _descriptionController.text = widget.member.description;
     _bloc = UpdateMemberBloc(widget.member, widget.members);
     super.initState();
   }
 
   final _firstNameController = TextEditingController();
-  final _middleNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
   final _birthdayController = TextEditingController();
   final _deathdayController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -72,10 +72,10 @@ class _UpdateMemberPageState extends State<UpdateMemberPage> {
                 },
               ),
               FormTextField(
-                title: "Middle Name",
-                controller: _middleNameController,
+                title: "Last Name",
+                controller: _lastNameController,
                 onChanged: (value) {
-                  _bloc.member.middleName = value;
+                  _bloc.member.lastName = value;
                 },
               ),
               FormDropDownField(

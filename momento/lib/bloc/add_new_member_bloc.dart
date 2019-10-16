@@ -24,7 +24,7 @@ class AddNewMemberBloc {
   final List<Member> members;
 
   String firstName = "";
-  String middleName = "";
+  String lastName = "";
   String gender = "";
   DateTime birthday;
   DateTime deathday;
@@ -60,7 +60,7 @@ class AddNewMemberBloc {
     Member newMember = Member(
       id: id,
       firstName: firstName,
-      middleName: middleName,
+      lastName: lastName,
       gender: gender,
       birthday: birthday,
       deathday: deathday,

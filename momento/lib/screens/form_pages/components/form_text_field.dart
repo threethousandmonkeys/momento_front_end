@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'constants.dart';
 
 class FormTextField extends StatefulWidget {
@@ -29,19 +31,36 @@ class _FormTextFieldState extends State<FormTextField> {
         children: <Widget>[
           Padding(
             padding: kFormTitlePadding,
-            child: Text(
+            child: PlatformText(
               widget.title,
               style: kFormTitleStyle,
             ),
           ),
-          TextField(
+          PlatformTextField(
             onChanged: widget.onChanged,
             enabled: widget.enabled,
             controller: widget.controller,
             keyboardType: TextInputType.multiline,
             maxLines: widget.maxLines,
             style: kFormTextFont,
-            decoration: kFormInputDecoration,
+            android: (_) => MaterialTextFieldData(
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(),
+                contentPadding: kFormInputPadding,
+              ),
+            ),
+            ios: (_) => CupertinoTextFieldData(
+              padding: kFormInputPadding,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  width: 1.0,
+                  color: CupertinoColors.inactiveGray,
+                ),
+              ),
+            ),
           ),
         ],
       ),

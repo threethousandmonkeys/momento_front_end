@@ -6,7 +6,7 @@ enum Gender { Male, Female, Other }
 class Member {
   String id;
   String firstName;
-  String middleName;
+  String lastName;
   String gender;
   DateTime birthday;
   DateTime deathday;
@@ -19,7 +19,7 @@ class Member {
   Member({
     this.id,
     this.firstName,
-    this.middleName,
+    this.lastName,
     this.gender,
     this.birthday,
     this.deathday,
@@ -34,7 +34,7 @@ class Member {
     return Member(
       id: memberId,
       firstName: jsonMember["firstName"],
-      middleName: jsonMember["middleName"],
+      lastName: jsonMember["lastName"],
       gender: jsonMember["gender"],
       birthday: DateTime.fromMillisecondsSinceEpoch(jsonMember["birthday"].seconds * 1000),
       deathday: jsonMember["birthday"] != null
@@ -51,7 +51,7 @@ class Member {
   Map<String, dynamic> serialize() {
     return {
       "firstName": this.firstName,
-      "middleName": this.middleName,
+      "lastName": this.lastName,
       "gender": this.gender,
       "birthday": Timestamp((birthday.millisecondsSinceEpoch * 0.001).toInt(), 0),
       "deathday":

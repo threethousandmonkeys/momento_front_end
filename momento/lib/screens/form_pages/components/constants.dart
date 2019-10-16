@@ -7,7 +7,7 @@ const kFormInputPadding = EdgeInsets.symmetric(
   horizontal: 12,
 );
 
-const kFormInputDecoration = InputDecoration(
+const kMaterialFormInputDecoration = InputDecoration(
   filled: true,
   fillColor: Colors.white,
   border: OutlineInputBorder(),

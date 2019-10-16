@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
@@ -45,14 +46,28 @@ class Stemma extends StatelessWidget {
                       ),
                     ),
                     Expanded(
-                      child: Center(
-                        child: Text(
-                          members[i].firstName,
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontFamily: "Lobster",
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: AutoSizeText(
+                              members[i].firstName + " " + members[i].lastName,
+                              maxLines: 1,
+                              minFontSize: 27,
+                              overflowReplacement: Text(
+                                "${members[i].firstName[0].toUpperCase()}. ${members[i].lastName[0].toUpperCase()}.",
+                                style: TextStyle(
+                                  fontSize: 27,
+                                  fontFamily: "Lobster",
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: "Lobster",
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
                   ],

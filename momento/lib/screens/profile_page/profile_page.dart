@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart' hide NestedScrollView;
 import 'package:flutter/cupertino.dart' hide NestedScrollView;
 import 'package:image_picker/image_picker.dart';
@@ -87,11 +88,12 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                       )
                     ],
                     flexibleSpace: FlexibleSpaceBar(
-                      titlePadding: EdgeInsets.all(0),
-                      title: Text(
+                      titlePadding: EdgeInsets.symmetric(horizontal: 0),
+                      title: AutoSizeText(
                         "The ${_bloc.name}s",
+                        maxLines: 1,
+                        minFontSize: 30,
                         style: TextStyle(
-                          fontSize: 30,
                           fontFamily: "Anton",
                         ),
                       ),
@@ -173,20 +175,32 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                                   final descriptionController = TextEditingController();
                                   descriptionController.text = snapshot.data;
                                   return PlatformAlertDialog(
-                                    title: PlatformText("Description:"),
+                                    title: PlatformText("Description"),
                                     content: PlatformTextField(
+                                      android: (_) => MaterialTextFieldData(
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(),
+                                        ),
+                                      ),
+                                      ios: (_) => CupertinoTextFieldData(
+                                          decoration: BoxDecoration(
+                                        border: Border.all(
+                                          width: 0.0,
+                                          color: CupertinoColors.inactiveGray,
+                                        ),
+                                      )),
                                       controller: descriptionController,
                                       maxLines: 5,
                                     ),
                                     actions: <Widget>[
                                       PlatformDialogAction(
-                                        child: PlatformText("CANCEL"),
+                                        child: PlatformText("Cancel"),
                                         onPressed: () {
                                           Navigator.pop(context, null);
                                         },
                                       ),
                                       PlatformDialogAction(
-                                        child: PlatformText("DONE"),
+                                        child: PlatformText("Update"),
                                         onPressed: () {
                                           if (descriptionController.text.trim() == "") {
                                             descriptionController.text =
@@ -194,7 +208,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                                           }
                                           Navigator.pop(context, descriptionController.text.trim());
                                         },
-                                      )
+                                      ),
                                     ],
                                   );
                                 },

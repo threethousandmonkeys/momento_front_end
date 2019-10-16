@@ -80,7 +80,7 @@ class _AddNewEventPageState extends State<AddNewEventPage> {
                 dataSource: widget.members
                     .map(
                       (member) => {
-                        "display": member.firstName + " " + member.middleName,
+                        "display": member.firstName + " " + member.lastName,
                         "value": member.id,
                       },
                     )

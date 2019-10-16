@@ -85,7 +85,7 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                 dataSource: widget.members
                     .map(
                       (member) => {
-                        "display": member.firstName + " " + member.middleName,
+                        "display": member.firstName + " " + member.lastName,
                         "value": member.id,
                       },
                     )

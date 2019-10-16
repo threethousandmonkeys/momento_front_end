@@ -31,7 +31,10 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
+  final _genderController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _motherController = TextEditingController();
+  final _fatherController = TextEditingController();
   final _birthdayController = TextEditingController();
   final _deathdayController = TextEditingController();
 
@@ -96,6 +99,7 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                   _bloc.gender = value;
                 },
                 itemKey: _bloc.gender,
+                controller: _genderController,
               ),
               FormDateField(
                 title: "Date of Birth",
@@ -130,6 +134,7 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                   _bloc.father = value;
                 },
                 itemKey: _bloc.father,
+                controller: _fatherController,
               ),
               FormDropDownField(
                 title: "Mother",
@@ -142,6 +147,7 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                   _bloc.mother = value;
                 },
                 itemKey: _bloc.mother,
+                controller: _motherController,
               ),
               FormTextField(
                 title: "Description",

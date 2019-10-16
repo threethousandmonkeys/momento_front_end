@@ -39,6 +39,8 @@ class _UpdateArtefactPageState extends State<UpdateArtefactPage> {
   final _nameController = TextEditingController();
   final _dateCreatedController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _originalOwnerController = TextEditingController();
+  final _currentOwnerController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +93,7 @@ class _UpdateArtefactPageState extends State<UpdateArtefactPage> {
                   _bloc.artefact.originalOwnerId = value;
                 },
                 itemKey: widget.artefact.originalOwnerId,
+                controller: _originalOwnerController,
               ),
               FormDropDownField(
                 title: "Current Owner",
@@ -103,6 +106,7 @@ class _UpdateArtefactPageState extends State<UpdateArtefactPage> {
                   _bloc.artefact.currentOwnerId = value;
                 },
                 itemKey: widget.artefact.currentOwnerId,
+                controller: _currentOwnerController,
               ),
               FormTextField(
                 title: "Description",

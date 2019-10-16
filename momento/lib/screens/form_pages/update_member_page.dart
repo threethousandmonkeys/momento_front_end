@@ -45,8 +45,11 @@ class _UpdateMemberPageState extends State<UpdateMemberPage> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _birthdayController = TextEditingController();
+  final _genderController = TextEditingController();
   final _deathdayController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _motherController = TextEditingController();
+  final _fatherController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +99,7 @@ class _UpdateMemberPageState extends State<UpdateMemberPage> {
                   _bloc.member.gender = value;
                 },
                 itemKey: _bloc.member.gender,
+                controller: _genderController,
               ),
               FormDateField(
                 title: "Date of Birth",
@@ -132,6 +136,7 @@ class _UpdateMemberPageState extends State<UpdateMemberPage> {
                   _bloc.member.fatherId = value;
                 },
                 itemKey: _bloc.member.fatherId,
+                controller: _fatherController,
               ),
               FormDropDownField(
                 title: "Mother",
@@ -144,6 +149,7 @@ class _UpdateMemberPageState extends State<UpdateMemberPage> {
                   _bloc.member.motherId = value;
                 },
                 itemKey: _bloc.member.motherId,
+                controller: _motherController,
               ),
               FormTextField(
                 title: "Description",

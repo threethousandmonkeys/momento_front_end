@@ -7,14 +7,18 @@ class FormTextField extends StatefulWidget {
   final String title;
   final int maxLines;
   final bool enabled;
+  final bool invalid;
   final Function onChanged;
   final TextEditingController controller;
+  final Widget suffix;
   FormTextField({
     @required this.title,
     this.maxLines = 1,
     this.enabled = true,
+    this.invalid = false,
     this.onChanged,
     this.controller,
+    this.suffix,
   });
 
   @override
@@ -46,15 +50,17 @@ class _FormTextFieldState extends State<FormTextField> {
             android: (_) => MaterialTextFieldData(
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: widget.invalid ? Colors.transparent : Colors.white,
                 border: OutlineInputBorder(),
                 contentPadding: kFormInputPadding,
+                suffixIcon: widget.suffix,
               ),
             ),
             ios: (_) => CupertinoTextFieldData(
               padding: kFormInputPadding,
+              suffix: widget.suffix,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: widget.invalid ? Colors.transparent : Colors.white,
                 border: Border.all(
                   width: 1.0,
                   color: CupertinoColors.inactiveGray,

@@ -31,6 +31,8 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
   final _nameController = TextEditingController();
   final _dateCreatedController = TextEditingController();
   final _descriptionController = TextEditingController();
+  final _originalOwnerController = TextEditingController();
+  final _currentOwnerController = TextEditingController();
 
   @override
   void initState() {
@@ -88,6 +90,7 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
                   _bloc.originalOwner = value;
                 },
                 itemKey: _bloc.originalOwner,
+                controller: _originalOwnerController,
               ),
               FormDropDownField(
                 title: "Current Owner",
@@ -100,6 +103,7 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
                   _bloc.currentOwner = value;
                 },
                 itemKey: _bloc.currentOwner,
+                controller: _currentOwnerController,
               ),
               FormTextField(
                 title: "Description",

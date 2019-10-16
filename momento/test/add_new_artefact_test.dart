@@ -35,22 +35,22 @@ void main() {
 
   group("Add artefact:", () {
     test("Input artefact", () {
-      expect(addNewArtefactBloc.validate(), "");
+      expect(addNewArtefactBloc.validate(), "name");
 
       addNewArtefactBloc.name = "test";
-      expect(addNewArtefactBloc.validate(), null);
+      expect(addNewArtefactBloc.validate(), "currentOwner");
       
       addNewArtefactBloc.dateCreated = DateTime(1998);
       addNewArtefactBloc.originalOwner = "test_original_owner_id";
       addNewArtefactBloc.currentOwner = "test_current_owner_id";
-      expect(addNewArtefactBloc.validate(), null);
+      expect(addNewArtefactBloc.validate(), "photo");
       
       addNewArtefactBloc.description = "test_description";
       addNewArtefactBloc.photo = File("assets/images/default_artefact.jpg");
       expect(addNewArtefactBloc.validate(), "");
     });
 
-    // initiate a random family
+    // initiate a random family to link the artefact
     Family testFamily = Family(
       id: "0kURFq7NPggoS5srF4UIKfyZpbc2",
     );

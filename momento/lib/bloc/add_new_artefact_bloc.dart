@@ -23,16 +23,16 @@ class AddNewArtefactBloc {
   String description = "";
   File photo;
 
-  // validations for testing 
+  // validations for testing
   String validate() {
     if (name == "") {
-      return "";
+      return "name";
     }
     if (currentOwner == null) {
-      return null;
+      return "currentOwner";
     }
     if (photo == null) {
-      return null;
+      return "photo";
     }
     return "";
   }

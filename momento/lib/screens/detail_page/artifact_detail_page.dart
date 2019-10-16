@@ -96,9 +96,9 @@ class _ArtefactDetailPageState extends State<ArtefactDetailPage> {
     );
   }
 
-  // gets the first and last name of a member, based on its user id
+  /// Gets the first and last name of a member, based on its user id
   String getMemberNameById(String userId) {
     Member member = Provider.of<ProfileBloc>(context).getMemberByUserId(userId);
-    return member.firstName + " " + member.middleName;
+    return member.firstName + " " + member.lastName;
   }
 }

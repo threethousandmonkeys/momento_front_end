@@ -108,7 +108,6 @@ class ProfileBloc {
     _setMembers(members);
   }
 
-<<<<<<< HEAD
   // gets an individual member of a family based on its user id
   Member getMemberByUserId(String userId) {
     for(Member member in _membersController.value) {
@@ -119,9 +118,7 @@ class ProfileBloc {
     return null;
   }
 
-=======
   /// Update member's information
->>>>>>> e412c224732c4d44f610dd3481619ac8cb5c1ae2
   void updateMember(Member updatedMember) {
     // update locally
     final newMembers = List<Member>.from(_membersController.value);

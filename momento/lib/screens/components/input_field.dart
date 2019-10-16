@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:momento/constants.dart';
 import 'package:flutter/cupertino.dart';
 
+/// UI part for input field
 class InputField extends StatelessWidget {
   InputField({
     this.controller,

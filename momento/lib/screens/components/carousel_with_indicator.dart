@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
+/// UI part for carouse with indicator
 class CarouselWithIndicator extends StatefulWidget {
   final double height;
   final List<Widget> items;

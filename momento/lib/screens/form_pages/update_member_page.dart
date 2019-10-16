@@ -12,6 +12,7 @@ import 'components/form_drop_down_field.dart';
 import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
 
+/// UI part for update new member pages
 class UpdateMemberPage extends StatefulWidget {
   final Member member;
   final List<Member> members;

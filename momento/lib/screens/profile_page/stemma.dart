@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 const kColors = [Color(0xFFC9C0D3), Color(0xFFC1CBD7)];
 
+/// UI part for stemma page
 class Stemma extends StatelessWidget {
   List<Widget> _createFamilyMemberCards(List<Member> members, double width, BuildContext context) {
     List<Widget> output = [];

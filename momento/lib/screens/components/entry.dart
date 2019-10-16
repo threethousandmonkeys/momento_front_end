@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../constants.dart';
 
+/// UI part for entry
 class Entry extends StatelessWidget {
   final String title;
   final String content;

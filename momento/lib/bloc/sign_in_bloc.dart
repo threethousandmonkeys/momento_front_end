@@ -35,10 +35,6 @@ class SignInBloc {
         email: email,
         password: password,
       );
-      await _familyRepository.createFamily(authUser.uid, name, email);
-      await _secureStorage.write(key: "uid", value: authUser.uid);
-      await _secureStorage.write(key: "familyName", value: name);
-      await _secureStorage.write(key: "numPhotos", value: '0');
     } catch (e) {
       switch (e.code) {
         case "ERROR_WEAK_PASSWORD":
@@ -59,11 +55,12 @@ class SignInBloc {
       await _familyRepository.createFamily(authUser.uid, name, email);
       await _secureStorage.write(key: "uid", value: authUser.uid);
       await _secureStorage.write(key: "familyName", value: name);
+      await _secureStorage.write(key: "numPhotos", value: '0');
     }
     return authUser;
   }
 
-  /// Sign up logical flow - including:
+  /// Sign in logical flow - including:
   /// user not found
   /// invalid email
   /// wrong password

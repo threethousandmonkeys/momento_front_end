@@ -12,21 +12,44 @@ class MockSnackBarService extends Mock implements SnackBarService {}
 
 class MockAuthService {
   MockAuthService({this.userId});
+
+  // mocks the behaviour of signIn function, returns an authenticated user
   String userId;
-  bool didRequestSignIn = false;
   Future<AuthUser> signIn({String email, String password}) async {
-    didRequestSignIn = true;
+    assert(email != null);
+    assert(password != null);
     if (userId != null) {
       return AuthUser(uid: userId);
     } else {
       return null;
     }
   }
+
+  // mocks the behaviour of signUp function, returns an new authenticated user
+  String randomId = "0kURFq7NPggoS5srF4UIKfyZpbc2";
+  Future<AuthUser> signUp({String email, String password, String name}) async {
+    assert(email != null);
+    assert(password != null);
+
+    // check if it's a valid email
+    int lastIdx = email.indexOf("@");
+    if (!email.contains("@") || !email.substring(lastIdx).contains(".")) {
+      return null;
+    }
+    
+    // check if the password is strong enough
+    if (password.length < 6) {
+      return null;
+    }
+    return AuthUser(uid: userId);
+  }
 }
 
 class MockFamilyRepository {
   MockFamilyRepository({this.familyId});
   String familyId;
+  
+  // mocks the behaviour of getFamily function, returns a family id
   Future<Family> getFamily(String familyId) async {
     if (familyId != null) {
       return Family(id: familyId);
@@ -34,13 +57,17 @@ class MockFamilyRepository {
       return null;
     }
   }
+
+  // mocks the behaviour of createFamily function, returns nothing
+  Future<Null> createFamily(String uid, String name, String email) async {
+    return null;
+  }
 }
 
 void main() {
   SignInBloc signInBloc;
 
   group("Log in:", () {
-    
     test("Invalid user", () async {
       signInBloc = SignInBloc(
         MockAuthService(userId: null),
@@ -72,14 +99,59 @@ void main() {
     });
   });
 
-  //   group("Sign up:", () {
-  //   test("Invalid user", () async {
-  //     final AuthUser user = await signInBloc.signUp(
-  //       email: "test@test.gov",
-  //       password: "123456",
-  //       name: "test",
-  //     );
-  //     expect(user == null, true);
-  //   });
-  // });
+  group("Sign up:", () {
+    test("Invalid email, no domain", () async {
+      final AuthUser user = await signInBloc.signUp(
+        email: "test@test",
+        password: "123456",
+        name: "test",
+      );
+      expect(user == null, true);
+    });
+
+    test("Invalid email, incomplete email", () async {
+      final AuthUser user = await signInBloc.signUp(
+        email: "test.com",
+        password: "123456",
+        name: "test",
+      );
+      expect(user == null, true);
+    });
+
+    test("Invalid email, blank email", () async {
+      final AuthUser user = await signInBloc.signUp(
+        email: "",
+        password: "123456",
+        name: "test",
+      );
+      expect(user == null, true);
+    });
+
+    test("Password too weak", () async {
+      final AuthUser user = await signInBloc.signUp(
+        email: "test@test.com",
+        password: "",
+        name: "test",
+      );
+      expect(user == null, true);
+    });
+
+    test("Valid credentials, but no name", () async {
+      final AuthUser user = await signInBloc.signUp(
+        email: "test@test.com",
+        password: "123456",
+        name: "",
+      );
+      expect(user != null, true);
+    });
+
+    test("Valid credentials", () async {
+      final AuthUser user = await signInBloc.signUp(
+        email: "test@test.com",
+        password: "123456",
+        name: "test",
+      );
+      expect(user != null, true);
+    });
+  });
 }

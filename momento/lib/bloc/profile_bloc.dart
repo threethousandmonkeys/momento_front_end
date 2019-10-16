@@ -82,8 +82,11 @@ class ProfileBloc {
   }
 
   final _membersController = BehaviorSubject<List<Member>>();
+
   Function(List<Member>) get _setMembers => _membersController.add;
+  
   Stream<List<Member>> get getMembers => _membersController.stream;
+  
   List<Member> get getLatestMembers => _membersController.value;
 
   void addMember(Member member) {
@@ -98,6 +101,16 @@ class ProfileBloc {
         family.members.map((id) => _memberRepository.getMemberById(family.id, id));
     final members = await Future.wait(futureMembers);
     _setMembers(members);
+  }
+
+  // gets an individual member of a family based on its user id
+  Member getMemberByUserId(String userId) {
+    for(Member member in _membersController.value) {
+      if (member.id == userId) {
+        return member;
+      }
+    }
+    return null;
   }
 
   void updateMember(Member updatedMember) {

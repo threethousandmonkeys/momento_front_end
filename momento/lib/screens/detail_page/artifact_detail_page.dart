@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
+import 'package:momento/models/member.dart';
 import 'package:momento/screens/components/entry.dart';
 import 'package:momento/screens/form_pages/update_artefact_page.dart';
 import 'package:momento/screens/components/viewable_image.dart';
@@ -57,11 +58,11 @@ class _ArtefactDetailPageState extends State<ArtefactDetailPage> {
                   ),
                   Entry(
                     title: "Original Owner",
-                    content: currentArtefact.originalOwnerId,
+                    content: getMemberNameById(currentArtefact.originalOwnerId),
                   ),
                   Entry(
                     title: "Current Owner",
-                    content: currentArtefact.currentOwnerId,
+                    content: getMemberNameById(currentArtefact.currentOwnerId),
                   ),
                 ],
               ),
@@ -92,5 +93,11 @@ class _ArtefactDetailPageState extends State<ArtefactDetailPage> {
         ),
       ),
     );
+  }
+
+  // gets the first and last name of a member, based on its user id
+  String getMemberNameById(String userId) {
+    Member member = Provider.of<ProfileBloc>(context).getMemberByUserId(userId);
+    return member.firstName + " " + member.middleName;
   }
 }

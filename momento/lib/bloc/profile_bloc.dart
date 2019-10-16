@@ -70,6 +70,7 @@ class ProfileBloc {
     }
   }
 
+  /// Update photo
   Future<Null> uploadPhoto(File photo) async {
     // upload photo to cloud and get url
     final id = "profile_photo_" + DateTime.now().millisecondsSinceEpoch.toString();
@@ -99,11 +100,12 @@ class ProfileBloc {
 
   Future<Null> _getMembers() async {
     final futureMembers =
-        family.members.map((id) => _memberRepository.getMemberById(family.id, id));
+    family.members.map((id) => _memberRepository.getMemberById(family.id, id));
     final members = await Future.wait(futureMembers);
     _setMembers(members);
   }
 
+  /// Update member's information
   void updateMember(Member updatedMember) {
     // update locally
     final newMembers = List<Member>.from(_membersController.value);
@@ -121,11 +123,24 @@ class ProfileBloc {
 
   Future<Null> _getArtefacts() async {
     final futureArtefacts =
-        family.artefacts.map((id) => _artefactRepository.getArtefactById(family.id, id)).toList();
+    family.artefacts.map((id) => _artefactRepository.getArtefactById(family.id, id)).toList();
     List<Artefact> artefacts = await Future.wait(futureArtefacts);
     _setArtefacts(artefacts);
   }
 
+  /// Deal with artifacts -
+  /// add
+  void addArtefact(Artefact artefact) {
+    // update locally
+    family.artefacts.add(artefact.id);
+    List<Artefact> newArtefacts = List<Artefact>.from(_artefactsController.value);
+    newArtefacts.add(artefact);
+    // push to the stream
+    _setArtefacts(newArtefacts);
+  }
+
+  /// Deal with artifacts -
+  /// update
   void updateArtefact(Artefact updatedArtefact) {
     // update locally
     final newArtefacts = List<Artefact>.from(_artefactsController.value);
@@ -137,19 +152,12 @@ class ProfileBloc {
     _setArtefacts(newArtefacts);
   }
 
-  void addArtefact(Artefact artefact) {
-    // update locally
-    family.artefacts.add(artefact.id);
-    List<Artefact> newArtefacts = List<Artefact>.from(_artefactsController.value);
-    newArtefacts.add(artefact);
-    // push to the stream
-    _setArtefacts(newArtefacts);
-  }
-
   final _eventsController = BehaviorSubject<List<Event>>();
   Function(List<Event>) get _setEvents => _eventsController.add;
   Stream<List<Event>> get getEvents => _eventsController.stream;
 
+  /// Deal with events -
+  /// add
   void addEvent(Event newEvent) {
     // update locally
     family.events.add(newEvent.id);
@@ -160,11 +168,13 @@ class ProfileBloc {
 
   Future<Null> _getEvents() async {
     List<Future<Event>> futureEvents =
-        family.events.map((id) => _eventRepository.getEventById(family.id, id)).toList();
+    family.events.map((id) => _eventRepository.getEventById(family.id, id)).toList();
     List<Event> events = await Future.wait(futureEvents);
     _setEvents(events);
   }
 
+  /// Deal with events -
+  /// update
   void updateEvent(Event updatedEvent) {
     // update locally
     final newEvents = List<Event>.from(_eventsController.value);

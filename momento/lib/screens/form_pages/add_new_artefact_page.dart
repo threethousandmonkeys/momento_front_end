@@ -14,6 +14,7 @@ import 'components/form_drop_down_field.dart';
 import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
 
+/// UI part for add new artifact pages
 class AddNewArtefactPage extends StatefulWidget {
   final Family family;
   final List<Member> members;

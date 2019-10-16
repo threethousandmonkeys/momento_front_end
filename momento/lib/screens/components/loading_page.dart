@@ -3,6 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../constants.dart';
 
+/// UI part for loading page
 class LoadingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

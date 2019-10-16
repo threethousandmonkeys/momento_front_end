@@ -10,6 +10,7 @@ import '../../constants.dart';
 import '../../models/artefact.dart';
 import '../components/ugly_button.dart';
 
+/// UI part for artifact detail pages
 class ArtefactDetailPage extends StatefulWidget {
   final Artefact artefact;
   ArtefactDetailPage(this.artefact);

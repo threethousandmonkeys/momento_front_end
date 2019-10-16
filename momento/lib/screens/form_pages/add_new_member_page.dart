@@ -15,6 +15,7 @@ import 'components/form_drop_down_field.dart';
 import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
 
+/// UI part for add new member pages
 class AddNewMemberPage extends StatefulWidget {
   final List<Member> members;
   AddNewMemberPage(this.members);
@@ -27,7 +28,7 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
   final _snackBarService = SnackBarService();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _firstNameController = TextEditingController();
-  final _middleNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _birthdayController = TextEditingController();
   final _deathdayController = TextEditingController();
@@ -76,18 +77,18 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                 },
               ),
               FormTextField(
-                title: "Middle Name",
-                controller: _middleNameController,
+                title: "Last Name",
+                controller: _lastNameController,
                 onChanged: (value) {
-                  _bloc.middleName = value;
+                  _bloc.lastName = value;
                 },
               ),
               FormDropDownField(
                 title: "Gender",
                 items: {
-                  "Male": "Male",
-                  "Female": "Female",
-                  "Others": "Others",
+                  "0": "Male",
+                  "1": "Female",
+                  "2": "Others",
                 },
                 onChanged: (value) {
                   _bloc.gender = value;

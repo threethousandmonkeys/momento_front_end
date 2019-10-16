@@ -11,6 +11,7 @@ import '../../constants.dart';
 import '../../models/member.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
+/// UI part for member detail pages
 class MemberDetailPage extends StatefulWidget {
   final Member member;
   MemberDetailPage(this.member);
@@ -52,9 +53,12 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
             onPressed: () async {
               final updatedMember = await Navigator.push(
                 context,
-                MaterialPageRoute(
+                platformPageRoute(
+                  context: context,
                   builder: (context) => UpdateMemberPage(
-                      currentMember, Provider.of<ProfileBloc>(context).getLatestMembers),
+                    currentMember,
+                    Provider.of<ProfileBloc>(context).getLatestMembers,
+                  ),
                 ),
               );
               if (updatedMember != null) {
@@ -73,16 +77,16 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                 context: context,
                 androidBarrierDismissible: false,
                 builder: (_) => PlatformAlertDialog(
-                  title: Text('Delete Member?'),
+                  title: PlatformText('Delete Member?'),
                   actions: <Widget>[
                     PlatformDialogAction(
-                      child: Text("Cancel"),
+                      child: PlatformText("Cancel"),
                       onPressed: () {
                         Navigator.pop(context);
                       },
                     ),
                     PlatformDialogAction(
-                      child: Text(
+                      child: PlatformText(
                         "Delete",
                         style: TextStyle(
                           color: Colors.red,
@@ -119,7 +123,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 20),
                 child: PlatformText(
-                  "${currentMember.firstName} ${currentMember.middleName}",
+                  "${currentMember.firstName} ${currentMember.lastName}",
                   style: TextStyle(
                     color: kDarkRedMoranti,
                     fontSize: 42,

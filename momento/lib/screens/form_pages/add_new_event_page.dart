@@ -14,6 +14,7 @@ import 'package:momento/services/snack_bar_service.dart';
 import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
 
+/// UI part for add new event pages
 class AddNewEventPage extends StatefulWidget {
   final Family family;
   final List<Member> members;
@@ -80,7 +81,7 @@ class _AddNewEventPageState extends State<AddNewEventPage> {
                 dataSource: widget.members
                     .map(
                       (member) => {
-                        "display": member.firstName + " " + member.middleName,
+                        "display": member.firstName + " " + member.lastName,
                         "value": member.id,
                       },
                     )

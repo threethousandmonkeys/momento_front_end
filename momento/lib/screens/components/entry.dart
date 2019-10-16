@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../../constants.dart';
 
+/// UI part for entry
 class Entry extends StatelessWidget {
   final String title;
   final String content;
@@ -11,18 +13,20 @@ class Entry extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
+        PlatformText(
           title + ": ",
           style: TextStyle(
             color: kDarkRedMoranti,
             fontSize: 16,
           ),
         ),
-        Text(
-          content ?? "",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+        Expanded(
+          child: PlatformText(
+            content ?? "",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],

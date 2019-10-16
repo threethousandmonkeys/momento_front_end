@@ -1,6 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
+/// UI part for image viewer
 class image_viewer extends StatelessWidget {
   final String url;
 

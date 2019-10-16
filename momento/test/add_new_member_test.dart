@@ -9,7 +9,9 @@ import 'package:momento/services/cloud_storage_service.dart';
 
 // mocks the repository and services
 class MockMemberRepository extends Mock implements MemberRepository {}
+
 class MockCloudStorageService extends Mock implements CloudStorageService {}
+
 class MockFamilyRepository extends Mock implements FamilyRepository {}
 
 void main() {
@@ -18,15 +20,12 @@ void main() {
   // set up the class to be tested
   setUp(() {
     addNewArtefactBloc = AddNewMemberBloc(
-        MockMemberRepository(), 
-        MockFamilyRepository(), 
-        MockCloudStorageService(), 
-        []);
+        MockMemberRepository(), MockFamilyRepository(), MockCloudStorageService(), []);
   });
 
   test("intial page state", () {
     expect(addNewArtefactBloc.firstName, "");
-    expect(addNewArtefactBloc.middleName, "");
+    expect(addNewArtefactBloc.lastName, "");
     expect(addNewArtefactBloc.gender, "");
     expect(addNewArtefactBloc.birthday, null);
     expect(addNewArtefactBloc.deathday, null);
@@ -39,16 +38,16 @@ void main() {
   group("add artefact", () {
     test("input artefact", () {
       expect(addNewArtefactBloc.validate(), "firstName");
-      
+
       addNewArtefactBloc.firstName = "test_first_name";
       expect(addNewArtefactBloc.validate(), "gender");
-      
+
       addNewArtefactBloc.gender = "Male";
       expect(addNewArtefactBloc.validate(), "birthday");
-      
+
       addNewArtefactBloc.birthday = DateTime(1998);
       expect(addNewArtefactBloc.validate(), "photo");
-      
+
       addNewArtefactBloc.description = "test_description";
       addNewArtefactBloc.photo = File("assets/images/default_artefact.jpg");
       expect(addNewArtefactBloc.validate(), "");

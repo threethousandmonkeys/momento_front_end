@@ -2,6 +2,8 @@ import 'package:momento/models/member.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 import 'package:momento/services/firestore_service.dart';
 
+/// getting member entries from Firease cloud firestore and provide
+/// it to the upper layers
 class MemberRepository {
   final _firestore = FirestoreService();
   final _cloudStorage = CloudStorageService();

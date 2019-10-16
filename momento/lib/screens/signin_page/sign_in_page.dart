@@ -1,9 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 ///This file contains all the widgets required to build the login page
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:momento/constants.dart';
+import 'package:momento/repositories/family_repository.dart';
 import 'package:momento/screens/components/input_field.dart';
 import 'package:momento/screens/components/ugly_button.dart';
+import 'package:momento/services/auth_service.dart';
 import 'package:momento/services/snack_bar_service.dart';
 import 'components/card_divider.dart';
 import 'components/bubble_indication_painter.dart';
@@ -18,7 +22,7 @@ class SignInPage extends StatefulWidget {
 /// _SignInPageState: state control of SignInPage
 class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateMixin {
   final _snackBarService = SnackBarService();
-  final _bloc = SignInBloc();
+  final _bloc = SignInBloc(AuthService(), FamilyRepository(), FlutterSecureStorage(), SnackBarService());
 
   bool _obscureTextSignIn = true;
   bool _obscureTextSignup = true;

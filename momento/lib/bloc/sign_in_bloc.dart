@@ -1,16 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:momento/services/auth_service.dart';
-import 'package:momento/repositories/family_repository.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:momento/services/snack_bar_service.dart';
 
 /// Business Logic Component for authentication
 class SignInBloc {
-  final _auth = AuthService();
-  final _familyRepository = FamilyRepository();
-  final _secureStorage = FlutterSecureStorage();
-  final _snackBarService = SnackBarService();
+
+  final _auth;
+  final _familyRepository;
+  final _secureStorage;
+  final _snackBarService;
+
+  SignInBloc(this._auth, this._familyRepository, this._secureStorage, this._snackBarService);
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -49,6 +49,12 @@ class SignInBloc {
         default:
           break;
       }
+      return null;
+    }
+    if (authUser != null) {
+      await _familyRepository.createFamily(authUser.uid, name, email);
+      await _secureStorage.write(key: "uid", value: authUser.uid);
+      await _secureStorage.write(key: "familyName", value: name);
     }
     return authUser;
   }
@@ -76,10 +82,12 @@ class SignInBloc {
       }
       return null;
     }
-    await _secureStorage.write(key: "uid", value: authUser.uid);
-    final family = await _familyRepository.getFamily(authUser.uid);
-    await _secureStorage.write(key: "familyName", value: family.name);
-    await _secureStorage.write(key: "numPhotos", value: '0');
+    if (authUser != null) {
+      await _secureStorage.write(key: "uid", value: authUser.uid);
+      final family = await _familyRepository.getFamily(authUser.uid);
+      await _secureStorage.write(key: "familyName", value: family.name);
+      await _secureStorage.write(key: "numPhotos", value: '0');
+    }
     return authUser;
   }
 

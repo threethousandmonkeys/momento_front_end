@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:momento/models/artefact.dart';
 import 'package:momento/models/family.dart';
 import 'package:momento/repositories/artefact_repository.dart';
@@ -24,12 +23,13 @@ class AddNewArtefactBloc {
   String description = "";
   File photo;
 
+  // validations for testing
   String validate() {
     if (name == "") {
       return "name";
     }
     if (currentOwner == null) {
-      return "current owner";
+      return "currentOwner";
     }
     if (photo == null) {
       return "photo";
@@ -37,7 +37,7 @@ class AddNewArtefactBloc {
     return "";
   }
 
-  /// upload photo to cloud, return a retrieval path
+  // upload photo to cloud, return a retrieval path
   Future<Artefact> addNewArtefact(Family family) async {
     final id = DateTime.now().millisecondsSinceEpoch.toString();
     final url = await cloudStorageService.uploadPhotoAt("${family.id}/", "artefact_$id", photo);

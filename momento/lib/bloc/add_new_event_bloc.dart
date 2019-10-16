@@ -23,6 +23,7 @@ class AddNewEventBloc {
   String description = "";
   File photo;
 
+  // validations for testing
   String validate() {
     if (name == "") {
       return "name";

@@ -1,6 +1,8 @@
 import 'package:momento/models/family.dart';
 import 'package:momento/services/firestore_service.dart';
 
+/// getting family entries from Firease cloud firestore and provide
+/// it to the upper layers
 class FamilyRepository {
   final _firestore = FirestoreService();
 

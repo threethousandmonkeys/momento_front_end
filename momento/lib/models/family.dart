@@ -1,4 +1,5 @@
-/// a model to represent family, which store the name and description and email
+/// a model to represent family,
+/// which store the name and description and email
 class Family {
   String id;
   String name;

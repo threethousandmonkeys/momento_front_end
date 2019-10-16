@@ -7,7 +7,7 @@ import 'package:momento/repositories/member_repository.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 
 /** Business logical：
- *     For add new members. Including upload the photos into
+ *     For adding new members. Including upload the photos into
  *     cloud and return a path for later use.
  **/
 

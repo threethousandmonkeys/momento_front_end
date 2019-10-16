@@ -2,12 +2,13 @@ import 'package:momento/models/member.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 import 'package:momento/services/firestore_service.dart';
 
-/// getting member entries from Firease cloud firestore and provide
+/// Getting member entries from Firease cloud firestore and provide
 /// it to the upper layers
 class MemberRepository {
   final _firestore = FirestoreService();
   final _cloudStorage = CloudStorageService();
 
+  /// Get individual members by its user id
   Future<Member> getMemberById(String familyId, String memberId) async {
     final Map<String, dynamic> memberJson = await _firestore.getDocument("member", memberId);
     final member = Member.parseMember(memberId, memberJson);

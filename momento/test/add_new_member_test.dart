@@ -7,7 +7,7 @@ import 'package:momento/repositories/family_repository.dart';
 import 'package:momento/repositories/member_repository.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 
-// mocks the repository and services
+/// mocks the repository and services
 class MockMemberRepository extends Mock implements MemberRepository {}
 
 class MockCloudStorageService extends Mock implements CloudStorageService {}
@@ -17,7 +17,7 @@ class MockFamilyRepository extends Mock implements FamilyRepository {}
 void main() {
   AddNewMemberBloc addNewArtefactBloc;
 
-  // set up the class to be tested
+  /// set up the class to be tested
   setUp(() {
     addNewArtefactBloc = AddNewMemberBloc(
         MockMemberRepository(), MockFamilyRepository(), MockCloudStorageService(), []);

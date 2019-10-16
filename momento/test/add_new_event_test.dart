@@ -7,7 +7,7 @@ import 'package:momento/repositories/event_repository.dart';
 import 'package:momento/repositories/family_repository.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 
-// mocks the repository and services
+/// mocks the repository and services
 class MockEventRepository extends Mock implements EventRepository {}
 class MockCloudStorageService extends Mock implements CloudStorageService {}
 class MockFamilyRepository extends Mock implements FamilyRepository {}
@@ -15,7 +15,7 @@ class MockFamilyRepository extends Mock implements FamilyRepository {}
 void main() {
   AddNewEventBloc addNewEventBloc;
 
-  // set up the class to be tested
+  /// set up the class to be tested
   setUp(() {
     addNewEventBloc = AddNewEventBloc(
       MockEventRepository(),

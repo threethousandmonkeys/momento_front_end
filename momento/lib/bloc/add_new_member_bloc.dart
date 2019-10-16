@@ -41,7 +41,7 @@ class AddNewMemberBloc {
   List<Member> fathers;
   List<Member> mothers;
 
-  // validations for testing
+  /// validations for testing
   String validate() {
     if (firstName == "") {
       return "firstName";

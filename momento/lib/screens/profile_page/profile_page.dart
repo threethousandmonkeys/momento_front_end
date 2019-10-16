@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart' hide NestedScrollView;
+import 'package:flutter/cupertino.dart' hide NestedScrollView;
 import 'package:image_picker/image_picker.dart';
 import 'package:momento/screens/components/carousel_with_indicator.dart';
 import 'package:momento/screens/components/viewable_image.dart';
@@ -11,6 +12,7 @@ import 'package:momento/screens/profile_page/stemma.dart';
 import 'package:momento/screens/profile_page/time_line.dart';
 import 'package:momento/services/dialogs.dart';
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 const kTabBarHeight = 46.0;
 const kNumTabs = 3;
@@ -57,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
     // get device dimensions
     double height = MediaQuery.of(context).size.height;
     double pinnedHeaderHeight = MediaQuery.of(context).padding.top + kToolbarHeight + kTabBarHeight;
-    return Scaffold(
+    return PlatformScaffold(
       backgroundColor: const Color(0xFFFFFAF4),
       body: FutureBuilder<Null>(
         future: _futureProfile,
@@ -164,29 +166,27 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
                           child: GestureDetector(
                             onTap: () async {
-                              final newDescription = await showDialog(
+                              final newDescription = await showPlatformDialog(
                                 context: context,
+                                androidBarrierDismissible: false,
                                 builder: (context) {
                                   final descriptionController = TextEditingController();
                                   descriptionController.text = snapshot.data;
-                                  return AlertDialog(
-                                    title: Text("Description:"),
-                                    content: TextField(
+                                  return PlatformAlertDialog(
+                                    title: PlatformText("Description:"),
+                                    content: PlatformTextField(
                                       controller: descriptionController,
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                      ),
                                       maxLines: 5,
                                     ),
                                     actions: <Widget>[
-                                      FlatButton(
-                                        child: Text("CANCEL"),
+                                      PlatformDialogAction(
+                                        child: PlatformText("CANCEL"),
                                         onPressed: () {
                                           Navigator.pop(context, null);
                                         },
                                       ),
-                                      FlatButton(
-                                        child: Text("DONE"),
+                                      PlatformDialogAction(
+                                        child: PlatformText("DONE"),
                                         onPressed: () {
                                           if (descriptionController.text.trim() == "") {
                                             descriptionController.text =
@@ -203,7 +203,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                                 _bloc.updateDescription(newDescription);
                               }
                             },
-                            child: Text(
+                            child: PlatformText(
                               snapshot.data,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 5,

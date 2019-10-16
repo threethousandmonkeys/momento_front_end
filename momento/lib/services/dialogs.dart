@@ -7,28 +7,25 @@ class Dialogs {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return WillPopScope(
-          onWillPop: () async => false,
-          child: SimpleDialog(
-            key: key,
-            backgroundColor: Colors.white,
-            children: <Widget>[
-              Center(
-                child: Column(children: [
-                  SizedBox(
-                    height: 27,
-                  ),
-                  SpinKitPumpingHeart(
-                    color: Colors.purple,
-                    size: 128,
-                  ),
-                  SizedBox(
-                    height: 27,
-                  ),
-                ]),
-              )
-            ],
-          ),
+        return SimpleDialog(
+          key: key,
+          backgroundColor: Colors.white,
+          children: <Widget>[
+            Center(
+              child: Column(children: [
+                SizedBox(
+                  height: 27,
+                ),
+                SpinKitPumpingHeart(
+                  color: Colors.purple,
+                  size: 128,
+                ),
+                SizedBox(
+                  height: 27,
+                ),
+              ]),
+            )
+          ],
         );
       },
     );

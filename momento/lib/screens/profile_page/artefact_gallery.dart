@@ -46,50 +46,84 @@ class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAli
   List<Widget> _buildGrids(BuildContext context, List<Artefact> artefacts) {
     return artefacts
         .map(
-          (artefact) => GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ArtefactDetailPage(artefact),
-                ),
-              );
-            },
-            child: ExtendedImage.network(
-              artefact.thumbnail ?? artefact.photo,
-              fit: BoxFit.cover,
-              cache: true,
-            ),
-          ),
+          (artefact) => Container(child: Thumbnail(artefact)),
         )
         .toList()
           ..add(
-            GestureDetector(
-              child: Container(
-                color: Colors.white,
-                child: Icon(
-                  Icons.add,
-                  size: 60,
-                ),
-              ),
-              onTap: () async {
-                final newArtefact = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddNewArtefactPage(
-                      Provider.of<ProfileBloc>(context).family,
-                      Provider.of<ProfileBloc>(context).getLatestMembers,
-                    ),
+            Container(
+              child: GestureDetector(
+                child: Container(
+                  color: Colors.white,
+                  child: Icon(
+                    Icons.add,
+                    size: 60,
                   ),
-                );
-                if (newArtefact != null) {
-                  Provider.of<ProfileBloc>(context).addArtefact(newArtefact);
-                }
-              },
+                ),
+                onTap: () async {
+                  final newArtefact = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddNewArtefactPage(
+                        Provider.of<ProfileBloc>(context).family,
+                        Provider.of<ProfileBloc>(context).getLatestMembers,
+                      ),
+                    ),
+                  );
+                  if (newArtefact != null) {
+                    Provider.of<ProfileBloc>(context).addArtefact(newArtefact);
+                  }
+                },
+              ),
             ),
           );
   }
 
   @override
   bool get wantKeepAlive => true;
+}
+
+class Thumbnail extends StatefulWidget {
+  final Artefact artefact;
+  Thumbnail(this.artefact);
+  @override
+  _ThumbnailState createState() => _ThumbnailState();
+}
+
+class _ThumbnailState extends State<Thumbnail> {
+  Color theme = Colors.white;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) {
+        setState(() {
+          theme = Colors.black26;
+        });
+      },
+      onTapCancel: () {
+        setState(() {
+          theme = Colors.white;
+        });
+      },
+      onTapUp: (_) {
+        setState(() {
+          theme = Colors.white;
+        });
+      },
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ArtefactDetailPage(widget.artefact),
+          ),
+        );
+      },
+      child: ExtendedImage.network(
+        widget.artefact.thumbnail ?? widget.artefact.photo,
+        fit: BoxFit.cover,
+        cache: true,
+        color: theme,
+        colorBlendMode: BlendMode.darken,
+      ),
+    );
+  }
 }

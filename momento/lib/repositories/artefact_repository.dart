@@ -2,6 +2,8 @@ import 'package:momento/models/artefact.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 import 'package:momento/services/firestore_service.dart';
 
+/// getting artifact entries from Firease cloud firestore and provide
+/// it to the upper layers
 class ArtefactRepository {
   final _firestore = FirestoreService();
   final _cloudStorage = CloudStorageService();

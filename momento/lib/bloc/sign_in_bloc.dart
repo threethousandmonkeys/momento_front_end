@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:momento/services/auth_service.dart';
 
-/// Business Logic Component for authentication
+/// Business Logic Component for authentication.
 class SignInBloc {
 
   final _auth;
@@ -15,15 +15,19 @@ class SignInBloc {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   ///  For recording the inputs in the text field:
-  final signInEmailController = TextEditingController();
-  final signInPasswordController = TextEditingController();
   final signupEmailController = TextEditingController();
   final signupPasswordController = TextEditingController();
   final signupConfirmPasswordController = TextEditingController();
   final familyNameController = TextEditingController();
+  final signInEmailController = TextEditingController();
+  final signInPasswordController = TextEditingController();
 
   AuthUser authUser;
 
+  /// Sign up logical flow - including:
+  /// weak password
+  /// invalid email address
+  /// email already in use
   Future<AuthUser> signUp({String email, String password, String name}) async {
     AuthUser authUser;
     try {
@@ -59,6 +63,10 @@ class SignInBloc {
     return authUser;
   }
 
+  /// Sign up logical flow - including:
+  /// user not found
+  /// invalid email
+  /// wrong password
   Future<AuthUser> signIn({String email, String password}) async {
     AuthUser authUser;
     try {
@@ -91,6 +99,8 @@ class SignInBloc {
     return authUser;
   }
 
+  /// Sign out logical flow
+  /// and delete all storage
   Future<Null> signOut() async {
     await _auth.signOut();
     await _secureStorage.deleteAll();

@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:momento/screens/components/image_viewer.dart';
 import 'package:page_transition/page_transition.dart';
 
+/// UI part for viewable image
 class ViewableImage extends StatelessWidget {
   final String url;
   ViewableImage(this.url);

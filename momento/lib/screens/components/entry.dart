@@ -3,6 +3,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../../constants.dart';
 
+/// UI part for entry
 class Entry extends StatelessWidget {
   final String title;
   final String content;

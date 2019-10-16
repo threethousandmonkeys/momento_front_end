@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum Gender { Male, Female, Other }
 
-/// a model to represent family, which store the name and description and email
+/// a model to represent family,
+/// which store the name and description and email
 class Member {
   String id;
   String firstName;

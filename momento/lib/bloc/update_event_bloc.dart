@@ -4,6 +4,12 @@ import 'package:momento/models/event.dart';
 import 'package:momento/repositories/event_repository.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 
+/** Business logical：
+ *     For updating new event. Including checking the
+ *     validity and  upload the new photos into
+ *     cloud
+ **/
+
 class UpdateEventBloc {
   final _eventRepository = EventRepository();
   final _cloudStorageService = CloudStorageService();

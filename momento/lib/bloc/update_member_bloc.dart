@@ -4,6 +4,12 @@ import 'package:momento/models/member.dart';
 import 'package:momento/repositories/member_repository.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 
+/** Business logical：
+ *     For updating new members. Including checking the
+ *     validity and upload the new photos into
+ *     cloud
+ **/
+
 class UpdateMemberBloc {
   final _memberRepository = MemberRepository();
   final _cloudStorageService = CloudStorageService();
@@ -19,15 +25,6 @@ class UpdateMemberBloc {
     updateMothers();
   }
 
-  void updateFathers() {
-    List<Member> possibleFathers = List<Member>.from(members);
-    possibleFathers.retainWhere((f) => f.gender == "Male");
-    if (member.birthday != null) {
-      possibleFathers.retainWhere((f) => f.birthday.isBefore(member.birthday));
-    }
-    fathers = possibleFathers;
-  }
-
   void updateMothers() {
     List<Member> possibleMothers = List<Member>.from(members);
     possibleMothers.retainWhere((f) => f.gender == "Female");
@@ -35,6 +32,15 @@ class UpdateMemberBloc {
       possibleMothers.retainWhere((f) => f.birthday.isBefore(member.birthday));
     }
     mothers = possibleMothers;
+  }
+
+  void updateFathers() {
+    List<Member> possibleFathers = List<Member>.from(members);
+    possibleFathers.retainWhere((f) => f.gender == "Male");
+    if (member.birthday != null) {
+      possibleFathers.retainWhere((f) => f.birthday.isBefore(member.birthday));
+    }
+    fathers = possibleFathers;
   }
 
   List<Member> fathers;

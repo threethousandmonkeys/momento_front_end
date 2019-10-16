@@ -11,6 +11,7 @@ import '../../constants.dart';
 import '../../models/member.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
+/// UI part for member detail pages
 class MemberDetailPage extends StatefulWidget {
   final Member member;
   MemberDetailPage(this.member);

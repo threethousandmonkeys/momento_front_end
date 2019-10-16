@@ -2,6 +2,9 @@ import 'package:momento/models/event.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 import 'package:momento/services/firestore_service.dart';
 
+
+/// getting event entries from Firease cloud firestore and provide
+/// it to the upper layers
 class EventRepository {
   final _firestore = FirestoreService();
   final _cloudStorage = CloudStorageService();

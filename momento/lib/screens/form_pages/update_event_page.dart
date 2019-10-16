@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
 
+/// UI part for update new event pages
 class UpdateEventPage extends StatefulWidget {
   final Event event;
   final List<Member> members;

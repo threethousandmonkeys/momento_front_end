@@ -9,6 +9,7 @@ import '../../constants.dart';
 import '../../models/event.dart';
 import '../components/ugly_button.dart';
 
+/// UI part for event detail pages
 class EventDetailPage extends StatefulWidget {
   final Event event;
   EventDetailPage(this.event);

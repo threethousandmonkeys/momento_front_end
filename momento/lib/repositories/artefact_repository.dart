@@ -21,8 +21,7 @@ class ArtefactRepository {
     final jsonArtefact = await _firestore.getDocument("artefact", artefactId);
     final artefact = Artefact.parseArtefact(artefactId, jsonArtefact);
     if (artefact.thumbnail == null) {
-      final thumbnail =
-          await _cloudStorage.getPhoto("$familyId/artefact_$artefactId@thumbnail.jpg");
+      final thumbnail = await _cloudStorage.getPhoto("$familyId/artefact_$artefactId@thumbnail");
       if (thumbnail != null) {
         artefact.thumbnail = thumbnail;
         await updateArtefact(artefact);

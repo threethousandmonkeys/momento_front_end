@@ -89,9 +89,9 @@ class ProfileBloc {
   final _membersController = BehaviorSubject<List<Member>>();
 
   Function(List<Member>) get _setMembers => _membersController.add;
-  
+
   Stream<List<Member>> get getMembers => _membersController.stream;
-  
+
   List<Member> get getLatestMembers => _membersController.value;
 
   void addMember(Member member) {
@@ -103,14 +103,14 @@ class ProfileBloc {
 
   Future<Null> _getMembers() async {
     final futureMembers =
-    family.members.map((id) => _memberRepository.getMemberById(family.id, id));
+        family.members.map((id) => _memberRepository.getMemberById(family.id, id));
     final members = await Future.wait(futureMembers);
     _setMembers(members);
   }
 
   // gets an individual member of a family based on its user id
   Member getMemberByUserId(String userId) {
-    for(Member member in _membersController.value) {
+    for (Member member in _membersController.value) {
       if (member.id == userId) {
         return member;
       }
@@ -136,7 +136,7 @@ class ProfileBloc {
 
   Future<Null> _getArtefacts() async {
     final futureArtefacts =
-    family.artefacts.map((id) => _artefactRepository.getArtefactById(family.id, id)).toList();
+        family.artefacts.map((id) => _artefactRepository.getArtefactById(family.id, id)).toList();
     List<Artefact> artefacts = await Future.wait(futureArtefacts);
     _setArtefacts(artefacts);
   }
@@ -181,7 +181,7 @@ class ProfileBloc {
 
   Future<Null> _getEvents() async {
     List<Future<Event>> futureEvents =
-    family.events.map((id) => _eventRepository.getEventById(family.id, id)).toList();
+        family.events.map((id) => _eventRepository.getEventById(family.id, id)).toList();
     List<Event> events = await Future.wait(futureEvents);
     _setEvents(events);
   }

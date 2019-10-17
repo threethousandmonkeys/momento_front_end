@@ -2,7 +2,6 @@ import 'package:momento/models/event.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 import 'package:momento/services/firestore_service.dart';
 
-
 /// getting event entries from Firease cloud firestore and provide
 /// it to the upper layers
 class EventRepository {
@@ -22,7 +21,7 @@ class EventRepository {
     final jsonEvent = await _firestore.getDocument("event", eventId);
     final event = Event.parseEvent(eventId, jsonEvent);
     if (event.thumbnail == null) {
-      final thumbnail = await _cloudStorage.getPhoto("$familyId/event_$eventId@thumbnail.jpg");
+      final thumbnail = await _cloudStorage.getPhoto("$familyId/event_$eventId@thumbnail");
       if (thumbnail != null) {
         event.thumbnail = thumbnail;
         await updateEvent(event);

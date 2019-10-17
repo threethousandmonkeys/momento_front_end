@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart' as prefix0;
 import 'package:flutter/material.dart' hide NestedScrollView;
 import 'package:flutter/cupertino.dart' hide NestedScrollView;
 import 'package:image_picker/image_picker.dart';
@@ -18,7 +17,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 const kTabBarHeight = 46.0;
 const kNumTabs = 3;
-const kThemeColor = Color(0xFFD7CCBB);
+const kThemeColor = Color(0xFFE3D4C3);
 
 /// ProfilePage: the widget of family profile page(home page)
 class ProfilePage extends StatefulWidget {
@@ -95,7 +94,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                       title: AutoSizeText(
                         "The ${_bloc.name}s",
                         maxLines: 1,
-                        textAlign: prefix0.TextAlign.center,
+                        textAlign: TextAlign.center,
                         minFontSize: 30,
                         style: TextStyle(
                           fontFamily: "Anton",
@@ -221,7 +220,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                                 _bloc.updateDescription(newDescription);
                               }
                             },
-                            child: PlatformText(
+                            child: Text(
                               snapshot.data,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 5,

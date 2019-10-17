@@ -13,7 +13,7 @@ class MemberRepository {
     final Map<String, dynamic> memberJson = await _firestore.getDocument("member", memberId);
     final member = Member.parseMember(memberId, memberJson);
     if (member.thumbnail == null) {
-      final thumbnail = await _cloudStorage.getPhoto("$familyId/member_$memberId@thumbnail.jpg");
+      final thumbnail = await _cloudStorage.getPhoto("$familyId/member_$memberId@thumbnail");
       if (thumbnail != null) {
         member.thumbnail = thumbnail;
         updateMember(member);

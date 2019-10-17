@@ -76,7 +76,7 @@ class _FormDropDownFieldState extends State<FormDropDownField> {
                     if (mounted) {
                       setState(() => selectedIndex = index);
                       widget.controller.text = widget.items.values.toList()[selectedIndex];
-                      widget.onChanged(widget.items.values.toList()[selectedIndex]);
+                      widget.onChanged(widget.items.keys.toList()[selectedIndex]);
                     }
                   },
                   children: widget.items.keys

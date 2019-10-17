@@ -33,12 +33,11 @@ class UpdateArtefactBloc {
     // update photo
     if (photo != null) {
       // delete old photo
-      _cloudStorageService.deletePhoto(artefact.photo);
       if (artefact.thumbnail != null) {
         _cloudStorageService.deletePhoto(artefact.thumbnail);
       }
       // upload new photo
-      final fileName = "artefact_${DateTime.now().millisecondsSinceEpoch}";
+      final fileName = "artefact_${artefact.id}";
       artefact.photo = await _cloudStorageService.uploadPhotoAt("$familyId/", fileName, photo);
       artefact.thumbnail = null;
     }

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+
 ///This file contains all the widgets required to build the login page
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,7 +23,8 @@ class SignInPage extends StatefulWidget {
 /// _SignInPageState: state control of SignInPage
 class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateMixin {
   final _snackBarService = SnackBarService();
-  final _bloc = SignInBloc(AuthService(), FamilyRepository(), FlutterSecureStorage(), SnackBarService());
+  final _bloc =
+      SignInBloc(AuthService(), FamilyRepository(), FlutterSecureStorage(), SnackBarService());
 
   bool _obscureTextSignIn = true;
   bool _obscureTextSignup = true;
@@ -38,48 +40,51 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     double contentWidth = MediaQuery.of(context).size.width;
     double contentHeight = MediaQuery.of(context).size.height;
-    return Scaffold(
-      key: _bloc.scaffoldKey,
-      body: Container(
-        height: contentHeight,
-        decoration: kLoginDecoration,
-        child: ListView(
-          children: <Widget>[
-            SizedBox(
-              height: contentHeight / 10,
-            ),
-            Image(
-              height: contentHeight * 3 / 10,
-              image: AssetImage('assets/images/login_logo.png'),
-            ),
-            Container(
-              height: contentHeight / 10,
-              child: _buildMenuBar(contentWidth, contentHeight / 10),
-            ),
-            Container(
-              height: contentHeight * 5 / 10,
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: (i) {
-                  if (i == 0) {
-                    setState(() {
-                      right = Colors.white;
-                      left = Colors.black;
-                    });
-                  } else if (i == 1) {
-                    setState(() {
-                      right = Colors.black;
-                      left = Colors.white;
-                    });
-                  }
-                },
-                children: <Widget>[
-                  _buildSignIn(),
-                  _buildSignUp(),
-                ],
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        key: _bloc.scaffoldKey,
+        body: Container(
+          height: contentHeight,
+          decoration: kLoginDecoration,
+          child: ListView(
+            children: <Widget>[
+              SizedBox(
+                height: contentHeight / 10,
               ),
-            ),
-          ],
+              Image(
+                height: contentHeight * 3 / 10,
+                image: AssetImage('assets/images/login_logo.png'),
+              ),
+              Container(
+                height: contentHeight / 10,
+                child: _buildMenuBar(contentWidth, contentHeight / 10),
+              ),
+              Container(
+                height: contentHeight * 5 / 10,
+                child: PageView(
+                  controller: _pageController,
+                  onPageChanged: (i) {
+                    if (i == 0) {
+                      setState(() {
+                        right = Colors.white;
+                        left = Colors.black;
+                      });
+                    } else if (i == 1) {
+                      setState(() {
+                        right = Colors.black;
+                        left = Colors.white;
+                      });
+                    }
+                  },
+                  children: <Widget>[
+                    _buildSignIn(),
+                    _buildSignUp(),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

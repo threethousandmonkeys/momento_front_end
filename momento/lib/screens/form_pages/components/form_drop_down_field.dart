@@ -76,7 +76,7 @@ class _FormDropDownFieldState extends State<FormDropDownField> {
                     if (mounted) {
                       setState(() => selectedIndex = index);
                       widget.controller.text = widget.items.values.toList()[selectedIndex];
-                      widget.onChanged(widget.items.keys.toList()[selectedIndex]);
+                      widget.onChanged(widget.items.values.toList()[selectedIndex]);
                     }
                   },
                   children: widget.items.keys
@@ -96,10 +96,7 @@ class _FormDropDownFieldState extends State<FormDropDownField> {
         title: widget.title,
         enabled: false,
         controller: widget.controller,
-        suffix: Padding(
-          padding: const EdgeInsets.only(right: 10.0),
-          child: Icon(Icons.arrow_drop_down),
-        ),
+        suffix: Icon(Icons.arrow_drop_down),
         invalid: widget.items.isEmpty,
       ),
     );

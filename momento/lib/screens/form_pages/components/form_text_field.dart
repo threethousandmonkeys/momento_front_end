@@ -9,12 +9,14 @@ class FormTextField extends StatefulWidget {
   final bool enabled;
   final bool invalid;
   final Function onChanged;
+  final Function onTap;
   final TextEditingController controller;
   final Widget suffix;
   FormTextField({
     @required this.title,
     this.maxLines = 1,
     this.enabled = true,
+    this.onTap,
     this.invalid = false,
     this.onChanged,
     this.controller,
@@ -47,6 +49,7 @@ class _FormTextFieldState extends State<FormTextField> {
             keyboardType: TextInputType.multiline,
             maxLines: widget.maxLines,
             style: kFormTextFont,
+            onTap: widget.onTap,
             android: (_) => MaterialTextFieldData(
               decoration: InputDecoration(
                 filled: true,
@@ -58,7 +61,10 @@ class _FormTextFieldState extends State<FormTextField> {
             ),
             ios: (_) => CupertinoTextFieldData(
               padding: kFormInputPadding,
-              suffix: widget.suffix,
+              suffix: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: widget.suffix,
+              ),
               decoration: BoxDecoration(
                 color: widget.invalid ? Colors.transparent : Colors.white,
                 border: Border.all(

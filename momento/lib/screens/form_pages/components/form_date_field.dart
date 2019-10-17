@@ -28,7 +28,7 @@ class _FormDateFieldState extends State<FormDateField> {
 
   @override
   void initState() {
-    _selectedDate = widget.initialDateTime ?? DateTime.now();
+    _selectedDate = widget.initialDateTime;
     widget.controller.text =
         widget.initialDateTime != null ? widget.initialDateTime.toString().split(" ")[0] : "N/A";
     super.initState();
@@ -36,14 +36,20 @@ class _FormDateFieldState extends State<FormDateField> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
+    return FormTextField(
+      title: widget.title,
+      enabled: true,
       onTap: () => _selectDate(context),
-      child: FormTextField(
-        title: widget.title,
-        enabled: false,
-        controller: widget.controller,
-      ),
+      controller: widget.controller,
+      suffix: _selectedDate != null
+          ? GestureDetector(
+              behavior: HitTestBehavior.deferToChild,
+              child: Icon(
+                Icons.clear,
+              ),
+              onTap: () => _clear(),
+            )
+          : null,
     );
   }
 
@@ -79,6 +85,14 @@ class _FormDateFieldState extends State<FormDateField> {
       );
       _updateSelected(picked);
     }
+  }
+
+  void _clear() {
+    setState(() {
+      _selectedDate = null;
+    });
+    widget.controller.text = "N/A";
+    widget.onChange(null);
   }
 
   void _updateSelected(DateTime picked) {

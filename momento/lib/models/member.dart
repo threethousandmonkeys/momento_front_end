@@ -38,8 +38,8 @@ class Member {
       lastName: jsonMember["lastName"],
       gender: jsonMember["gender"],
       birthday: DateTime.fromMillisecondsSinceEpoch(jsonMember["birthday"].seconds * 1000),
-      deathday: jsonMember["birthday"] != null
-          ? DateTime.fromMillisecondsSinceEpoch(jsonMember["birthday"].seconds * 1000)
+      deathday: jsonMember["deathday"] != null
+          ? DateTime.fromMillisecondsSinceEpoch(jsonMember["deathday"].seconds * 1000)
           : null,
       fatherId: jsonMember["father"],
       motherId: jsonMember["mother"],

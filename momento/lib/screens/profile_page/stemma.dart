@@ -7,12 +7,15 @@ import 'package:momento/models/member.dart';
 import 'package:momento/screens/detail_page/member_detail_page.dart';
 import 'package:momento/screens/form_pages//add_new_member_page.dart';
 import 'package:provider/provider.dart';
+import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 
-const kColors = [Color(0xFFC9C0D3), Color(0xFFC1CBD7)];
+//const kColors = [Color(0xFFC9C0D3), Color(0xFFC1CBD7)];
+const kColors = [Color(0xFFF8EBD8)];
 
 /// UI part for stemma page
 class Stemma extends StatelessWidget {
-  List<Widget> _createFamilyMemberCards(List<Member> members, double width, BuildContext context) {
+  List<Widget> _createFamilyMemberCards(
+      List<Member> members, double width, BuildContext context) {
     List<Widget> output = [];
     if (members.isNotEmpty) {
       members.sort((a, b) => a.birthday.compareTo(b.birthday));
@@ -31,20 +34,32 @@ class Stemma extends StatelessWidget {
           child: FractionallySizedBox(
             widthFactor: 1,
             child: Card(
-              color: kColors[i % 2],
+              margin:
+                  const EdgeInsets.symmetric(horizontal: 6.0, vertical: 5.0),
+              color: kColors[i % kColors.length],
               child: Container(
                 margin: const EdgeInsets.all(10.0),
-                height: width * kGoldenRatio * kGoldenRatio,
+                height: width * kGoldenRatio * kGoldenRatio * kGoldenRatio,
                 child: Row(
                   children: <Widget>[
-                    FractionallySizedBox(
-                      heightFactor: 1,
-                      child: ExtendedImage.network(
-                        members[i].thumbnail ?? members[i].photo,
-                        width: width * kGoldenRatio * kGoldenRatio,
-                        fit: BoxFit.cover,
-                        cache: true,
-                      ),
+                    CircularProfileAvatar(
+                      members[i].thumbnail ?? members[i].photo,
+                      cacheImage: true,
+                    ),
+//                    FractionallySizedBox(
+//                      heightFactor: 1,
+//                      child: ExtendedImage.network(
+//                        members[i].thumbnail ?? members[i].photo,
+//                        width: width * kGoldenRatio * kGoldenRatio,
+//                        fit: BoxFit.cover,
+//                        cache: true,
+//                      ),
+//                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 10),
+                      width: 2,
+                      color: Colors.white,
                     ),
                     Expanded(
                       child: Row(

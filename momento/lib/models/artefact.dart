@@ -27,7 +27,9 @@ class Artefact {
     return Artefact(
       id: artefactId,
       name: jsonArtefact["name"],
-      dateCreated: DateTime.fromMillisecondsSinceEpoch(jsonArtefact["date_created"].seconds * 1000),
+      dateCreated: jsonArtefact["date_created"] != null
+          ? DateTime.fromMillisecondsSinceEpoch(jsonArtefact["date_created"].seconds * 1000)
+          : null,
       originalOwnerId: jsonArtefact["original_owner"],
       currentOwnerId: jsonArtefact["current_owner"],
       description: jsonArtefact["description"],

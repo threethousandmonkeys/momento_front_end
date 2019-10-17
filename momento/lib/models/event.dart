@@ -25,7 +25,9 @@ class Event {
     return Event(
       id: eventId,
       name: jsonEvent["name"],
-      date: DateTime.fromMillisecondsSinceEpoch(jsonEvent["date"].seconds * 1000),
+      date: jsonEvent["date"] != null
+          ? DateTime.fromMillisecondsSinceEpoch(jsonEvent["date"].seconds * 1000)
+          : null,
       participants: List<String>.from(jsonEvent["participants"]),
       description: jsonEvent["description"],
       photo: jsonEvent["photo"],

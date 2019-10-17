@@ -15,8 +15,6 @@ import 'components/form_drop_down_field.dart';
 import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
 
-const kGenders = ["Male", "Female", "Others"];
-
 /// UI part for add new member pages
 class AddNewMemberPage extends StatefulWidget {
   final List<Member> members;

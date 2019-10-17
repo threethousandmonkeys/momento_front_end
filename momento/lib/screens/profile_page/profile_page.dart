@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart' as prefix0;
 import 'package:flutter/material.dart' hide NestedScrollView;
 import 'package:flutter/cupertino.dart' hide NestedScrollView;
 import 'package:image_picker/image_picker.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 const kTabBarHeight = 46.0;
 const kNumTabs = 3;
+const kThemeColor = Color(0xFFD7CCBB);
 
 /// ProfilePage: the widget of family profile page(home page)
 class ProfilePage extends StatefulWidget {
@@ -25,8 +27,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 /// _ProfilePageState: the state control of family profile page
-class _ProfilePageState extends State<ProfilePage>
-    with TickerProviderStateMixin {
+class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin {
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   TabController _tabController;
@@ -60,11 +61,10 @@ class _ProfilePageState extends State<ProfilePage>
     }
     // get device dimensions
     double height = MediaQuery.of(context).size.height;
-    double pinnedHeaderHeight =
-        MediaQuery.of(context).padding.top + kToolbarHeight + kTabBarHeight;
+    double pinnedHeaderHeight = MediaQuery.of(context).padding.top + kToolbarHeight + kTabBarHeight;
     return PlatformScaffold(
 //      backgroundColor: const Color(0xFFFFFAF4),
-      backgroundColor: const Color(0xFFD7CCBB),
+      backgroundColor: kThemeColor,
       body: FutureBuilder<Null>(
         future: _futureProfile,
         builder: (context, snapshot) {
@@ -76,7 +76,7 @@ class _ProfilePageState extends State<ProfilePage>
                   SliverAppBar(
                     pinned: true,
                     elevation: 0.0,
-                    backgroundColor: Color(0xFFBFBFBF),
+                    backgroundColor: kThemeColor,
                     expandedHeight: height * (1 - kGoldenRatio),
                     actions: <Widget>[
                       IconButton(
@@ -95,6 +95,7 @@ class _ProfilePageState extends State<ProfilePage>
                       title: AutoSizeText(
                         "The ${_bloc.name}s",
                         maxLines: 1,
+                        textAlign: prefix0.TextAlign.center,
                         minFontSize: 30,
                         style: TextStyle(
                           fontFamily: "Anton",
@@ -105,8 +106,7 @@ class _ProfilePageState extends State<ProfilePage>
                           stream: _bloc.getPhotos,
                           initialData: [],
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.active) {
+                            if (snapshot.connectionState == ConnectionState.active) {
                               return Container(
                                 color: Colors.black,
                                 child: CarouselWithIndicator(
@@ -121,43 +121,31 @@ class _ProfilePageState extends State<ProfilePage>
                                       [
                                         Container(
                                           child: GestureDetector(
-                                            behavior:
-                                                HitTestBehavior.translucent,
+                                            behavior: HitTestBehavior.translucent,
                                             onTap: () async {
-                                              selectedUpload =
-                                                  await ImagePicker.pickImage(
-                                                      source:
-                                                          ImageSource.gallery);
+                                              selectedUpload = await ImagePicker.pickImage(
+                                                  source: ImageSource.gallery);
                                               if (selectedUpload != null) {
                                                 setState(() {});
-                                                Dialogs.showLoadingDialog(
-                                                    context, _keyLoader);
-                                                await _bloc.uploadPhoto(
-                                                    selectedUpload);
+                                                Dialogs.showLoadingDialog(context, _keyLoader);
+                                                await _bloc.uploadPhoto(selectedUpload);
                                                 selectedUpload = null;
-                                                Navigator.of(
-                                                        _keyLoader
-                                                            .currentContext,
+                                                Navigator.of(_keyLoader.currentContext,
                                                         rootNavigator: true)
                                                     .pop();
                                               }
                                             },
                                             child: Stack(
-                                              alignment:
-                                                  AlignmentDirectional.center,
+                                              alignment: AlignmentDirectional.center,
                                               children: <Widget>[
                                                 Image(
                                                   image: selectedUpload == null
-                                                      ? AssetImage(
-                                                          "assets/images/login_logo.png")
-                                                      : FileImage(
-                                                          selectedUpload),
+                                                      ? AssetImage("assets/images/login_logo.png")
+                                                      : FileImage(selectedUpload),
                                                 ),
                                                 Icon(
                                                   Icons.add,
-                                                  size: selectedUpload == null
-                                                      ? 100
-                                                      : 0,
+                                                  size: selectedUpload == null ? 100 : 0,
                                                   color: Colors.white,
                                                 ),
                                               ],
@@ -181,16 +169,14 @@ class _ProfilePageState extends State<ProfilePage>
                       initialData: "Loading Description",
                       builder: (context, snapshot) {
                         return Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 10),
+                          padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
                           child: GestureDetector(
                             onTap: () async {
                               final newDescription = await showPlatformDialog(
                                 context: context,
                                 androidBarrierDismissible: false,
                                 builder: (context) {
-                                  final descriptionController =
-                                      TextEditingController();
+                                  final descriptionController = TextEditingController();
                                   descriptionController.text = snapshot.data;
                                   return PlatformAlertDialog(
                                     title: PlatformText("Description"),
@@ -220,24 +206,18 @@ class _ProfilePageState extends State<ProfilePage>
                                       PlatformDialogAction(
                                         child: PlatformText("Update"),
                                         onPressed: () {
-                                          if (descriptionController.text
-                                                  .trim() ==
-                                              "") {
+                                          if (descriptionController.text.trim() == "") {
                                             descriptionController.text =
                                                 "This family is too lazy to write any description.";
                                           }
-                                          Navigator.pop(
-                                              context,
-                                              descriptionController.text
-                                                  .trim());
+                                          Navigator.pop(context, descriptionController.text.trim());
                                         },
                                       ),
                                     ],
                                   );
                                 },
                               );
-                              if (newDescription != null &&
-                                  newDescription != snapshot.data) {
+                              if (newDescription != null && newDescription != snapshot.data) {
                                 _bloc.updateDescription(newDescription);
                               }
                             },
@@ -245,8 +225,7 @@ class _ProfilePageState extends State<ProfilePage>
                               snapshot.data,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 5,
-                              style: TextStyle(
-                                  fontSize: 18.0, fontFamily: "Lobster"),
+                              style: TextStyle(fontSize: 18.0, fontFamily: "Lobster"),
                             ),
                           ),
                         );
@@ -257,7 +236,7 @@ class _ProfilePageState extends State<ProfilePage>
                     pinned: true,
                     delegate: SliverTabBarDelegate(
                       child: Container(
-                        color: Color(0xFFBFBFBF),
+                        color: kThemeColor,
                         child: TabBar(
                           labelColor: Colors.black87,
                           unselectedLabelColor: Colors.black12,
@@ -315,8 +294,7 @@ class SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   double get maxExtent => kTabBarHeight;
   @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return SizedBox.expand(child: child);
   }
 

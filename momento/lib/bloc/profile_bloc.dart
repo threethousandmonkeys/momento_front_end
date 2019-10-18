@@ -131,6 +131,7 @@ class ProfileBloc {
   }
 
   void deleteMember(String id) {
+    family.members.remove(id);
     final newMembers = List<Member>.from(_membersController.value);
     newMembers.removeWhere((a) => a.id == id);
     _setMembers(newMembers);
@@ -172,6 +173,7 @@ class ProfileBloc {
   }
 
   void deleteArtefact(String id) {
+    family.artefacts.remove(id);
     final newArtefacts = List<Artefact>.from(_artefactsController.value);
     newArtefacts.removeWhere((a) => a.id == id);
     _setArtefacts(newArtefacts);
@@ -212,6 +214,7 @@ class ProfileBloc {
   }
 
   void deleteEvent(String id) {
+    family.events.remove(id);
     final newEvents = List<Event>.from(_eventsController.value);
     newEvents.removeWhere((a) => a.id == id);
     _setEvents(newEvents);

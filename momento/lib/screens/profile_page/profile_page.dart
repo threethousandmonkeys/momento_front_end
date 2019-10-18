@@ -94,12 +94,12 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                       title: AutoSizeText(
                         "The ${_bloc.name}s",
                         maxLines: 1,
-                        textAlign: TextAlign.center,
                         minFontSize: 30,
                         style: TextStyle(
                           fontFamily: "Anton",
                         ),
                       ),
+                      centerTitle: true,
                       background: Container(
                         child: StreamBuilder<List<String>>(
                           stream: _bloc.getPhotos,

@@ -1,4 +1,6 @@
 import 'package:momento/models/event.dart';
+import 'package:momento/models/family.dart';
+import 'package:momento/repositories/family_repository.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 import 'package:momento/services/firestore_service.dart';
 
@@ -7,6 +9,7 @@ import 'package:momento/services/firestore_service.dart';
 class EventRepository {
   final _firestore = FirestoreService();
   final _cloudStorage = CloudStorageService();
+  final _familyRepository = FamilyRepository();
 
   Future<String> createEvent(String id, Event event) async {
     final eventId = await _firestore.createDocumentById(
@@ -36,5 +39,16 @@ class EventRepository {
       event.id,
       event.serialize(),
     );
+  }
+
+  Future<Null> deleteEvent(Family family, Event event) async {
+    if (event.photo != null) {
+      _cloudStorage.deletePhoto(event.photo);
+    }
+    if (event.thumbnail != null) {
+      _cloudStorage.deletePhoto(event.thumbnail);
+    }
+    await _firestore.deleteDocument("event", event.id);
+    await _familyRepository.deleteEvent(family, event.id);
   }
 }

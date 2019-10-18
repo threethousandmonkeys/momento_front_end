@@ -43,6 +43,17 @@ class FamilyRepository {
     );
   }
 
+  Future<Null> deleteMember(Family family, String memberId) async {
+    final newMembers = List<String>.from(family.members);
+    newMembers.removeWhere((id) => id == memberId);
+    await _firestore.updateDocumentByField(
+      "family",
+      family.id,
+      "members",
+      newMembers,
+    );
+  }
+
   Future<Null> addArtefact(Family family, String artefactId) async {
     final newArtefacts = List<String>.from(family.artefacts);
     newArtefacts.add(artefactId);
@@ -54,9 +65,31 @@ class FamilyRepository {
     );
   }
 
+  Future<Null> deleteArtefact(Family family, String artefactId) async {
+    final newArtefacts = List<String>.from(family.artefacts);
+    newArtefacts.removeWhere((id) => id == artefactId);
+    await _firestore.updateDocumentByField(
+      "family",
+      family.id,
+      "artefacts",
+      newArtefacts,
+    );
+  }
+
   Future<Null> addEvent(Family family, String eventId) async {
     final newEvents = List<String>.from(family.events);
     newEvents.add(eventId);
+    await _firestore.updateDocumentByField(
+      "family",
+      family.id,
+      "events",
+      newEvents,
+    );
+  }
+
+  Future<Null> deleteEvent(Family family, String eventId) async {
+    final newEvents = List<String>.from(family.events);
+    newEvents.removeWhere((id) => id == eventId);
     await _firestore.updateDocumentByField(
       "family",
       family.id,

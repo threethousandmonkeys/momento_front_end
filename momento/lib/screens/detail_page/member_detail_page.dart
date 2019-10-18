@@ -4,10 +4,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:momento/bloc/profile_bloc.dart';
+import 'package:momento/repositories/member_repository.dart';
 import 'package:momento/screens/components/entry.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:momento/screens/detail_page/detail_page.dart';
 import 'package:momento/screens/form_pages/update_member_page.dart';
+import 'package:momento/services/dialogs.dart';
 import 'package:provider/provider.dart';
 import '../../constants.dart';
 import '../../models/member.dart';
@@ -24,6 +26,8 @@ class MemberDetailPage extends StatefulWidget {
 
 class _MemberDetailPageState extends State<MemberDetailPage> {
   Member currentMember;
+  final _keyLoader = GlobalKey<State>();
+  final _memberRepository = MemberRepository();
 
   @override
   void initState() {
@@ -50,6 +54,16 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
           currentMember = updatedMember;
           Provider.of<ProfileBloc>(context).updateMember(updatedMember);
         }
+      },
+      delete: () async {
+        Dialogs.showLoadingDialog(context, _keyLoader);
+        await _memberRepository.deleteMember(
+          Provider.of<ProfileBloc>(context).family,
+          currentMember,
+        );
+        Provider.of<ProfileBloc>(context).deleteMember(currentMember.id);
+        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        Navigator.pop(context);
       },
       content: [
         Padding(

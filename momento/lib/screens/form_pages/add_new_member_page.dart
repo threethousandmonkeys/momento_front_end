@@ -89,9 +89,9 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
               FormDropDownField(
                 title: "Gender",
                 items: {
-                  "0": "Male",
-                  "1": "Female",
-                  "2": "Others",
+                  "Male": "Male",
+                  "Female": "Female",
+                  "Others": "Others",
                 },
                 onChanged: (value) {
                   _bloc.gender = value;

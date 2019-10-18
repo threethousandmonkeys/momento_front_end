@@ -1,10 +1,13 @@
 import 'package:momento/models/artefact.dart';
+import 'package:momento/models/family.dart';
+import 'package:momento/repositories/family_repository.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 import 'package:momento/services/firestore_service.dart';
 
 /// getting artifact entries from Firease cloud firestore and provide
 /// it to the upper layers
 class ArtefactRepository {
+  final _familyRepository = FamilyRepository();
   final _firestore = FirestoreService();
   final _cloudStorage = CloudStorageService();
 
@@ -36,5 +39,16 @@ class ArtefactRepository {
       artefact.id,
       artefact.serialize(),
     );
+  }
+
+  Future<Null> deleteArtefact(Family family, Artefact artefact) async {
+    if (artefact.photo != null) {
+      _cloudStorage.deletePhoto(artefact.photo);
+    }
+    if (artefact.thumbnail != null) {
+      _cloudStorage.deletePhoto(artefact.thumbnail);
+    }
+    await _firestore.deleteDocument("artefact", artefact.id);
+    await _familyRepository.deleteArtefact(family, artefact.id);
   }
 }

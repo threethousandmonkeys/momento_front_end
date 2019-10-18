@@ -39,7 +39,7 @@ class DetailPage extends StatelessWidget {
                 context: context,
                 androidBarrierDismissible: false,
                 builder: (_) => PlatformAlertDialog(
-                  title: PlatformText('Delete Member?'),
+                  title: PlatformText('Delete?'),
                   actions: <Widget>[
                     PlatformDialogAction(
                       child: PlatformText("Cancel"),
@@ -54,7 +54,10 @@ class DetailPage extends StatelessWidget {
                           color: Colors.red,
                         ),
                       ),
-                      onPressed: delete,
+                      onPressed: () {
+                        Navigator.pop(context);
+                        delete();
+                      },
                     ),
                   ],
                 ),

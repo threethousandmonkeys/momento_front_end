@@ -130,6 +130,12 @@ class ProfileBloc {
     _setMembers(newMembers);
   }
 
+  void deleteMember(String id) {
+    final newMembers = List<Member>.from(_membersController.value);
+    newMembers.removeWhere((a) => a.id == id);
+    _setMembers(newMembers);
+  }
+
   final _artefactsController = BehaviorSubject<List<Artefact>>();
   Function(List<Artefact>) get _setArtefacts => _artefactsController.add;
   Stream<List<Artefact>> get getArtefacts => _artefactsController.stream;
@@ -165,6 +171,12 @@ class ProfileBloc {
     _setArtefacts(newArtefacts);
   }
 
+  void deleteArtefact(String id) {
+    final newArtefacts = List<Artefact>.from(_artefactsController.value);
+    newArtefacts.removeWhere((a) => a.id == id);
+    _setArtefacts(newArtefacts);
+  }
+
   final _eventsController = BehaviorSubject<List<Event>>();
   Function(List<Event>) get _setEvents => _eventsController.add;
   Stream<List<Event>> get getEvents => _eventsController.stream;
@@ -196,6 +208,12 @@ class ProfileBloc {
     });
     newEvents.removeAt(index);
     newEvents.insert(index, updatedEvent);
+    _setEvents(newEvents);
+  }
+
+  void deleteEvent(String id) {
+    final newEvents = List<Event>.from(_eventsController.value);
+    newEvents.removeWhere((a) => a.id == id);
     _setEvents(newEvents);
   }
 

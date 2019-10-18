@@ -1,4 +1,6 @@
+import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
+import 'package:momento/repositories/family_repository.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 import 'package:momento/services/firestore_service.dart';
 
@@ -7,6 +9,7 @@ import 'package:momento/services/firestore_service.dart';
 class MemberRepository {
   final _firestore = FirestoreService();
   final _cloudStorage = CloudStorageService();
+  final _familyRepository = FamilyRepository();
 
   /// Get individual members by its user id
   Future<Member> getMemberById(String familyId, String memberId) async {
@@ -39,5 +42,14 @@ class MemberRepository {
     );
   }
 
-  void deleteMember(String memberId) {}
+  Future<Null> deleteMember(Family family, Member member) async {
+    if (member.photo != null) {
+      _cloudStorage.deletePhoto(member.photo);
+    }
+    if (member.thumbnail != null) {
+      _cloudStorage.deletePhoto(member.thumbnail);
+    }
+    await _firestore.deleteDocument("member", member.id);
+    await _familyRepository.deleteMember(family, member.id);
+  }
 }

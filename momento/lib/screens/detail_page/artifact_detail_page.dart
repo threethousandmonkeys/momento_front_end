@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
+import 'package:momento/models/artefact.dart';
 import 'package:momento/models/member.dart';
+import 'package:momento/repositories/artefact_repository.dart';
 import 'package:momento/screens/components/entry.dart';
 import 'package:momento/screens/detail_page/detail_page.dart';
 import 'package:momento/screens/form_pages/update_artefact_page.dart';
 import 'package:momento/screens/components/viewable_image.dart';
+import 'package:momento/services/dialogs.dart';
 import 'package:provider/provider.dart';
-
-import '../../constants.dart';
-import '../../models/artefact.dart';
-import '../components/ugly_button.dart';
 
 /// UI part for artifact detail pages
 class ArtefactDetailPage extends StatefulWidget {
@@ -21,6 +20,8 @@ class ArtefactDetailPage extends StatefulWidget {
 }
 
 class _ArtefactDetailPageState extends State<ArtefactDetailPage> {
+  final _keyLoader = GlobalKey<State>();
+  final _artefactRepository = ArtefactRepository();
   Artefact currentArtefact;
   @override
   void initState() {
@@ -45,6 +46,16 @@ class _ArtefactDetailPageState extends State<ArtefactDetailPage> {
           currentArtefact = updatedArtefact;
           Provider.of<ProfileBloc>(context).updateArtefact(updatedArtefact);
         }
+      },
+      delete: () async {
+        Dialogs.showLoadingDialog(context, _keyLoader);
+        await _artefactRepository.deleteArtefact(
+          Provider.of<ProfileBloc>(context).family,
+          currentArtefact,
+        );
+        Provider.of<ProfileBloc>(context).deleteArtefact(currentArtefact.id);
+        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        Navigator.pop(context);
       },
       content: <Widget>[
         ViewableImage(currentArtefact.photo),

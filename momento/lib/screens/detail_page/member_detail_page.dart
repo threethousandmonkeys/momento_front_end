@@ -2,6 +2,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:momento/bloc/profile_bloc.dart';
+import 'package:momento/models/artefact.dart';
+import 'package:momento/models/event.dart';
 import 'package:momento/repositories/member_repository.dart';
 import 'package:momento/screens/components/entry.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
@@ -15,7 +17,9 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 /// UI part for member detail pages
 class MemberDetailPage extends StatefulWidget {
   final Member member;
-  MemberDetailPage(this.member);
+  final List<Event> events;
+  final List<Artefact> artefacts;
+  MemberDetailPage(this.member, this.events, this.artefacts);
 
   @override
   _MemberDetailPageState createState() => _MemberDetailPageState();

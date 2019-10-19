@@ -197,6 +197,16 @@ class ProfileBloc {
     _setArtefacts(newArtefacts);
   }
 
+  List<Artefact> getRelatedArtefact(String memberId) {
+    List<Artefact> relatedArtefacts = [];
+    for (Artefact artefact in _artefactsController.value) {
+      if (artefact.currentOwnerId == memberId || artefact.originalOwnerId == memberId) {
+        relatedArtefacts.add(artefact);
+      }
+    }
+    return relatedArtefacts;
+  }
+
   final _eventsController = BehaviorSubject<List<Event>>();
   Function(List<Event>) get _setEvents => _eventsController.add;
   Stream<List<Event>> get getEvents => _eventsController.stream;
@@ -216,6 +226,17 @@ class ProfileBloc {
         family.events.map((id) => _eventRepository.getEventById(family.id, id)).toList();
     List<Event> events = await Future.wait(futureEvents);
     _setEvents(events);
+  }
+
+  /// get related events for a specific member
+  List<Event> getRelatedEvents(String memberId) {
+    List<Event> relatedEvents = [];
+    for (Event event in _eventsController.value) {
+      if (event.participants.contains(memberId)) {
+        relatedEvents.add(event);
+      }
+    }
+    return relatedEvents;
   }
 
   /// Deal with events -

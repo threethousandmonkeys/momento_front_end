@@ -16,7 +16,7 @@ class ViewableImage extends StatelessWidget {
           context,
           PageTransition(
             type: PageTransitionType.fade,
-            child: image_viewer(url),
+            child: ImageViewer(url),
           ),
         );
       },

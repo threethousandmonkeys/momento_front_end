@@ -1,5 +1,4 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/constants.dart';
@@ -14,8 +13,7 @@ const kColors = [Color(0xFFF8EBD8)];
 
 /// UI part for stemma page
 class Stemma extends StatelessWidget {
-  List<Widget> _createFamilyMemberCards(
-      List<Member> members, double width, BuildContext context) {
+  List<Widget> _createFamilyMemberCards(List<Member> members, double width, BuildContext context) {
     List<Widget> output = [];
     if (members.isNotEmpty) {
       members.sort((a, b) => a.birthday.compareTo(b.birthday));
@@ -34,8 +32,7 @@ class Stemma extends StatelessWidget {
           child: FractionallySizedBox(
             widthFactor: 1,
             child: Card(
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 6.0, vertical: 5.0),
+              margin: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 5.0),
               color: kColors[i % kColors.length],
               child: Container(
                 margin: const EdgeInsets.all(10.0),
@@ -56,8 +53,7 @@ class Stemma extends StatelessWidget {
 //                      ),
 //                    ),
                     Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 10),
+                      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                       width: 2,
                       color: Colors.white,
                     ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/screens/profile_page/profile_page.dart';
 import 'package:provider/provider.dart';

@@ -1,6 +1,5 @@
 import 'package:momento/models/family.dart';
 import 'package:momento/models/member.dart';
-import 'package:momento/repositories/event_repository.dart';
 import 'package:momento/repositories/family_repository.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 import 'package:momento/services/firestore_service.dart';
@@ -11,7 +10,6 @@ class MemberRepository {
   final _firestore = FirestoreService();
   final _cloudStorage = CloudStorageService();
   final _familyRepository = FamilyRepository();
-  final _eventRepository = EventRepository();
 
   /// Get individual members by its user id
   Future<Member> getMemberById(String familyId, String memberId) async {

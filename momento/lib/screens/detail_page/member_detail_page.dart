@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,7 +9,6 @@ import 'package:momento/screens/detail_page/detail_page.dart';
 import 'package:momento/screens/form_pages/update_member_page.dart';
 import 'package:momento/services/dialogs.dart';
 import 'package:provider/provider.dart';
-import '../../constants.dart';
 import '../../models/member.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 

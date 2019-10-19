@@ -6,10 +6,9 @@ import 'package:momento/repositories/event_repository.dart';
 import 'package:momento/repositories/family_repository.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 
-/** Business logical：
- *     For adding new events. Including upload the photos into
- *     cloud and return a path for later use
- **/
+/// Business logical：
+/// For adding new events. Including upload the photos into
+/// cloud and return a path for later use
 
 class AddNewEventBloc {
   final FamilyRepository familyRepository;

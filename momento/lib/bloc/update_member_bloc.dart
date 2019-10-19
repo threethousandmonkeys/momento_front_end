@@ -4,11 +4,9 @@ import 'package:momento/models/member.dart';
 import 'package:momento/repositories/member_repository.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 
-/** Business logical：
- *     For updating new members. Including checking the
- *     validity and upload the new photos into
- *     cloud
- **/
+/// Business logical：
+/// For updating new members. Including checking the
+/// validity and upload the new photos into cloud
 
 class UpdateMemberBloc {
   final _memberRepository = MemberRepository();

@@ -134,6 +134,24 @@ class ProfileBloc {
     family.members.remove(id);
     final newMembers = List<Member>.from(_membersController.value);
     newMembers.removeWhere((a) => a.id == id);
+    // delete member as participants in all existing events
+    for (Event event in _eventsController.value) {
+      if (event.participants.contains(id)) {
+        event.participants.remove(id);
+        _eventRepository.updateEvent(event);
+      }
+    }
+    // delete member as parent in remaining members
+    for (Member member in newMembers) {
+      if (member.fatherId == id) {
+        member.fatherId = null;
+        _memberRepository.updateMember(member);
+      }
+      if (member.motherId == id) {
+        member.motherId = null;
+        _memberRepository.updateMember(member);
+      }
+    }
     _setMembers(newMembers);
   }
 

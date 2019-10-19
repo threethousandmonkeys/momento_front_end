@@ -87,6 +87,15 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
             child: AutoSizeText(
               "${currentMember.firstName} ${currentMember.lastName}",
               minFontSize: 40,
+              maxLines: 1,
+              overflowReplacement: Text(
+                "${currentMember.firstName[0].toUpperCase()}. ${currentMember.lastName[0].toUpperCase()}.",
+                style: TextStyle(
+                  fontSize: 40,
+                  fontFamily: "Anton",
+                ),
+                textAlign: TextAlign.center,
+              ),
               style: TextStyle(
                 color: kDarkRedMoranti,
                 fontWeight: FontWeight.bold,

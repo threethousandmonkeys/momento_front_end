@@ -60,7 +60,7 @@ class _AddNewEventPageState extends State<AddNewEventPage> {
                 ),
               ),
               FormTextField(
-                title: "Event Name (max 20 characters)",
+                title: "Event Name (max 50 characters)",
                 onChanged: (value) {
                   _bloc.name = value;
                 },

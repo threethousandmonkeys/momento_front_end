@@ -68,7 +68,8 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
       content: [
         Padding(
           padding: EdgeInsets.only(
-            top: MediaQuery.of(context).size.height * 0.1,
+            top: MediaQuery.of(context).size.height * 0.025,
+            bottom: MediaQuery.of(context).size.height * 0.020,
           ),
           child: Align(
             alignment: Alignment.center,
@@ -83,7 +84,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
         ),
         Center(
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 0),
+            padding: const EdgeInsets.all(0),
             child: AutoSizeText(
               "${currentMember.firstName} ${currentMember.lastName}",
               minFontSize: 40,
@@ -97,10 +98,11 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                 textAlign: TextAlign.center,
               ),
               style: TextStyle(
-                color: kDarkRedMoranti,
+                color: Color(0xFF6B5152),
+                fontSize: 40,
                 fontWeight: FontWeight.bold,
-                fontFamily: "Anton",
               ),
+              textAlign: TextAlign.center,
             ),
           ),
         ),

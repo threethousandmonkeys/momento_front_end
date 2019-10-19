@@ -126,7 +126,7 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                 items: Map<String, String>.fromIterable(
                   _bloc.fathers,
                   key: (f) => f.id,
-                  value: (v) => v.firstName,
+                  value: (v) => v.firstName + " " + v.lastName,
                 ),
                 onChanged: (value) {
                   _bloc.father = value;
@@ -139,7 +139,7 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                 items: Map<String, String>.fromIterable(
                   _bloc.mothers,
                   key: (f) => f.id,
-                  value: (v) => v.firstName,
+                  value: (v) => v.firstName + " " + v.lastName,
                 ),
                 onChanged: (value) {
                   _bloc.mother = value;

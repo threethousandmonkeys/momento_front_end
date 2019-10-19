@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/models/artefact.dart';
@@ -62,14 +63,16 @@ class _ArtefactDetailPageState extends State<ArtefactDetailPage> {
         ViewableImage(currentArtefact.photo),
         Center(
           child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Text(
+            padding: const EdgeInsets.all(0),
+            child: AutoSizeText(
               currentArtefact.name,
+              minFontSize: 40,
               style: TextStyle(
                 color: Color(0xFF6B5152),
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
               ),
+              textAlign: TextAlign.center,
             ),
           ),
         ),

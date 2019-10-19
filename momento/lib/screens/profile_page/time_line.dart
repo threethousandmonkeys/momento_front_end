@@ -91,6 +91,7 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
                   Text(
                     events[i].name,
                     style: textStyle,
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
@@ -148,6 +149,13 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
                 physics: ClampingScrollPhysics(),
                 slivers: <Widget>[
                   SliverToBoxAdapter(
+                    child: Timeline(
+                      physics: NeverScrollableScrollPhysics(),
+                      children: _createTimelineModels(snapshot.data),
+                      position: TimelinePosition.Center,
+                    ),
+                  ),
+                  SliverToBoxAdapter(
                     child: GestureDetector(
                       onTap: () async {
                         final newEvent = await Navigator.push(
@@ -167,13 +175,6 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
                         Icons.add,
                         size: 50,
                       ),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Timeline(
-                      physics: NeverScrollableScrollPhysics(),
-                      children: _createTimelineModels(snapshot.data),
-                      position: TimelinePosition.Center,
                     ),
                   ),
                 ],

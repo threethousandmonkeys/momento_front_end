@@ -23,12 +23,23 @@ class UpdateEventBloc {
 
   File photo;
 
+  // validations for testing
   String validate() {
     if (event.name == "") {
       return "name";
     }
+    // if the event name is too long
+    if (event.name.length > 20) {
+      return "name length";
+    }
+    if (event.date == null) {
+      return "date";
+    }
     if (event.participants.length == 0) {
       return "participants";
+    }
+    if (event.photo == null) {
+      return "photo";
     }
     return "";
   }

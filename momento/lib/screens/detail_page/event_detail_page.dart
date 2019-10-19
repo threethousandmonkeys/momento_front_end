@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/repositories/event_repository.dart';
+import 'package:momento/screens/components/entry.dart';
 import 'package:momento/screens/detail_page/detail_page.dart';
 import 'package:momento/screens/form_pages/update_event_page.dart';
 import 'package:momento/screens/components/viewable_image.dart';
 import 'package:momento/services/dialogs.dart';
 import 'package:provider/provider.dart';
-
-import '../../constants.dart';
 import '../../models/event.dart';
-import '../components/ugly_button.dart';
 
 /// UI part for event detail pages
 class EventDetailPage extends StatefulWidget {
@@ -34,6 +31,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width / 2.7;
     return DetailPage(
       edit: () async {
         final updatedEvent = await Navigator.push(
@@ -60,7 +58,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
         Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
         Navigator.pop(context);
       },
-      content: [
+      content: <Widget>[
         ViewableImage(currentEvent.photo),
         Center(
           child: Padding(
@@ -68,15 +66,30 @@ class _EventDetailPageState extends State<EventDetailPage> {
             child: Text(
               currentEvent.name,
               style: TextStyle(
-                color: Colors.black,
-                fontSize: 50,
+                color: Color(0xFF6B5152),
+                fontSize: 40,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
         ),
-        Text(currentEvent.date.toString().split(' ')[0]),
-        Text("Description: " + currentEvent.description),
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: (MediaQuery.of(context).size.width - width) * 0.15,
+          ),
+          child: Column(
+            children: <Widget>[
+              Entry(
+                title: "Date",
+                content: currentEvent.date.toString().split(' ')[0],
+              ),
+              Entry(
+                title: "Description",
+                content: currentEvent.description,
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

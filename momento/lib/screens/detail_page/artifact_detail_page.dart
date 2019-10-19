@@ -31,6 +31,7 @@ class _ArtefactDetailPageState extends State<ArtefactDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width / 2.7;
     return DetailPage(
       edit: () async {
         final updatedArtefact = await Navigator.push(
@@ -73,7 +74,9 @@ class _ArtefactDetailPageState extends State<ArtefactDetailPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 0),
+          padding: EdgeInsets.symmetric(
+            horizontal: (MediaQuery.of(context).size.width - width) * 0.15,
+          ),
           child: Column(
             children: <Widget>[
               Entry(

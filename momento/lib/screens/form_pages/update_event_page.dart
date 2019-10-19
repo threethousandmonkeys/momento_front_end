@@ -64,7 +64,7 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                 ),
               ),
               FormTextField(
-                title: "Event Name",
+                title: "Event Name (max 20 characters)",
                 onChanged: (value) {
                   _bloc.event.name = value;
                 },
@@ -141,7 +141,12 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                               await _bloc.updateEvent(Provider.of<ProfileBloc>(context).family.id);
                           Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
                           Navigator.pop(context, newEvent);
-                        } else {
+                        }
+                        else if (validation == "name length") {
+                          _snackBarService.showInSnackBar(
+                              _scaffoldKey, "Event name is too long");
+                        } 
+                        else {
                           _snackBarService.showInSnackBar(
                               _scaffoldKey, "Please provide $validation");
                         }

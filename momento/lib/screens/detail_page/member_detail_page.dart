@@ -103,7 +103,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
         ),
         Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: (MediaQuery.of(context).size.width - width) * 0.25,
+            horizontal: (MediaQuery.of(context).size.width - width) * 0.15,
           ),
           child: Column(
             children: <Widget>[

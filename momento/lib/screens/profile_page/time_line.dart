@@ -8,6 +8,8 @@ import 'package:momento/screens/detail_page/event_detail_page.dart';
 import 'package:momento/screens/form_pages/add_new_event_page.dart';
 import 'package:provider/provider.dart';
 
+const kTextColor = Color(0xFF1F275F);
+
 /// TimeLine: the widget of timeline
 class TimeLine extends StatefulWidget {
   @override
@@ -24,7 +26,7 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
     TimelineItemPosition position = TimelineItemPosition.right;
     int year = -1;
     TextStyle textStyle =
-        TextStyle(fontFamily: 'WorkSansMedium', fontSize: 20, color: Colors.brown[700]);
+        TextStyle(fontFamily: 'WorkSansMedium', fontSize: 20, color: kTextColor);
 
     // sort the events based on date
     if (events.isEmpty == false) {
@@ -57,7 +59,7 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
       timelineModels.add(
         TimelineModel(
           Card(
-            color: Color(0xFFFAFAFA),
+            color: Color(0xFFFFFFFF),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),
             ),
@@ -174,6 +176,7 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
                       child: Icon(
                         Icons.add,
                         size: 50,
+                        color: kTextColor,
                       ),
                     ),
                   ),

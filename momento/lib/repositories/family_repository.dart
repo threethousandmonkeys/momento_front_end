@@ -9,7 +9,7 @@ class FamilyRepository {
   Future<Null> createFamily(String uid, String name, String email) async {
     Family defaultFamily = Family(
       name: name,
-      description: "This family is too lazy to write any description.",
+      description: "Insert family description",
       email: email,
       photos: [],
       members: [],

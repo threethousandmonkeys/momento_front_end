@@ -6,6 +6,8 @@ import 'package:momento/screens/detail_page/artifact_detail_page.dart';
 import 'package:momento/screens/form_pages//add_new_artefact_page.dart';
 import 'package:provider/provider.dart';
 
+const kTextColor = Color(0xFF1F275F);
+
 /// ArtefactGallery: Instagram style of artifacts display under home page
 /// (testing)
 class ArtefactGallery extends StatefulWidget {
@@ -56,6 +58,7 @@ class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAli
                   child: Icon(
                     Icons.add,
                     size: 60,
+                    color: kTextColor,
                   ),
                 ),
                 onTap: () async {

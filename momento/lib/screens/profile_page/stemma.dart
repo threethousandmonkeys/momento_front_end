@@ -10,7 +10,9 @@ import 'package:provider/provider.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 
 //const kColors = [Color(0xFFC9C0D3), Color(0xFFC1CBD7)];
-const kColors = [Color(0xFFF8EBD8)];
+// const kColors = [Color(0xFFF8EBD8)];
+const kColors = [Color(0xFFFFFFFF)];
+const kTextColor = Color(0xFF1F275F);
 
 /// UI part for stemma page
 class Stemma extends StatelessWidget {
@@ -35,8 +37,9 @@ class Stemma extends StatelessWidget {
             widthFactor: 1,
             child: Card(
               margin:
-                  const EdgeInsets.symmetric(horizontal: 6.0, vertical: 5.0),
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
               color: kColors[i % kColors.length],
+              elevation: 2.5,
               child: Container(
                 margin: const EdgeInsets.all(10.0),
                 height: width * kGoldenRatio * kGoldenRatio * kGoldenRatio,
@@ -46,20 +49,11 @@ class Stemma extends StatelessWidget {
                       members[i].thumbnail ?? members[i].photo,
                       cacheImage: true,
                     ),
-//                    FractionallySizedBox(
-//                      heightFactor: 1,
-//                      child: ExtendedImage.network(
-//                        members[i].thumbnail ?? members[i].photo,
-//                        width: width * kGoldenRatio * kGoldenRatio,
-//                        fit: BoxFit.cover,
-//                        cache: true,
-//                      ),
-//                    ),
                     Container(
                       margin: const EdgeInsets.symmetric(
                           vertical: 5, horizontal: 10),
                       width: 2,
-                      color: Colors.white,
+                      color: Color(0xFFFFDFCC),
                     ),
                     Expanded(
                       child: Row(
@@ -74,12 +68,14 @@ class Stemma extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 27,
                                   fontFamily: "Lobster",
+                                  color: kTextColor,
                                 ),
                                 textAlign: TextAlign.center,
                               ),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: "Lobster",
+                                color: kTextColor,
                               ),
                             ),
                           ),
@@ -129,6 +125,7 @@ class Stemma extends StatelessWidget {
                     child: Icon(
                       Icons.add,
                       size: 60,
+                      color: kTextColor,
                     ),
                   ),
                 ),

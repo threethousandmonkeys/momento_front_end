@@ -46,7 +46,11 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
         key: _bloc.scaffoldKey,
         body: Container(
           height: contentHeight,
-          decoration: kLoginDecoration,
+          // decoration: kLoginDecoration,
+          // pale gold
+          // color: Color(0xFFF2B396),
+          // color: Color(0xFFF4B688),
+          color: Color(0xFFFFDFCC),
           child: ListView(
             children: <Widget>[
               SizedBox(
@@ -241,7 +245,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
                   "Forgot Password?",
                   style: TextStyle(
                     decoration: TextDecoration.underline,
-                    color: Colors.white,
+                    color: Color(0xbb2B2B2B),
                     fontSize: 16.0,
                     fontFamily: "WorkSansMedium",
                   ),

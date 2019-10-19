@@ -6,6 +6,7 @@ import 'package:momento/constants.dart';
 import 'package:momento/screens/form_pages/components/form_text_field.dart';
 
 import 'constants.dart';
+import 'multiline_drop_down_button_field.dart';
 
 const double _kPickerItemHeight = 32.0;
 
@@ -120,7 +121,9 @@ class _FormDropDownFieldState extends State<FormDropDownField> {
               style: kFormTitleStyle,
             ),
           ),
-          DropdownButtonFormField(
+          MultilineDropdownButtonFormField(
+            isExpanded: true,
+            isDense: false,
             onChanged: (value) {
               setState(() {
                 selectedValue = value;

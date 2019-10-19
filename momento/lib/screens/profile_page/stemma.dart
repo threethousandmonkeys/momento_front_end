@@ -127,8 +127,8 @@ class Stemma extends StatelessWidget {
                       }
                     },
                     child: Icon(
-                      Icons.add_circle_outline,
-                      size: 50,
+                      Icons.add,
+                      size: 60,
                     ),
                   ),
                 ),

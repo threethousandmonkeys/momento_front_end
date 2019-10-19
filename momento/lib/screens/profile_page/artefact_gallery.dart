@@ -53,7 +53,6 @@ class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAli
             Container(
               child: GestureDetector(
                 child: Container(
-                  color: Colors.white,
                   child: Icon(
                     Icons.add,
                     size: 60,

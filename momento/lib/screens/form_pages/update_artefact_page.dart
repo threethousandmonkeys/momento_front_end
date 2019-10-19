@@ -87,7 +87,7 @@ class _UpdateArtefactPageState extends State<UpdateArtefactPage> {
                 items: Map<String, String>.fromIterable(
                   widget.members,
                   key: (f) => f.id,
-                  value: (v) => v.firstName,
+                  value: (v) => v.firstName + " " + v.lastName,
                 ),
                 onChanged: (value) {
                   _bloc.artefact.originalOwnerId = value;
@@ -100,7 +100,7 @@ class _UpdateArtefactPageState extends State<UpdateArtefactPage> {
                 items: Map<String, String>.fromIterable(
                   widget.members,
                   key: (f) => f.id,
-                  value: (v) => v.firstName,
+                  value: (v) => v.firstName + " " + v.lastName,
                 ),
                 onChanged: (value) {
                   _bloc.artefact.currentOwnerId = value;

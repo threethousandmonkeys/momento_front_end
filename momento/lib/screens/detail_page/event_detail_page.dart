@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/repositories/event_repository.dart';
@@ -63,13 +64,15 @@ class _EventDetailPageState extends State<EventDetailPage> {
         Center(
           child: Padding(
             padding: const EdgeInsets.all(0),
-            child: Text(
+            child: AutoSizeText(
               currentEvent.name,
+              minFontSize: 40,
               style: TextStyle(
                 color: Color(0xFF6B5152),
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
               ),
+              textAlign: TextAlign.center,
             ),
           ),
         ),

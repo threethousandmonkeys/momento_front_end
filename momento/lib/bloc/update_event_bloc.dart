@@ -29,7 +29,7 @@ class UpdateEventBloc {
       return "name";
     }
     // if the event name is too long
-    if (event.name.length > 20) {
+    if (event.name.length > 50) {
       return "name length";
     }
     if (event.date == null) {

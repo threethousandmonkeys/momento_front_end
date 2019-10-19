@@ -34,7 +34,7 @@ class AddNewEventBloc {
       return "name";
     }
     // if the event name is too long
-    if (name.length > 20) {
+    if (name.length > 50) {
       return "name length";
     }
     if (date == null) {

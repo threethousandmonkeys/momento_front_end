@@ -20,6 +20,7 @@ class _ArtefactGalleryState extends State<ArtefactGallery> with AutomaticKeepAli
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return SafeArea(
       top: false,
       bottom: false,

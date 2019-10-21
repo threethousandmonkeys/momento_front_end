@@ -134,6 +134,7 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     if (_bloc == null) {
       _bloc = Provider.of<ProfileBloc>(context);
     }

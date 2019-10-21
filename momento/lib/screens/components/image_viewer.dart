@@ -2,7 +2,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
 /// UI part for image viewer
-class image_viewer extends StatelessWidget {
+class ImageViewer extends StatelessWidget {
   final String url;
 
   double initScale({Size imageSize, Size size, double initialScale}) {
@@ -23,7 +23,7 @@ class image_viewer extends StatelessWidget {
     return initialScale;
   }
 
-  image_viewer(this.url);
+  ImageViewer(this.url);
   @override
   Widget build(BuildContext context) {
     return Scaffold(

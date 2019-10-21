@@ -1,5 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
-
 ///This file contains all the widgets required to build the login page
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

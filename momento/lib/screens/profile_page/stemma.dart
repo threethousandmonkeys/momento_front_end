@@ -1,5 +1,4 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/constants.dart';
@@ -13,8 +12,7 @@ const kColors = [Color(0xFFFFFFFF)];
 
 /// UI part for stemma page
 class Stemma extends StatelessWidget {
-  List<Widget> _createFamilyMemberCards(
-      List<Member> members, double width, BuildContext context) {
+  List<Widget> _createFamilyMemberCards(List<Member> members, double width, BuildContext context) {
     List<Widget> output = [];
     if (members.isNotEmpty) {
       members.sort((a, b) => a.birthday.compareTo(b.birthday));
@@ -26,7 +24,9 @@ class Stemma extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => MemberDetailPage(members[i]),
+                builder: (context) => MemberDetailPage(
+                  members[i],
+                ),
               ),
             );
           },
@@ -47,8 +47,7 @@ class Stemma extends StatelessWidget {
                       cacheImage: true,
                     ),
                     Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 10),
+                      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                       width: 2,
                       color: kThemeColor,
                     ),

@@ -17,9 +17,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:rxdart/rxdart.dart';
 
-/** Business logical：
- *     For edit and update profile page.
- **/
+/// Business logical：
+///     For edit and update profile page.
+///
 
 class ProfileBloc {
   final _auth = FirebaseAuth.instance;
@@ -134,6 +134,24 @@ class ProfileBloc {
     family.members.remove(id);
     final newMembers = List<Member>.from(_membersController.value);
     newMembers.removeWhere((a) => a.id == id);
+    // delete member as participants in all existing events
+    for (Event event in _eventsController.value) {
+      if (event.participants.contains(id)) {
+        event.participants.remove(id);
+        _eventRepository.updateEvent(event);
+      }
+    }
+    // delete member as parent in remaining members
+    for (Member member in newMembers) {
+      if (member.fatherId == id) {
+        member.fatherId = null;
+        _memberRepository.updateMember(member);
+      }
+      if (member.motherId == id) {
+        member.motherId = null;
+        _memberRepository.updateMember(member);
+      }
+    }
     _setMembers(newMembers);
   }
 
@@ -179,6 +197,16 @@ class ProfileBloc {
     _setArtefacts(newArtefacts);
   }
 
+  List<Artefact> getRelatedArtefact(String memberId) {
+    List<Artefact> relatedArtefacts = [];
+    for (Artefact artefact in _artefactsController.value) {
+      if (artefact.currentOwnerId == memberId || artefact.originalOwnerId == memberId) {
+        relatedArtefacts.add(artefact);
+      }
+    }
+    return relatedArtefacts;
+  }
+
   final _eventsController = BehaviorSubject<List<Event>>();
   Function(List<Event>) get _setEvents => _eventsController.add;
   Stream<List<Event>> get getEvents => _eventsController.stream;
@@ -198,6 +226,17 @@ class ProfileBloc {
         family.events.map((id) => _eventRepository.getEventById(family.id, id)).toList();
     List<Event> events = await Future.wait(futureEvents);
     _setEvents(events);
+  }
+
+  /// get related events for a specific member
+  List<Event> getRelatedEvents(String memberId) {
+    List<Event> relatedEvents = [];
+    for (Event event in _eventsController.value) {
+      if (event.participants.contains(memberId)) {
+        relatedEvents.add(event);
+      }
+    }
+    return relatedEvents;
   }
 
   /// Deal with events -

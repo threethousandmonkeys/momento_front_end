@@ -2,6 +2,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:momento/bloc/profile_bloc.dart';
+import 'package:momento/constants.dart';
+import 'package:momento/models/artefact.dart';
+import 'package:momento/models/event.dart';
 import 'package:momento/repositories/member_repository.dart';
 import 'package:momento/screens/components/entry.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
@@ -11,7 +14,14 @@ import 'package:momento/services/dialogs.dart';
 import 'package:provider/provider.dart';
 import '../../models/member.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+<<<<<<< HEAD
 import 'package:momento/constants.dart';
+=======
+import 'package:expandable_card/expandable_card.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:extended_image/extended_image.dart';
+import 'artifact_detail_page.dart';
+>>>>>>> 18dc4df2a59034c46b42e84cbcecf9e9e57843c1
 
 /// UI part for member detail pages
 class MemberDetailPage extends StatefulWidget {
@@ -24,6 +34,7 @@ class MemberDetailPage extends StatefulWidget {
 
 class _MemberDetailPageState extends State<MemberDetailPage> {
   Member currentMember;
+  List<Artefact> artefacts = [];
   final _keyLoader = GlobalKey<State>();
   final _memberRepository = MemberRepository();
 
@@ -33,9 +44,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
     super.initState();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width / 2.7;
+  Widget _buildPage(double width) {
     return DetailPage(
       edit: () async {
         final updatedMember = await Navigator.push(
@@ -85,14 +94,22 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
             padding: const EdgeInsets.all(0),
             child: AutoSizeText(
               "${currentMember.firstName} ${currentMember.lastName}",
-              maxFontSize: 40,
+              minFontSize: 40,
+              maxLines: 1,
+              overflowReplacement: Text(
+                "${currentMember.firstName[0].toUpperCase()}. ${currentMember.lastName[0].toUpperCase()}.",
+                style: TextStyle(
+                  fontSize: 40,
+                  fontFamily: "Anton",
+                ),
+                textAlign: TextAlign.center,
+              ),
               style: TextStyle(
                 color: kHeaderColor,
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
-              maxLines: 2,
             ),
           ),
         ),
@@ -126,6 +143,76 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
           ),
         ),
       ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width / 2.7;
+    artefacts = Provider.of<ProfileBloc>(context).getRelatedArtefact(widget.member.id);
+    return Scaffold(
+      body: artefacts.isEmpty
+          ? _buildPage(width)
+          : ExpandableCardPage(
+              page: _buildPage(width),
+              expandableCard: ExpandableCard(
+                backgroundColor: Color(0xFFF8EBD8),
+                hasRoundedCorners: true,
+                hasHandle: false,
+                padding: const EdgeInsets.all(10.0),
+                maxHeight: MediaQuery.of(context).size.height * kGoldenRatio,
+                minHeight: MediaQuery.of(context).size.height * 0.1,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Text(
+                        "Related Artefacts",
+                        style: TextStyle(
+                          fontFamily: "Anton",
+                          color: kDarkRedMoranti,
+                          fontSize: 30,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.width * 0.8 - 10,
+                    width: MediaQuery.of(context).size.width,
+                    child: Swiper(
+                      loop: false,
+                      controller: SwiperController(),
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          onTap: () async {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ArtefactDetailPage(artefacts[index]),
+                              ),
+                            );
+                          },
+                          child: new Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ExtendedImage.network(
+                                artefacts[index].thumbnail ?? artefacts[index].photo,
+                                fit: BoxFit.fill,
+                                cache: true,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      itemCount: artefacts.length,
+                      viewportFraction: 0.8,
+                      scale: 0.9,
+                      pagination: new SwiperPagination(),
+                    ),
+                  )
+                ],
+              ),
+            ),
     );
   }
 }

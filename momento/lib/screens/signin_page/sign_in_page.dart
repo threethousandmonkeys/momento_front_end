@@ -44,11 +44,10 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
         key: _bloc.scaffoldKey,
         body: Container(
           height: contentHeight,
-          // decoration: kLoginDecoration,
+          decoration: kLoginDecoration,
           // pale gold
           // color: Color(0xFFF2B396),
           // color: Color(0xFFF4B688),
-          color: kThemeColor,
           child: ListView(
             children: <Widget>[
               SizedBox(
@@ -323,6 +322,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
         UglyButton(
           text: "SIGNUP",
           height: buttonHeight,
+          color: Color(0xFF9E8C81),
           transform: Matrix4.translationValues(0.0, -buttonHeight * 0.5, 0.0),
           onPressed: () async {
             if (_bloc.familyNameController.text == "" ||

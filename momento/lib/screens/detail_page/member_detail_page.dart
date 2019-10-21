@@ -13,6 +13,10 @@ import 'package:momento/services/dialogs.dart';
 import 'package:provider/provider.dart';
 import '../../models/member.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:expandable_card/expandable_card.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:extended_image/extended_image.dart';
+import 'artifact_detail_page.dart';
 
 /// UI part for member detail pages
 class MemberDetailPage extends StatefulWidget {
@@ -27,18 +31,20 @@ class MemberDetailPage extends StatefulWidget {
 
 class _MemberDetailPageState extends State<MemberDetailPage> {
   Member currentMember;
+  List<Event> events;
+  List<Artefact> artefacts;
   final _keyLoader = GlobalKey<State>();
   final _memberRepository = MemberRepository();
 
   @override
   void initState() {
     currentMember = widget.member;
+    events = widget.events;
+    artefacts = widget.artefacts;
     super.initState();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width / 2.7;
+  Widget _buildPage(double width) {
     return DetailPage(
       edit: () async {
         final updatedMember = await Navigator.push(
@@ -131,6 +137,75 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
           ),
         ),
       ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width / 2.7;
+    return Scaffold(
+      body: widget.artefacts.isEmpty
+          ? _buildPage(width)
+          : ExpandableCardPage(
+              page: _buildPage(width),
+              expandableCard: ExpandableCard(
+                hasRoundedCorners: true,
+                padding: EdgeInsets.all(10),
+                maxHeight: MediaQuery.of(context).size.height * 0.53,
+                minHeight: MediaQuery.of(context).size.height * 0.1,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Text(
+                        "Related Artefacts",
+                        style: TextStyle(
+                            fontFamily: "Anton",
+                            color: Colors.brown,
+                            fontSize: 30),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.width * 0.8 - 10,
+                    width: MediaQuery.of(context).size.width,
+                    child: new Swiper(
+                      loop: false,
+                      controller: SwiperController(),
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ArtefactDetailPage(artefacts[index]),
+                              ),
+                            );
+                          },
+                          child: new Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ExtendedImage.network(
+                                artefacts[index].thumbnail ??
+                                    artefacts[index].photo,
+                                height: 150,
+                                fit: BoxFit.fill,
+                                cache: true,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      itemCount: artefacts.length,
+                      viewportFraction: 0.8,
+                      scale: 0.9,
+                      pagination: new SwiperPagination(),
+                    ),
+                  )
+                ],
+              ),
+            ),
     );
   }
 }

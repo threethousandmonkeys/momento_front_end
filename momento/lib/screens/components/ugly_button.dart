@@ -12,6 +12,9 @@ class UglyButton extends StatelessWidget {
   /// effect if the button pressed once
   final Function onPressed;
 
+  /// color of button
+  final Color color;
+
   /// applying rotation of the widget
   final Matrix4 transform;
   UglyButton({
@@ -19,6 +22,7 @@ class UglyButton extends StatelessWidget {
     this.height,
     this.onPressed,
     this.transform,
+    this.color,
   });
   @override
   Widget build(BuildContext context) {
@@ -26,7 +30,7 @@ class UglyButton extends StatelessWidget {
       transform: transform,
       child: MaterialButton(
         height: height,
-        color: Color(0xFF9E8C81),
+        color: this.color,
         child: Padding(
           padding: EdgeInsets.symmetric(
             vertical: 10.0,

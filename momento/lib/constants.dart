@@ -56,3 +56,12 @@ const kBackgroundDecoration = BoxDecoration(
 ));
 
 const kDarkRedMoranti = Color(0xFF421910);
+
+/// color name: unbleached silk (white-pink)
+const kThemeColor = Color(0xFFFFDFCC);
+
+/// color name: redbrick (dark red)
+const kHeaderColor = Color(0xFFB22222);
+
+/// color name: space cadet (navy blue)
+const kMainTextColor = Color(0xFF1F275F);

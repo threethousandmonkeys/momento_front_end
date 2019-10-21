@@ -8,6 +8,7 @@ import 'package:momento/screens/form_pages/update_event_page.dart';
 import 'package:momento/screens/components/viewable_image.dart';
 import 'package:momento/services/dialogs.dart';
 import 'package:provider/provider.dart';
+import 'package:momento/constants.dart';
 import '../../models/event.dart';
 
 /// UI part for event detail pages
@@ -66,13 +67,14 @@ class _EventDetailPageState extends State<EventDetailPage> {
             padding: const EdgeInsets.all(0),
             child: AutoSizeText(
               currentEvent.name,
-              minFontSize: 40,
+              maxFontSize: 40,
               style: TextStyle(
-                color: Color(0xFF6B5152),
+                color: kHeaderColor,
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
+              maxLines: 2,
             ),
           ),
         ),

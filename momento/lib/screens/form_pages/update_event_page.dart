@@ -46,7 +46,7 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
     return Scaffold(
       key: _scaffoldKey,
       body: Container(
-        decoration: kBackgroundDecoration,
+        color: kThemeColor,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
           child: ListView(
@@ -59,6 +59,7 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
+                      color: kHeaderColor,
                     ),
                   ),
                 ),
@@ -126,6 +127,7 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                     UglyButton(
                       text: "Cancel",
                       height: 10,
+                      color: kHeaderColor,
                       onPressed: () {
                         Navigator.pop(context, null);
                       },
@@ -133,6 +135,7 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                     UglyButton(
                       text: "Update",
                       height: 10,
+                      color: kMainTextColor,
                       onPressed: () async {
                         final validation = _bloc.validate();
                         if (validation == "") {

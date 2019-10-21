@@ -49,7 +49,7 @@ void main() {
       expect(addNewArtefactBloc.validate(), "photo");
 
       addNewArtefactBloc.description = "test_description";
-      addNewArtefactBloc.photo = File("assets/images/default_artefact.jpg");
+      addNewArtefactBloc.photo = File("assets/images/default_artefact.png");
       expect(addNewArtefactBloc.validate(), "");
     });
 
@@ -59,7 +59,7 @@ void main() {
     );
 
     test("upload artefact", () async {
-      addNewArtefactBloc.photo = File("assets/images/default_artefact.jpg");
+      addNewArtefactBloc.photo = File("assets/images/default_artefact.png");
       final newArtefact = await addNewArtefactBloc.addNewMember(testFamily);
       expect(newArtefact != null, true);
     });

@@ -11,11 +11,11 @@ class DetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return PlatformScaffold(
       appBar: PlatformAppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: kThemeColor,
         leading: PlatformIconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: kDarkRedMoranti,
+            color: kMainTextColor,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -25,14 +25,14 @@ class DetailPage extends StatelessWidget {
           PlatformIconButton(
             icon: Icon(
               Icons.edit,
-              color: kDarkRedMoranti,
+              color: kMainTextColor,
             ),
             onPressed: edit,
           ),
           PlatformIconButton(
             icon: Icon(
               Icons.delete,
-              color: kDarkRedMoranti,
+              color: kMainTextColor,
             ),
             onPressed: () async {
               showPlatformDialog(
@@ -51,7 +51,7 @@ class DetailPage extends StatelessWidget {
                       child: PlatformText(
                         "Delete",
                         style: TextStyle(
-                          color: Colors.red,
+                          color: kMainTextColor,
                         ),
                       ),
                       onPressed: () {
@@ -67,7 +67,7 @@ class DetailPage extends StatelessWidget {
         ],
       ),
       body: Container(
-        decoration: kBackgroundDecoration,
+        color: kThemeColor,
         child: ListView(children: content),
       ),
     );

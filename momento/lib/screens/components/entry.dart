@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-
-import '../../constants.dart';
+import 'package:momento/screens/profile_page/time_line.dart';
+import 'package:momento/constants.dart';
 
 /// UI part for entry
 class Entry extends StatelessWidget {
@@ -16,7 +16,8 @@ class Entry extends StatelessWidget {
         PlatformText(
           title + ": ",
           style: TextStyle(
-            color: kDarkRedMoranti,
+            color: kMainTextColor,
+            fontWeight: FontWeight.bold,
             fontSize: 16,
           ),
         ),
@@ -25,7 +26,7 @@ class Entry extends StatelessWidget {
             content ?? "",
             style: TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.bold,
+              color: kMainTextColor,
             ),
           ),
         ),

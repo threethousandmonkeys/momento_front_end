@@ -46,7 +46,7 @@ void main() {
       expect(addNewEventBloc.validate(), "photo");
       
       addNewEventBloc.description = "test_description";
-      addNewEventBloc.photo = File("assets/images/default_artefact.jpg");
+      addNewEventBloc.photo = File("assets/images/default_artefact.png");
       expect(addNewEventBloc.validate(), "");
     });
 
@@ -56,7 +56,7 @@ void main() {
     );
 
     test("upload artefact", () async {
-      addNewEventBloc.photo = File("assets/images/default_artefact.jpg");
+      addNewEventBloc.photo = File("assets/images/default_artefact.png");
       final newArtefact = await addNewEventBloc.addNewEvent(testFamily);
       expect(newArtefact != null, true);
     });

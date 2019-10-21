@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,9 +9,9 @@ import 'package:momento/screens/detail_page/detail_page.dart';
 import 'package:momento/screens/form_pages/update_member_page.dart';
 import 'package:momento/services/dialogs.dart';
 import 'package:provider/provider.dart';
-import '../../constants.dart';
 import '../../models/member.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:momento/constants.dart';
 
 /// UI part for member detail pages
 class MemberDetailPage extends StatefulWidget {
@@ -87,26 +85,33 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
             padding: const EdgeInsets.all(0),
             child: AutoSizeText(
               "${currentMember.firstName} ${currentMember.lastName}",
-              minFontSize: 40,
+              maxFontSize: 40,
               style: TextStyle(
-                color: Color(0xFF6B5152),
+                color: kHeaderColor,
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
+              maxLines: 2,
             ),
           ),
         ),
         Center(
-          child: AutoSizeText(
-            "${currentMember.birthday.toString().split(' ')[0]} to ${currentMember.deathday != null ? currentMember.deathday.toString().split(' ')[0] : "Present"}",
-            minFontSize: 20,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5),
+            child:
+              AutoSizeText(
+                "${currentMember.birthday.toString().split(' ')[0]} - ${currentMember.deathday != null ? currentMember.deathday.toString().split(' ')[0] : "present"}",
+                minFontSize: 20,
+                style: TextStyle(
+                  color: kMainTextColor,
+                )
+              ),
           ),
         ),
         Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: (MediaQuery.of(context).size.width - width) * 0.15,
-          ),
+            horizontal: (MediaQuery.of(context).size.width - width) * 0.15),
           child: Column(
             children: <Widget>[
               Entry(

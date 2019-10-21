@@ -19,9 +19,6 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 const kTabBarHeight = 46.0;
 const kNumTabs = 3;
-// const kThemeColor = Color(0xFFE3D4C3);
-const kThemeColor = Color(0xFFFFDFCC);
-const kTextColor = Color(0xFF1F275F);
 
 /// ProfilePage: the widget of family profile page(home page)
 class ProfilePage extends StatefulWidget {
@@ -91,7 +88,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                         },
                         icon: Icon(
                           Icons.power,
-                          color: kTextColor,
+                          color: kMainTextColor,
                         ),
                       ),
                     ],
@@ -104,7 +101,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                         minFontSize: 30,
                         style: TextStyle(
                           fontFamily: "Anton",
-                          color: kTextColor,
+                          color: kMainTextColor,
                         ),
                       ),
                       centerTitle: true,
@@ -115,7 +112,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                           builder: (context, snapshot) {
                             if (snapshot.connectionState == ConnectionState.active) {
                               return Container(
-                                color: Color(0xFFFFDFCC),
+                                color: kThemeColor,
                                 child: CarouselWithIndicator(
                                   height: height * (1 - kGoldenRatio),
                                   items: snapshot.data
@@ -157,7 +154,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                                                 Icon(
                                                   Icons.add,
                                                   size: selectedUpload == null ? 100 : 0,
-                                                  color: kTextColor,
+                                                  color: kMainTextColor,
                                                 ),
                                               ],
                                             ),
@@ -242,7 +239,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                                   style: TextStyle(
                                     fontSize: 18.0, 
                                     fontFamily: "Lobster",
-                                    color: kTextColor),
+                                    color: kMainTextColor),
                                 ),
                               ),
                             );
@@ -257,9 +254,9 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                       child: Container(
                         color: kThemeColor,
                         child: TabBar(
-                          labelColor: Color(0xFF1F275F),
+                          labelColor: kMainTextColor,
                           unselectedLabelColor: Colors.black12,
-                          indicatorColor: Color(0xFF1F275F),
+                          indicatorColor: kMainTextColor,
                           controller: _tabController,
                           tabs: [
                             Tab(icon: Icon(Icons.people_outline)),

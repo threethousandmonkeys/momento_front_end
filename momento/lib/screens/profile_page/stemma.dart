@@ -9,10 +9,7 @@ import 'package:momento/screens/form_pages//add_new_member_page.dart';
 import 'package:provider/provider.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 
-//const kColors = [Color(0xFFC9C0D3), Color(0xFFC1CBD7)];
-// const kColors = [Color(0xFFF8EBD8)];
 const kColors = [Color(0xFFFFFFFF)];
-const kTextColor = Color(0xFF1F275F);
 
 /// UI part for stemma page
 class Stemma extends StatelessWidget {
@@ -53,7 +50,7 @@ class Stemma extends StatelessWidget {
                       margin: const EdgeInsets.symmetric(
                           vertical: 5, horizontal: 10),
                       width: 2,
-                      color: Color(0xFFFFDFCC),
+                      color: kThemeColor,
                     ),
                     Expanded(
                       child: Row(
@@ -68,14 +65,14 @@ class Stemma extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 27,
                                   fontFamily: "Lobster",
-                                  color: kTextColor,
+                                  color: kMainTextColor,
                                 ),
                                 textAlign: TextAlign.center,
                               ),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: "Lobster",
-                                color: kTextColor,
+                                color: kMainTextColor,
                               ),
                             ),
                           ),
@@ -125,7 +122,7 @@ class Stemma extends StatelessWidget {
                     child: Icon(
                       Icons.add,
                       size: 60,
-                      color: kTextColor,
+                      color: kMainTextColor,
                     ),
                   ),
                 ),

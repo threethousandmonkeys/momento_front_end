@@ -50,7 +50,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
           // pale gold
           // color: Color(0xFFF2B396),
           // color: Color(0xFFF4B688),
-          color: Color(0xFFFFDFCC),
+          color: kThemeColor,
           child: ListView(
             children: <Widget>[
               SizedBox(
@@ -215,6 +215,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
         ),
         UglyButton(
           text: "LOGIN",
+          color: Color(0xFF9E8C81),
           height: buttonHeight,
           transform: Matrix4.translationValues(0.0, -buttonHeight * 0.5, 0.0),
           onPressed: () async {

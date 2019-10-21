@@ -55,7 +55,7 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
     return Scaffold(
       key: _scaffoldKey,
       body: Container(
-        decoration: kBackgroundDecoration,
+        color: kThemeColor,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
           child: ListView(
@@ -68,6 +68,7 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
+                      color: kHeaderColor,
                     ),
                   ),
                 ),
@@ -156,7 +157,7 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                 },
               ),
               ImageSelector(
-                defaultImage: AssetImage("assets/images/default_member.jpg"),
+                defaultImage: AssetImage("assets/images/default_member.png"),
                 onChange: (value) {
                   _bloc.photo = value;
                 },
@@ -170,6 +171,7 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                     UglyButton(
                       text: "Cancel",
                       height: 10,
+                      color: kHeaderColor,
                       onPressed: () {
                         Navigator.pop(context, null);
                       },
@@ -177,6 +179,7 @@ class _AddNewMemberPageState extends State<AddNewMemberPage> {
                     UglyButton(
                       text: "Add",
                       height: 10,
+                      color: kMainTextColor,
                       onPressed: () async {
                         final validation = _bloc.validate();
                         if (validation == "") {

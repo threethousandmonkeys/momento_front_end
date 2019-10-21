@@ -48,7 +48,7 @@ class _UpdateArtefactPageState extends State<UpdateArtefactPage> {
     return Scaffold(
       key: _scaffoldKey,
       body: Container(
-        decoration: kBackgroundDecoration,
+        color: kThemeColor,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
           child: ListView(
@@ -61,6 +61,7 @@ class _UpdateArtefactPageState extends State<UpdateArtefactPage> {
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
+                      color: kHeaderColor,
                     ),
                   ),
                 ),
@@ -131,6 +132,7 @@ class _UpdateArtefactPageState extends State<UpdateArtefactPage> {
                     UglyButton(
                       text: "Cancel",
                       height: 10,
+                      color: kHeaderColor,
                       onPressed: () {
                         Navigator.pop(context, null);
                       },
@@ -138,6 +140,7 @@ class _UpdateArtefactPageState extends State<UpdateArtefactPage> {
                     UglyButton(
                       text: "Update",
                       height: 10,
+                      color: kMainTextColor,
                       onPressed: () async {
                         final validation = _bloc.validate();
                         if (validation == "") {

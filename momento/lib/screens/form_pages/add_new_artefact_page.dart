@@ -46,7 +46,7 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
     return Scaffold(
       key: _scaffoldKey,
       body: Container(
-        decoration: kBackgroundDecoration,
+        color: kThemeColor,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
           child: ListView(
@@ -59,6 +59,7 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
+                      color: kMainTextColor,
                     ),
                   ),
                 ),
@@ -114,7 +115,7 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
                 controller: _descriptionController,
               ),
               ImageSelector(
-                defaultImage: AssetImage("assets/images/default_artefact.jpg"),
+                defaultImage: AssetImage("assets/images/default_artefact.png"),
                 onChange: (value) {
                   _bloc.photo = value;
                 },
@@ -128,6 +129,7 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
                     UglyButton(
                       text: "Cancel",
                       height: 10,
+                      color: kHeaderColor,
                       onPressed: () {
                         Navigator.pop(context, null);
                       },
@@ -135,6 +137,7 @@ class _AddNewArtefactPageState extends State<AddNewArtefactPage> {
                     UglyButton(
                       text: "Add",
                       height: 10,
+                      color: kMainTextColor,
                       onPressed: () async {
                         final validation = _bloc.validate();
                         if (validation == "") {

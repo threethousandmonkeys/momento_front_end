@@ -8,7 +8,7 @@ import 'package:momento/screens/form_pages//add_new_member_page.dart';
 import 'package:provider/provider.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 
-const kColors = [Color(0xFFFFFFFF)];
+const kCardColor = Color(0xFFFBF0E9);
 
 /// UI part for stemma page
 class Stemma extends StatelessWidget {
@@ -33,9 +33,8 @@ class Stemma extends StatelessWidget {
           child: FractionallySizedBox(
             widthFactor: 1,
             child: Card(
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-              color: kColors[i % kColors.length],
+              margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+              color: kCardColor,
               elevation: 2.5,
               child: Container(
                 margin: const EdgeInsets.all(10.0),
@@ -49,7 +48,7 @@ class Stemma extends StatelessWidget {
                     Container(
                       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                       width: 2,
-                      color: kThemeColor,
+                      color: kDarkRedMoranti,
                     ),
                     Expanded(
                       child: Row(

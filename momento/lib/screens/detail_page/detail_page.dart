@@ -15,7 +15,7 @@ class DetailPage extends StatelessWidget {
         leading: PlatformIconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: kMainTextColor,
+            color: kDarkRedMoranti,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -25,14 +25,14 @@ class DetailPage extends StatelessWidget {
           PlatformIconButton(
             icon: Icon(
               Icons.edit,
-              color: kMainTextColor,
+              color: kDarkRedMoranti,
             ),
             onPressed: edit,
           ),
           PlatformIconButton(
             icon: Icon(
               Icons.delete,
-              color: kMainTextColor,
+              color: kDarkRedMoranti,
             ),
             onPressed: () async {
               showPlatformDialog(

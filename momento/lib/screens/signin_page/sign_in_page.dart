@@ -243,7 +243,7 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
                   "Forgot Password?",
                   style: TextStyle(
                     decoration: TextDecoration.underline,
-                    color: Color(0xbb2B2B2B),
+                    color: Colors.white,
                     fontSize: 16.0,
                     fontFamily: "WorkSansMedium",
                   ),

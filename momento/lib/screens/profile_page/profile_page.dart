@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart' as prefix0;
 import 'package:flutter/material.dart' hide NestedScrollView;
 import 'package:flutter/cupertino.dart' hide NestedScrollView;
-import 'package:flutter/material.dart' as prefix1;
 import 'package:image_picker/image_picker.dart';
 import 'package:momento/screens/components/carousel_with_indicator.dart';
 import 'package:momento/screens/components/viewable_image.dart';
@@ -76,9 +74,8 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                   SliverAppBar(
                     pinned: true,
                     elevation: 0.0,
-                    backgroundColor: kThemeColor,
+                    backgroundColor: Color(0xFF965454),
                     expandedHeight: height * (1 - kGoldenRatio),
-                    
                     actions: <Widget>[
                       IconButton(
                         padding: EdgeInsets.all(0.0),
@@ -87,13 +84,13 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                           _futureProfile = _bloc.init(context);
                         },
                         icon: Icon(
-                          Icons.power,
-                          color: kMainTextColor,
+                          Icons.power_settings_new,
+                          color: kTitleColor,
                         ),
                       ),
                     ],
                     flexibleSpace: FlexibleSpaceBar(
-                      titlePadding: EdgeInsets.symmetric(horizontal: 0),
+                      titlePadding: EdgeInsets.all(0.0),
                       // titlePadding: EdgeInsets.only(top: 20.0),
                       title: AutoSizeText(
                         "The ${_bloc.name}s",
@@ -101,7 +98,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                         minFontSize: 30,
                         style: TextStyle(
                           fontFamily: "Anton",
-                          color: kMainTextColor,
+                          color: kTitleColor,
                         ),
                       ),
                       centerTitle: true,
@@ -112,7 +109,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                           builder: (context, snapshot) {
                             if (snapshot.connectionState == ConnectionState.active) {
                               return Container(
-                                color: kThemeColor,
+                                color: Colors.black,
                                 child: CarouselWithIndicator(
                                   height: height * (1 - kGoldenRatio),
                                   items: snapshot.data
@@ -144,12 +141,11 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                                               children: <Widget>[
                                                 Opacity(
                                                   opacity: 0.9,
-                                                  child:
-                                                    Image(
-                                                      image: selectedUpload == null
-                                                          ? AssetImage("assets/images/login_logo.png")
-                                                          : FileImage(selectedUpload),
-                                                    ),
+                                                  child: Image(
+                                                    image: selectedUpload == null
+                                                        ? AssetImage("assets/images/login_logo.png")
+                                                        : FileImage(selectedUpload),
+                                                  ),
                                                 ),
                                                 Icon(
                                                   Icons.add,
@@ -173,78 +169,76 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                   ),
                   SliverToBoxAdapter(
                     child: Container(
-                      child:
-                        StreamBuilder<String>(
-                          stream: _bloc.getDescription,
-                          initialData: "Loading Description",
-                          builder: (context, snapshot) {
-                            return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-                              child: GestureDetector(
-                                onTap: () async {
-                                  final newDescription = await showPlatformDialog(
-                                    context: context,
-                                    androidBarrierDismissible: false,
-                                    builder: (context) {
-                                      final descriptionController = TextEditingController();
-                                      descriptionController.text = snapshot.data;
-                                      return PlatformAlertDialog(
-                                        title: PlatformText("Description"),
-                                        content: PlatformTextField(
-                                          android: (_) => MaterialTextFieldData(
-                                            decoration: InputDecoration(
-                                              border: OutlineInputBorder(),
-                                            ),
+                      child: StreamBuilder<String>(
+                        stream: _bloc.getDescription,
+                        initialData: "Loading Description",
+                        builder: (context, snapshot) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                            child: GestureDetector(
+                              onTap: () async {
+                                final newDescription = await showPlatformDialog(
+                                  context: context,
+                                  androidBarrierDismissible: false,
+                                  builder: (context) {
+                                    final descriptionController = TextEditingController();
+                                    descriptionController.text = snapshot.data;
+                                    return PlatformAlertDialog(
+                                      title: PlatformText("Description"),
+                                      content: PlatformTextField(
+                                        android: (_) => MaterialTextFieldData(
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
                                           ),
-                                          ios: (_) => CupertinoTextFieldData(
-                                              decoration: BoxDecoration(
-                                            border: Border.all(
-                                              width: 0.0,
-                                              color: CupertinoColors.inactiveGray,
-                                              // color: Colors.black,
-                                            ),
-                                          )),
-                                          controller: descriptionController,
-                                          maxLines: 5,
                                         ),
-                                        actions: <Widget>[
-                                          PlatformDialogAction(
-                                            child: PlatformText("Cancel"),
-                                            onPressed: () {
-                                              Navigator.pop(context, null);
-                                            },
+                                        ios: (_) => CupertinoTextFieldData(
+                                            decoration: BoxDecoration(
+                                          border: Border.all(
+                                            width: 0.0,
+                                            color: CupertinoColors.inactiveGray,
+                                            // color: Colors.black,
                                           ),
-                                          PlatformDialogAction(
-                                            child: PlatformText("Update"),
-                                            onPressed: () {
-                                              if (descriptionController.text.trim() == "") {
-                                                descriptionController.text =
-                                                    "Insert family description";
-                                              }
-                                              Navigator.pop(context, descriptionController.text.trim());
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                  if (newDescription != null && newDescription != snapshot.data) {
-                                    _bloc.updateDescription(newDescription);
-                                  }
-                                },
-                                child: Text(
-                                  snapshot.data,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 5,
-                                  style: TextStyle(
-                                    fontSize: 18.0, 
-                                    fontFamily: "Lobster",
-                                    color: kMainTextColor),
-                                ),
+                                        )),
+                                        controller: descriptionController,
+                                        maxLines: 5,
+                                      ),
+                                      actions: <Widget>[
+                                        PlatformDialogAction(
+                                          child: PlatformText("Cancel"),
+                                          onPressed: () {
+                                            Navigator.pop(context, null);
+                                          },
+                                        ),
+                                        PlatformDialogAction(
+                                          child: PlatformText("Update"),
+                                          onPressed: () {
+                                            if (descriptionController.text.trim() == "") {
+                                              descriptionController.text =
+                                                  "Insert family description";
+                                            }
+                                            Navigator.pop(
+                                                context, descriptionController.text.trim());
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                                if (newDescription != null && newDescription != snapshot.data) {
+                                  _bloc.updateDescription(newDescription);
+                                }
+                              },
+                              child: Text(
+                                snapshot.data,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 5,
+                                style: TextStyle(
+                                    fontSize: 18.0, fontFamily: "Lobster", color: kMainTextColor),
                               ),
-                            );
-                          },
-                        ),
+                            ),
+                          );
+                        },
+                      ),
                       alignment: Alignment.center,
                     ),
                   ),
@@ -252,10 +246,10 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                     pinned: true,
                     delegate: SliverTabBarDelegate(
                       child: Container(
-                        color: kThemeColor,
+                        color: Color(0xFFC2AA9B),
                         child: TabBar(
                           labelColor: kMainTextColor,
-                          unselectedLabelColor: Colors.black12,
+                          unselectedLabelColor: Colors.black26,
                           indicatorColor: kMainTextColor,
                           controller: _tabController,
                           tabs: [

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:momento/screens/profile_page/time_line.dart';
 import 'package:momento/constants.dart';
 
 /// UI part for entry

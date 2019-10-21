@@ -9,6 +9,8 @@ import 'package:momento/screens/form_pages/add_new_event_page.dart';
 import 'package:provider/provider.dart';
 import '../../constants.dart';
 
+const kCardColor = Color(0xFFFBF0E9);
+
 /// TimeLine: the widget of timeline
 class TimeLine extends StatefulWidget {
   @override
@@ -58,7 +60,7 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
       timelineModels.add(
         TimelineModel(
           Card(
-            color: Color(0xFFFFFFFF),
+            color: kCardColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8.0),
             ),

@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/constants.dart';
 import 'package:momento/models/artefact.dart';
-import 'package:momento/models/event.dart';
 import 'package:momento/repositories/member_repository.dart';
 import 'package:momento/screens/components/entry.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
@@ -14,7 +13,6 @@ import 'package:momento/services/dialogs.dart';
 import 'package:provider/provider.dart';
 import '../../models/member.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:momento/constants.dart';
 import 'package:expandable_card/expandable_card.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:extended_image/extended_image.dart';
@@ -81,7 +79,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
               currentMember.photo,
               radius: width,
               borderWidth: 15,
-              borderColor: Color(0x20BFBFBF),
+              borderColor: Color(0x40BFBFBF),
               cacheImage: true,
             ),
           ),
@@ -102,7 +100,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                 textAlign: TextAlign.center,
               ),
               style: TextStyle(
-                color: kHeaderColor,
+                color: kDarkRedMoranti,
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
               ),
@@ -113,19 +111,17 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
         Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 5),
-            child:
-              AutoSizeText(
+            child: AutoSizeText(
                 "${currentMember.birthday.toString().split(' ')[0]} - ${currentMember.deathday != null ? currentMember.deathday.toString().split(' ')[0] : "present"}",
                 minFontSize: 20,
                 style: TextStyle(
                   color: kMainTextColor,
-                )
-              ),
+                )),
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: (MediaQuery.of(context).size.width - width) * 0.15),
+          padding:
+              EdgeInsets.symmetric(horizontal: (MediaQuery.of(context).size.width - width) * 0.15),
           child: Column(
             children: <Widget>[
               Entry(
@@ -153,60 +149,71 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
           : ExpandableCardPage(
               page: _buildPage(width),
               expandableCard: ExpandableCard(
-                backgroundColor: Color(0xFFF8EBD8),
+                backgroundColor: Color(0xAAFBF0E9),
                 hasRoundedCorners: true,
                 hasHandle: false,
                 padding: const EdgeInsets.all(10.0),
                 maxHeight: MediaQuery.of(context).size.height * kGoldenRatio,
                 minHeight: MediaQuery.of(context).size.height * 0.1,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        "Related Artefacts",
-                        style: TextStyle(
-                          fontFamily: "Anton",
-                          color: kDarkRedMoranti,
-                          fontSize: 30,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.width * 0.8 - 10,
-                    width: MediaQuery.of(context).size.width,
-                    child: Swiper(
-                      loop: false,
-                      controller: SwiperController(),
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                          onTap: () async {
-                            await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ArtefactDetailPage(artefacts[index]),
-                              ),
-                            );
-                          },
-                          child: new Card(
-                            child: Padding(
+                  Expanded(
+                    child: Stack(
+                      children: <Widget>[
+                        Column(
+                          children: <Widget>[
+                            Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: ExtendedImage.network(
-                                artefacts[index].thumbnail ?? artefacts[index].photo,
-                                fit: BoxFit.fill,
-                                cache: true,
+                              child: Center(
+                                child: Text(
+                                  "Related Artefacts",
+                                  style: TextStyle(
+                                    fontFamily: "Anton",
+                                    color: kDarkRedMoranti,
+                                    fontSize: 30,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                      itemCount: artefacts.length,
-                      viewportFraction: 0.8,
-                      scale: 0.9,
-                      pagination: new SwiperPagination(),
+                            Container(
+                              height: MediaQuery.of(context).size.width * 0.8 - 10,
+                              width: MediaQuery.of(context).size.width,
+                              child: Swiper(
+                                loop: false,
+                                controller: SwiperController(),
+                                itemBuilder: (BuildContext context, int index) {
+                                  return GestureDetector(
+                                    onTap: () async {
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ArtefactDetailPage(artefacts[index]),
+                                        ),
+                                      );
+                                    },
+                                    child: new Card(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: ExtendedImage.network(
+                                          artefacts[index].thumbnail ?? artefacts[index].photo,
+                                          fit: BoxFit.fill,
+                                          cache: true,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                itemCount: artefacts.length,
+                                viewportFraction: 0.8,
+                                scale: 0.9,
+                                pagination: new SwiperPagination(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

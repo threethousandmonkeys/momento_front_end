@@ -61,7 +61,9 @@ const kDarkRedMoranti = Color(0xFF421910);
 const kThemeColor = Color(0xFFFFDFCC);
 
 /// color name: redbrick (dark red)
-const kHeaderColor = Color(0xFFB22222);
+const kTitleColor = Color(0xFFFAFAFA);
+
+const kHeaderColor = Color(0xFF5A0C21);
 
 /// color name: space cadet (navy blue)
-const kMainTextColor = Color(0xFF1F275F);
+const kMainTextColor = Color(0xFF421910);

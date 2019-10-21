@@ -27,8 +27,6 @@ class Stemma extends StatelessWidget {
               MaterialPageRoute(
                 builder: (context) => MemberDetailPage(
                   members[i],
-                  Provider.of<ProfileBloc>(context).getRelatedEvents(members[i].id),
-                  Provider.of<ProfileBloc>(context).getRelatedArtefact(members[i].id),
                 ),
               ),
             );

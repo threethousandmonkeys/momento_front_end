@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:momento/bloc/profile_bloc.dart';
+import 'package:momento/constants.dart';
 import 'package:momento/models/artefact.dart';
 import 'package:momento/models/event.dart';
 import 'package:momento/repositories/member_repository.dart';
@@ -21,9 +22,7 @@ import 'artifact_detail_page.dart';
 /// UI part for member detail pages
 class MemberDetailPage extends StatefulWidget {
   final Member member;
-  final List<Event> events;
-  final List<Artefact> artefacts;
-  MemberDetailPage(this.member, this.events, this.artefacts);
+  MemberDetailPage(this.member);
 
   @override
   _MemberDetailPageState createState() => _MemberDetailPageState();
@@ -31,16 +30,13 @@ class MemberDetailPage extends StatefulWidget {
 
 class _MemberDetailPageState extends State<MemberDetailPage> {
   Member currentMember;
-  List<Event> events;
-  List<Artefact> artefacts;
+  List<Artefact> artefacts = [];
   final _keyLoader = GlobalKey<State>();
   final _memberRepository = MemberRepository();
 
   @override
   void initState() {
     currentMember = widget.member;
-    events = widget.events;
-    artefacts = widget.artefacts;
     super.initState();
   }
 
@@ -143,15 +139,18 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width / 2.7;
+    artefacts = Provider.of<ProfileBloc>(context).getRelatedArtefact(widget.member.id);
     return Scaffold(
-      body: widget.artefacts.isEmpty
+      body: artefacts.isEmpty
           ? _buildPage(width)
           : ExpandableCardPage(
               page: _buildPage(width),
               expandableCard: ExpandableCard(
+                backgroundColor: Color(0xFFF8EBD8),
                 hasRoundedCorners: true,
-                padding: EdgeInsets.all(10),
-                maxHeight: MediaQuery.of(context).size.height * 0.53,
+                hasHandle: false,
+                padding: const EdgeInsets.all(10.0),
+                maxHeight: MediaQuery.of(context).size.height * kGoldenRatio,
                 minHeight: MediaQuery.of(context).size.height * 0.1,
                 children: <Widget>[
                   Padding(
@@ -160,26 +159,26 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                       child: Text(
                         "Related Artefacts",
                         style: TextStyle(
-                            fontFamily: "Anton",
-                            color: Colors.brown,
-                            fontSize: 30),
+                          fontFamily: "Anton",
+                          color: kDarkRedMoranti,
+                          fontSize: 30,
+                        ),
                       ),
                     ),
                   ),
                   Container(
                     height: MediaQuery.of(context).size.width * 0.8 - 10,
                     width: MediaQuery.of(context).size.width,
-                    child: new Swiper(
+                    child: Swiper(
                       loop: false,
                       controller: SwiperController(),
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
+                          onTap: () async {
+                            await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    ArtefactDetailPage(artefacts[index]),
+                                builder: (context) => ArtefactDetailPage(artefacts[index]),
                               ),
                             );
                           },
@@ -187,9 +186,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: ExtendedImage.network(
-                                artefacts[index].thumbnail ??
-                                    artefacts[index].photo,
-                                height: 150,
+                                artefacts[index].thumbnail ?? artefacts[index].photo,
                                 fit: BoxFit.fill,
                                 cache: true,
                               ),

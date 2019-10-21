@@ -14,14 +14,11 @@ import 'package:momento/services/dialogs.dart';
 import 'package:provider/provider.dart';
 import '../../models/member.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-<<<<<<< HEAD
 import 'package:momento/constants.dart';
-=======
 import 'package:expandable_card/expandable_card.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:extended_image/extended_image.dart';
 import 'artifact_detail_page.dart';
->>>>>>> 18dc4df2a59034c46b42e84cbcecf9e9e57843c1
 
 /// UI part for member detail pages
 class MemberDetailPage extends StatefulWidget {

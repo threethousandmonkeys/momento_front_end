@@ -155,13 +155,6 @@ class _TimeLineState extends State<TimeLine>
                 physics: ClampingScrollPhysics(),
                 slivers: <Widget>[
                   SliverToBoxAdapter(
-                    child: Timeline(
-                      physics: NeverScrollableScrollPhysics(),
-                      children: _createTimelineModels(snapshot.data),
-                      position: TimelinePosition.Center,
-                    ),
-                  ),
-                  SliverToBoxAdapter(
                     child: GestureDetector(
                       onTap: () async {
                         final newEvent = await Navigator.push(
@@ -183,6 +176,13 @@ class _TimeLineState extends State<TimeLine>
                         size: 50,
                         color: kMainTextColor,
                       ),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Timeline(
+                      physics: NeverScrollableScrollPhysics(),
+                      children: _createTimelineModels(snapshot.data),
+                      position: TimelinePosition.Center,
                     ),
                   ),
                 ],

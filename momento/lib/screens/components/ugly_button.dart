@@ -30,6 +30,7 @@ class UglyButton extends StatelessWidget {
     return Container(
       transform: transform,
       child: PlatformButton(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         color: this.color,
         child: Text(
           text,

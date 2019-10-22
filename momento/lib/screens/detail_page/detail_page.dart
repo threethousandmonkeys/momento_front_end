@@ -51,7 +51,7 @@ class DetailPage extends StatelessWidget {
                       child: PlatformText(
                         "Delete",
                         style: TextStyle(
-                          color: kMainTextColor,
+                          color: Colors.red,
                         ),
                       ),
                       onPressed: () {

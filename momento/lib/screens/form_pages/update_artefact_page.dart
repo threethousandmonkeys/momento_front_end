@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/bloc/update_artefact_bloc.dart';
@@ -118,7 +119,10 @@ class _UpdateArtefactPageState extends State<UpdateArtefactPage> {
                 controller: _descriptionController,
               ),
               ImageSelector(
-                defaultImage: NetworkImage(widget.artefact.photo),
+                defaultImage: ExtendedNetworkImageProvider(
+                  widget.artefact.photo,
+                  cache: true,
+                ),
                 onChange: (value) {
                   _bloc.photo = value;
                 },

@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/constants.dart';
@@ -6,7 +7,6 @@ import 'package:momento/models/member.dart';
 import 'package:momento/screens/detail_page/member_detail_page.dart';
 import 'package:momento/screens/form_pages//add_new_member_page.dart';
 import 'package:provider/provider.dart';
-import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 
 const kCardColor = Color(0xFFFBF0E9);
 
@@ -41,14 +41,14 @@ class Stemma extends StatelessWidget {
                 height: width * kGoldenRatio * kGoldenRatio * kGoldenRatio,
                 child: Row(
                   children: <Widget>[
-                    CircularProfileAvatar(
+                    ExtendedImage.network(
                       members[i].thumbnail ?? members[i].photo,
-                      cacheImage: true,
+                      cache: true,
                     ),
                     Container(
                       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                       width: 2,
-                      color: kDarkRedMoranti,
+                      color: kDarkRedMorandi,
                     ),
                     Expanded(
                       child: Row(

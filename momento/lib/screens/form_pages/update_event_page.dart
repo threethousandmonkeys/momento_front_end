@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_multiselect/flutter_multiselect.dart';
 import 'package:momento/bloc/profile_bloc.dart';
@@ -113,7 +114,10 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                 controller: _descriptionController,
               ),
               ImageSelector(
-                defaultImage: NetworkImage(widget.event.photo),
+                defaultImage: ExtendedNetworkImageProvider(
+                  widget.event.photo,
+                  cache: true,
+                ),
                 onChange: (value) {
                   _bloc.photo = value;
                 },

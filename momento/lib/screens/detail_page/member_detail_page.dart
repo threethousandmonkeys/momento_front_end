@@ -6,7 +6,6 @@ import 'package:momento/constants.dart';
 import 'package:momento/models/artefact.dart';
 import 'package:momento/repositories/member_repository.dart';
 import 'package:momento/screens/components/entry.dart';
-import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:momento/screens/detail_page/detail_page.dart';
 import 'package:momento/screens/form_pages/update_member_page.dart';
 import 'package:momento/screens/components/dialogs.dart';
@@ -75,12 +74,17 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
           ),
           child: Align(
             alignment: Alignment.center,
-            child: CircularProfileAvatar(
+            child: ExtendedImage.network(
               currentMember.photo,
-              radius: width,
-              borderWidth: 15,
-              borderColor: Color(0x40BFBFBF),
-              cacheImage: true,
+              cache: true,
+              width: width * 2,
+              height: width * 2,
+              fit: BoxFit.cover,
+              border: Border.all(
+                color: Color(0xFFfae5d9),
+                width: 15.0,
+              ),
+              shape: BoxShape.circle,
             ),
           ),
         ),
@@ -100,7 +104,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                 textAlign: TextAlign.center,
               ),
               style: TextStyle(
-                color: kDarkRedMoranti,
+                color: kDarkRedMorandi,
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
               ),
@@ -186,7 +190,7 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                                   "Related Artefacts",
                                   style: TextStyle(
                                     fontFamily: "Anton",
-                                    color: kDarkRedMoranti,
+                                    color: kDarkRedMorandi,
                                     fontSize: 30,
                                   ),
                                 ),

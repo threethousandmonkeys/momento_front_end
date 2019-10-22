@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/bloc/update_member_bloc.dart';
@@ -161,7 +162,10 @@ class _UpdateMemberPageState extends State<UpdateMemberPage> {
                 },
               ),
               ImageSelector(
-                defaultImage: NetworkImage(widget.member.photo),
+                defaultImage: ExtendedNetworkImageProvider(
+                  widget.member.photo,
+                  cache: true,
+                ),
                 onChange: (value) {
                   _bloc.photo = value;
                 },

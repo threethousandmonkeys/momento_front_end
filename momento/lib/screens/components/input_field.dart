@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:momento/constants.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -36,22 +37,39 @@ class InputField extends StatelessWidget {
             top: 5,
             bottom: bottomPadding ?? 5,
           ),
-          child: TextField(
+          child: PlatformTextField(
             controller: controller,
             keyboardType: inputType,
             obscureText: obscureText ?? false,
             style: kTextFieldTextStyle,
             autocorrect: false,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              icon: Icon(
+            android: (_) => MaterialTextFieldData(
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                icon: Icon(
+                  icon,
+                  color: Colors.black,
+                  size: 22.0,
+                ),
+                hintText: hintText,
+                hintStyle: kHintTextStyle,
+                suffixIcon: suffix,
+              ),
+            ),
+            ios: (_) => CupertinoTextFieldData(
+              prefix: Icon(
                 icon,
                 color: Colors.black,
                 size: 22.0,
               ),
-              hintText: hintText,
-              hintStyle: kHintTextStyle,
-              suffixIcon: suffix,
+              suffix: suffix,
+              placeholder: hintText,
+              placeholderStyle: kHintTextStyle,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  style: BorderStyle.none,
+                ),
+              ),
             ),
           ),
         ),

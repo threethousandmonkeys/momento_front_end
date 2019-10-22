@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:momento/theme/style.dart' as Theme;
 
 const kGoldenRatio = 0.61803398875;
 
@@ -29,33 +28,24 @@ const kTextFieldPadding = EdgeInsets.only(
   right: 20.0,
 );
 
-const kLoginPageRatios = [1, 3, 1, 5];
-
 const kDividerRatio = 0.9;
 
+const Color loginGradientStart = Color(0xFFF8EBD8);
+const Color loginGradientEnd = Color(0xFF965454);
+
 const kLoginDecoration = BoxDecoration(
-    gradient: LinearGradient(
-  colors: [
-    Theme.Colors.loginGradientStart,
-    Theme.Colors.loginGradientEnd,
-  ],
-  begin: FractionalOffset(0.0, 0.0),
-  end: FractionalOffset(1.0, 1.0),
-  tileMode: TileMode.clamp,
-));
+  gradient: LinearGradient(
+    colors: [
+      loginGradientStart,
+      loginGradientEnd,
+    ],
+    begin: FractionalOffset(0.0, 0.0),
+    end: FractionalOffset(1.0, 1.0),
+    tileMode: TileMode.clamp,
+  ),
+);
 
-const kBackgroundDecoration = BoxDecoration(
-    gradient: LinearGradient(
-  colors: [
-    Theme.Colors.backgroundGradientStart,
-    Theme.Colors.backgroundGradientEnd,
-  ],
-  begin: FractionalOffset(0.0, 0.0),
-  end: FractionalOffset(1.0, 1.0),
-  tileMode: TileMode.clamp,
-));
-
-const kDarkRedMoranti = Color(0xFF421910);
+const kDarkRedMorandi = Color(0xFF421910);
 
 /// color name: unbleached silk (white-pink)
 const kThemeColor = Color(0xFFFFDFCC);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:momento/constants.dart';
 
 /// Build for the button components used later.
@@ -27,19 +28,13 @@ class UglyButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: height,
       transform: transform,
-      child: MaterialButton(
-        height: height,
+      child: PlatformButton(
         color: this.color,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: 10.0,
-            horizontal: 20.0,
-          ),
-          child: Text(
-            text,
-            style: kButtonTextStyle,
-          ),
+        child: Text(
+          text,
+          style: kButtonTextStyle,
         ),
         onPressed: onPressed,
       ),

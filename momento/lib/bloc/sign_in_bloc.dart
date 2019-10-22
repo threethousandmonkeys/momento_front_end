@@ -4,7 +4,6 @@ import 'package:momento/services/auth_service.dart';
 
 /// Business Logic Component for authentication.
 class SignInBloc {
-
   final _auth;
   final _familyRepository;
   final _secureStorage;
@@ -101,5 +100,9 @@ class SignInBloc {
   Future<Null> signOut() async {
     await _auth.signOut();
     await _secureStorage.deleteAll();
+  }
+
+  Future<Null> recoverPassword(String email) async {
+    await _auth.recoverPassword(email);
   }
 }

@@ -1,6 +1,9 @@
+import 'package:flutter/cupertino.dart';
+
 ///This file contains all the widgets required to build the login page
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:momento/constants.dart';
 import 'package:momento/repositories/family_repository.dart';
@@ -235,9 +238,136 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
           transform: Matrix4.translationValues(0.0, -buttonHeight * 0.5, 0.0),
           child: Column(
             children: <Widget>[
-              FlatButton(
-                onPressed: () {
-                  // _auth.sendPasswordResetEmail(email: signInEmail);
+              PlatformButton(
+                onPressed: () async {
+                  final recoveryEmail = await showPlatformDialog(
+                    context: context,
+                    androidBarrierDismissible: false,
+                    builder: (context) {
+                      final descriptionController = TextEditingController();
+                      return PlatformAlertDialog(
+                        title: PlatformText("Enter email"),
+                        content: PlatformTextField(
+                          android: (_) => MaterialTextFieldData(
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                          ios: (_) => CupertinoTextFieldData(
+                              decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 0.0,
+                              color: CupertinoColors.inactiveGray,
+                              // color: Colors.black,
+                            ),
+                          )),
+                          controller: descriptionController,
+                        ),
+                        actions: <Widget>[
+                          PlatformDialogAction(
+                            child: PlatformText("Cancel"),
+                            onPressed: () {
+                              Navigator.pop(context, null);
+                            },
+                          ),
+                          PlatformDialogAction(
+                            child: PlatformText("Send"),
+                            onPressed: () {
+                              Navigator.pop(
+                                context,
+                                descriptionController.text.trim(),
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  if (recoveryEmail != "") {
+                    try {
+                      await _bloc.recoverPassword(recoveryEmail);
+                      showPlatformDialog(
+                        context: context,
+                        androidBarrierDismissible: false,
+                        builder: (context) {
+                          return PlatformAlertDialog(
+                            title: PlatformText("Email sent"),
+                            content: PlatformText("Please check your inbox."),
+                            actions: <Widget>[
+                              PlatformDialogAction(
+                                child: PlatformText("Thanks"),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } catch (e) {
+                      switch (e.code) {
+                        case "ERROR_INVALID_EMAIL":
+                          showPlatformDialog(
+                            context: context,
+                            androidBarrierDismissible: false,
+                            builder: (context) {
+                              return PlatformAlertDialog(
+                                title: PlatformText("Something wrong"),
+                                content: PlatformText("Wrong email format."),
+                                actions: <Widget>[
+                                  PlatformDialogAction(
+                                    child: PlatformText("Try again"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          break;
+                        case "ERROR_USER_NOT_FOUND":
+                          showPlatformDialog(
+                            context: context,
+                            androidBarrierDismissible: false,
+                            builder: (context) {
+                              return PlatformAlertDialog(
+                                title: PlatformText("Something wrong"),
+                                content: PlatformText("User not found."),
+                                actions: <Widget>[
+                                  PlatformDialogAction(
+                                    child: PlatformText("Try again"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          break;
+                      }
+                    }
+                  } else {
+                    showPlatformDialog(
+                      context: context,
+                      androidBarrierDismissible: false,
+                      builder: (context) {
+                        return PlatformAlertDialog(
+                          title: PlatformText("Something wrong"),
+                          content: PlatformText("No email input."),
+                          actions: <Widget>[
+                            PlatformDialogAction(
+                              child: PlatformText("Try again"),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 },
                 child: Text(
                   "Forgot Password?",

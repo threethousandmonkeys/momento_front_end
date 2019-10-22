@@ -239,6 +239,8 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
           child: Column(
             children: <Widget>[
               PlatformButton(
+                /// force it to be flat button (no background color)
+                androidFlat: (_) => MaterialFlatButtonData(),
                 onPressed: () async {
                   final recoveryEmail = await showPlatformDialog(
                     context: context,
@@ -283,6 +285,9 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
                       );
                     },
                   );
+                  if (recoveryEmail == null) {
+                    return;
+                  }
                   if (recoveryEmail != "") {
                     try {
                       await _bloc.recoverPassword(recoveryEmail);
@@ -451,7 +456,6 @@ class _SignInPageState extends State<SignInPage> with SingleTickerProviderStateM
         ),
         UglyButton(
           text: "SIGNUP",
-          height: buttonHeight,
           color: Color(0xFF9E8C81),
           transform: Matrix4.translationValues(0.0, -buttonHeight * 0.5, 0.0),
           onPressed: () async {

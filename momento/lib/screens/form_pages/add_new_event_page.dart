@@ -116,16 +116,14 @@ class _AddNewEventPageState extends State<AddNewEventPage> {
                   children: <Widget>[
                     UglyButton(
                       text: "Cancel",
-                      height: 10,
-                      color: kHeaderColor,
+                      color: kDarkRedMorandi,
                       onPressed: () {
                         Navigator.pop(context, null);
                       },
                     ),
                     UglyButton(
                       text: "Add",
-                      height: 10,
-                      color: kMainTextColor,
+                      color: kHeaderColor,
                       onPressed: () async {
                         final validation = _bloc.validate();
                         if (validation == "") {

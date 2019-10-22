@@ -56,4 +56,4 @@ const kTitleColor = Color(0xFFFAFAFA);
 const kHeaderColor = Color(0xFF5A0C21);
 
 /// color name: space cadet (navy blue)
-const kMainTextColor = Color(0xFF421910);
+const kMainTextColor = kDarkRedMorandi;

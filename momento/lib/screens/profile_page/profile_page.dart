@@ -11,7 +11,7 @@ import 'package:momento/bloc/profile_bloc.dart';
 import 'package:momento/screens/profile_page/artefact_gallery.dart';
 import 'package:momento/screens/profile_page/stemma.dart';
 import 'package:momento/screens/profile_page/time_line.dart';
-import 'package:momento/services/dialogs.dart';
+import 'package:momento/screens/components/dialogs.dart';
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
@@ -80,8 +80,34 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                       IconButton(
                         padding: EdgeInsets.all(0.0),
                         onPressed: () async {
-                          await _bloc.signOut();
-                          _futureProfile = _bloc.init(context);
+                          showPlatformDialog(
+                            context: context,
+                            androidBarrierDismissible: false,
+                            builder: (_) => PlatformAlertDialog(
+                              title: PlatformText('Log out?'),
+                              actions: <Widget>[
+                                PlatformDialogAction(
+                                  child: PlatformText("Cancel"),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                PlatformDialogAction(
+                                  child: PlatformText(
+                                    "Confirm",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    Navigator.pop(context);
+                                    await _bloc.signOut();
+                                    _futureProfile = _bloc.init(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
                         },
                         icon: Icon(
                           Icons.power_settings_new,

@@ -9,7 +9,7 @@ import 'package:momento/screens/components/entry.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:momento/screens/detail_page/detail_page.dart';
 import 'package:momento/screens/form_pages/update_member_page.dart';
-import 'package:momento/services/dialogs.dart';
+import 'package:momento/screens/components/dialogs.dart';
 import 'package:provider/provider.dart';
 import '../../models/member.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';

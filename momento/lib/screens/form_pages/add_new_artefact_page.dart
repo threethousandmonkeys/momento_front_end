@@ -8,7 +8,7 @@ import 'package:momento/repositories/family_repository.dart';
 import 'package:momento/screens/form_pages//components/form_image_selector.dart';
 import 'package:momento/screens/components/ugly_button.dart';
 import 'package:momento/services/cloud_storage_service.dart';
-import 'package:momento/services/dialogs.dart';
+import 'package:momento/screens/components/dialogs.dart';
 import 'package:momento/services/snack_bar_service.dart';
 import 'components/form_drop_down_field.dart';
 import 'components/form_date_field.dart';

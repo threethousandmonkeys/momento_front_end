@@ -8,7 +8,7 @@ import 'package:momento/screens/components/entry.dart';
 import 'package:momento/screens/detail_page/detail_page.dart';
 import 'package:momento/screens/form_pages/update_artefact_page.dart';
 import 'package:momento/screens/components/viewable_image.dart';
-import 'package:momento/services/dialogs.dart';
+import 'package:momento/screens/components/dialogs.dart';
 import 'package:provider/provider.dart';
 import 'package:momento/constants.dart';
 

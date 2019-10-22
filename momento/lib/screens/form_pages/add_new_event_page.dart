@@ -9,7 +9,7 @@ import 'package:momento/repositories/family_repository.dart';
 import 'package:momento/screens/form_pages//components/form_image_selector.dart';
 import 'package:momento/screens/components/ugly_button.dart';
 import 'package:momento/services/cloud_storage_service.dart';
-import 'package:momento/services/dialogs.dart';
+import 'package:momento/screens/components/dialogs.dart';
 import 'package:momento/services/snack_bar_service.dart';
 import 'components/form_date_field.dart';
 import 'components/form_text_field.dart';
@@ -133,12 +133,9 @@ class _AddNewEventPageState extends State<AddNewEventPage> {
                           final newEvent = await _bloc.addNewEvent(widget.family);
                           Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
                           Navigator.pop(context, newEvent);
-                        } 
-                        else if (validation == "name length") {
-                          _snackBarService.showInSnackBar(
-                              _scaffoldKey, "Event name is too long");
-                        }
-                        else {
+                        } else if (validation == "name length") {
+                          _snackBarService.showInSnackBar(_scaffoldKey, "Event name is too long");
+                        } else {
                           _snackBarService.showInSnackBar(
                               _scaffoldKey, "Please provide $validation");
                         }

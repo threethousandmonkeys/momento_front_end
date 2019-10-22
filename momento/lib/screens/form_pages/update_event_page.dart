@@ -7,7 +7,7 @@ import 'package:momento/models/event.dart';
 import 'package:momento/models/member.dart';
 import 'package:momento/screens/form_pages//components/form_image_selector.dart';
 import 'package:momento/screens/components/ugly_button.dart';
-import 'package:momento/services/dialogs.dart';
+import 'package:momento/screens/components/dialogs.dart';
 import 'package:momento/services/snack_bar_service.dart';
 import 'package:provider/provider.dart';
 import 'components/form_date_field.dart';
@@ -144,12 +144,9 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
                               await _bloc.updateEvent(Provider.of<ProfileBloc>(context).family.id);
                           Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
                           Navigator.pop(context, newEvent);
-                        }
-                        else if (validation == "name length") {
-                          _snackBarService.showInSnackBar(
-                              _scaffoldKey, "Event name is too long");
-                        } 
-                        else {
+                        } else if (validation == "name length") {
+                          _snackBarService.showInSnackBar(_scaffoldKey, "Event name is too long");
+                        } else {
                           _snackBarService.showInSnackBar(
                               _scaffoldKey, "Please provide $validation");
                         }

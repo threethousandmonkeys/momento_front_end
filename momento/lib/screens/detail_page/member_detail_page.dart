@@ -129,6 +129,14 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
                 content: currentMember.gender,
               ),
               Entry(
+                title: "Father",
+                content: _getMemberNameById(currentMember.fatherId),
+              ),
+              Entry(
+                title: "Mother",
+                content: _getMemberNameById(currentMember.motherId),
+              ),
+              Entry(
                 title: "Description",
                 content: currentMember.description,
               ),
@@ -137,6 +145,16 @@ class _MemberDetailPageState extends State<MemberDetailPage> {
         ),
       ],
     );
+  }
+
+  /// Gets the first and last name of a member, based on its user id
+  String _getMemberNameById(String userId) {
+    Member member = Provider.of<ProfileBloc>(context).getMemberByUserId(userId);
+    if (member != null) {
+      return member.firstName + " " + member.lastName;
+    } else {
+      return "Unknown";
+    }
   }
 
   @override

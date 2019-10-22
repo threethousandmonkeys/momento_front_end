@@ -62,7 +62,7 @@ class UpdateMemberBloc {
         _cloudStorageService.deletePhoto(member.thumbnail);
       }
       // upload new photo
-      final fileName = "member_${DateTime.now().millisecondsSinceEpoch}";
+      final fileName = "member_${member.id}";
       member.photo = await _cloudStorageService.uploadPhotoAt("$familyId/", fileName, photo);
       member.thumbnail = null;
     }

@@ -51,7 +51,7 @@ class UpdateEventBloc {
         _cloudStorageService.deletePhoto(event.thumbnail);
       }
       // upload new photo
-      final fileName = "event_${DateTime.now().millisecondsSinceEpoch}";
+      final fileName = "event_${event.id}";
       event.photo = await _cloudStorageService.uploadPhotoAt("$familyId/", fileName, photo);
       event.thumbnail = null;
     }

@@ -18,7 +18,8 @@ class TimeLine extends StatefulWidget {
 }
 
 /// _TimeLineState: the state control of timeline
-class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin {
+class _TimeLineState extends State<TimeLine>
+    with AutomaticKeepAliveClientMixin {
   ProfileBloc _bloc;
 
   ///create all the models need to display on the timeline based on a list
@@ -26,14 +27,29 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
   List<TimelineModel> _createTimelineModels(List<Event> events) {
     TimelineItemPosition position = TimelineItemPosition.right;
     int year = -1;
-    TextStyle textStyle =
-        TextStyle(fontFamily: 'WorkSansMedium', fontSize: 20, color: kMainTextColor);
+    TextStyle textStyle = TextStyle(
+        fontFamily: 'WorkSansMedium', fontSize: 20, color: kMainTextColor);
+    List<TimelineModel> timelineModels = [];
 
     // sort the events based on date
     if (events.isEmpty == false) {
-      events.sort((a, b) => a.date.compareTo(b.date));
+      events.sort((a, b) => b.date.compareTo(a.date));
+    } else {
+      // create a timeline item showing "now" at the top of the timeline
+      timelineModels.add(TimelineModel(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Text(
+                "Now",
+                style: textStyle,
+              ),
+            ],
+          ),
+          position: TimelineItemPosition.left,
+          iconBackground: Color(0xFF7CA9DF),
+          icon: Icon(Icons.mood)));
     }
-    List<TimelineModel> timelineModels = [];
 
     for (var i = 0; i < events.length; i++) {
       // create an timeline item showing year before display all the
@@ -108,20 +124,6 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
       position = _changePosition(position);
     }
 
-    // create a timeline item showing "now" at the end of the timeline
-    timelineModels.add(TimelineModel(
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Text(
-              "Now",
-              style: textStyle,
-            ),
-          ],
-        ),
-        position: TimelineItemPosition.left,
-        iconBackground: Color(0xFF7CA9DF),
-        icon: Icon(Icons.mood)));
     return timelineModels;
   }
 
@@ -167,7 +169,8 @@ class _TimeLineState extends State<TimeLine> with AutomaticKeepAliveClientMixin 
                           MaterialPageRoute(
                             builder: (context) => AddNewEventPage(
                               Provider.of<ProfileBloc>(context).family,
-                              Provider.of<ProfileBloc>(context).getLatestMembers,
+                              Provider.of<ProfileBloc>(context)
+                                  .getLatestMembers,
                             ),
                           ),
                         );

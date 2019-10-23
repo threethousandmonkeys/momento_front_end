@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'constants.dart';
@@ -5,7 +7,7 @@ import 'constants.dart';
 class ImageSelector extends StatefulWidget {
   final ImageProvider defaultImage;
   final Function onChange;
-  final selected;
+  final File selected;
   ImageSelector({
     @required this.defaultImage,
     this.onChange,
@@ -16,6 +18,13 @@ class ImageSelector extends StatefulWidget {
 }
 
 class _ImageSelectorState extends State<ImageSelector> {
+  File currentSelected;
+  @override
+  void initState() {
+    currentSelected = widget.selected;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -37,6 +46,9 @@ class _ImageSelectorState extends State<ImageSelector> {
                         final file = await ImagePicker.pickImage(source: ImageSource.gallery);
                         if (file != null) {
                           widget.onChange(file);
+                          setState(() {
+                            currentSelected = file;
+                          });
                         }
                       },
                       child: Icon(Icons.photo_album),
@@ -49,6 +61,9 @@ class _ImageSelectorState extends State<ImageSelector> {
                         final file = await ImagePicker.pickImage(source: ImageSource.camera);
                         if (file != null) {
                           widget.onChange(file);
+                          setState(() {
+                            currentSelected = file;
+                          });
                         }
                       },
                       child: Icon(Icons.camera_alt),

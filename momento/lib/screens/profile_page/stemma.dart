@@ -44,6 +44,7 @@ class Stemma extends StatelessWidget {
                     ExtendedImage.network(
                       members[i].thumbnail ?? members[i].photo,
                       cache: true,
+                      shape: BoxShape.circle,
                     ),
                     Container(
                       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),

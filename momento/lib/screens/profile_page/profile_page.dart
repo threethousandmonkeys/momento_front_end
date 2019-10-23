@@ -156,7 +156,9 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                                                 setState(() {});
                                                 Dialogs.showLoadingDialog(context, _keyLoader);
                                                 await _bloc.uploadPhoto(selectedUpload);
-                                                selectedUpload = null;
+                                                setState(() {
+                                                  selectedUpload = null;
+                                                });
                                                 Navigator.of(_keyLoader.currentContext,
                                                         rootNavigator: true)
                                                     .pop();
@@ -176,7 +178,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                                                 Icon(
                                                   Icons.add,
                                                   size: selectedUpload == null ? 100 : 0,
-                                                  color: kMainTextColor,
+                                                  color: kTitleColor,
                                                 ),
                                               ],
                                             ),

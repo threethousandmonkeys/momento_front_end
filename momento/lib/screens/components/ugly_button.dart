@@ -31,7 +31,7 @@ class UglyButton extends StatelessWidget {
       transform: transform,
       height: height,
       child: PlatformButton(
-        padding: const EdgeInsets.symmetric(horizontal: 40.0),
+        padding: const EdgeInsets.symmetric(horizontal: 30.0),
         color: this.color,
         child: Text(
           text,

@@ -11,7 +11,7 @@ class DetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return PlatformScaffold(
       appBar: PlatformAppBar(
-        backgroundColor: kThemeColor,
+        backgroundColor: Color(0xFF965454),
         leading: PlatformIconButton(
           icon: Icon(
             Icons.arrow_back_ios,

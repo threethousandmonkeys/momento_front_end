@@ -77,7 +77,7 @@ class _ImageSelectorState extends State<ImageSelector> {
             backgroundColor: Colors.white,
             radius: MediaQuery.of(context).size.width / 4,
             backgroundImage:
-                widget.selected != null ? FileImage(widget.selected) : widget.defaultImage,
+                currentSelected != null ? FileImage(currentSelected) : widget.defaultImage,
           ),
         ],
       ),

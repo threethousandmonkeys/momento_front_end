@@ -64,7 +64,8 @@ class ProfileBloc {
 
   Future<void> _updatePhotos() async {
     _setPhotos(family.photos);
-    await _secureStorage.write(key: "numPhotos", value: family.photos.length.toString());
+    await _secureStorage.write(
+        key: "numPhotos", value: family.photos.length.toString());
     for (int i = 0; i < family.photos.length; i++) {
       await _secureStorage.write(key: "photo$i", value: family.photos[i]);
     }
@@ -73,15 +74,19 @@ class ProfileBloc {
   /// Update photo
   Future<Null> uploadPhoto(File photo) async {
     // upload photo to cloud and get url
-    final id = "profile_photo_" + DateTime.now().millisecondsSinceEpoch.toString();
-    final url = await _cloudStorageService.uploadPhotoAt("${family.id}/", id, photo);
+    final id =
+        "profile_photo_" + DateTime.now().millisecondsSinceEpoch.toString();
+    final url =
+        await _cloudStorageService.uploadPhotoAt("${family.id}/", id, photo);
     // update locally
     final photos = List<String>.from(_photosController.value);
     photos.add(url);
     _setPhotos(photos);
     family.photos.add(url);
-    await _secureStorage.write(key: "numPhotos", value: family.photos.length.toString());
-    await _secureStorage.write(key: "photo${family.photos.length - 1}", value: url);
+    await _secureStorage.write(
+        key: "numPhotos", value: family.photos.length.toString());
+    await _secureStorage.write(
+        key: "photo${family.photos.length - 1}", value: url);
     // update the database entry
     _familyRepository.updatePhotos(family);
   }
@@ -102,8 +107,8 @@ class ProfileBloc {
   }
 
   Future<Null> _getMembers() async {
-    final futureMembers =
-        family.members.map((id) => _memberRepository.getMemberById(family.id, id));
+    final futureMembers = family.members
+        .map((id) => _memberRepository.getMemberById(family.id, id));
     final members = await Future.wait(futureMembers);
     _setMembers(members);
   }
@@ -160,8 +165,9 @@ class ProfileBloc {
   Stream<List<Artefact>> get getArtefacts => _artefactsController.stream;
 
   Future<Null> _getArtefacts() async {
-    final futureArtefacts =
-        family.artefacts.map((id) => _artefactRepository.getArtefactById(family.id, id)).toList();
+    final futureArtefacts = family.artefacts
+        .map((id) => _artefactRepository.getArtefactById(family.id, id))
+        .toList();
     List<Artefact> artefacts = await Future.wait(futureArtefacts);
     _setArtefacts(artefacts);
   }
@@ -171,7 +177,8 @@ class ProfileBloc {
   void addArtefact(Artefact artefact) {
     // update locally
     family.artefacts.add(artefact.id);
-    List<Artefact> newArtefacts = List<Artefact>.from(_artefactsController.value);
+    List<Artefact> newArtefacts =
+        List<Artefact>.from(_artefactsController.value);
     newArtefacts.add(artefact);
     // push to the stream
     _setArtefacts(newArtefacts);
@@ -190,6 +197,8 @@ class ProfileBloc {
     _setArtefacts(newArtefacts);
   }
 
+  /// Deal with artifacts -
+  /// delete
   void deleteArtefact(String id) {
     family.artefacts.remove(id);
     final newArtefacts = List<Artefact>.from(_artefactsController.value);
@@ -197,10 +206,12 @@ class ProfileBloc {
     _setArtefacts(newArtefacts);
   }
 
+  /// find related artifacts of a member
   List<Artefact> getRelatedArtefact(String memberId) {
     List<Artefact> relatedArtefacts = [];
     for (Artefact artefact in _artefactsController.value) {
-      if (artefact.currentOwnerId == memberId || artefact.originalOwnerId == memberId) {
+      if (artefact.currentOwnerId == memberId ||
+          artefact.originalOwnerId == memberId) {
         relatedArtefacts.add(artefact);
       }
     }
@@ -222,8 +233,9 @@ class ProfileBloc {
   }
 
   Future<Null> _getEvents() async {
-    List<Future<Event>> futureEvents =
-        family.events.map((id) => _eventRepository.getEventById(family.id, id)).toList();
+    List<Future<Event>> futureEvents = family.events
+        .map((id) => _eventRepository.getEventById(family.id, id))
+        .toList();
     List<Event> events = await Future.wait(futureEvents);
     _setEvents(events);
   }
@@ -252,6 +264,8 @@ class ProfileBloc {
     _setEvents(newEvents);
   }
 
+  /// Deal with events -
+  /// delete
   void deleteEvent(String id) {
     family.events.remove(id);
     final newEvents = List<Event>.from(_eventsController.value);
@@ -298,6 +312,7 @@ class ProfileBloc {
     }
   }
 
+  /// signout function
   Future<Null> signOut() async {
     await _auth.signOut();
     await _secureStorage.deleteAll();

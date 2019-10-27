@@ -6,9 +6,8 @@ import 'package:momento/repositories/family_repository.dart';
 import 'package:momento/services/cloud_storage_service.dart';
 
 /// Business logical：
-///     For adding new artifacts. Including upload the photos into
-///     cloud and return a path for later use
-///
+/// For adding new artifacts. Including upload the photos into
+/// cloud and return a path for later use
 
 class AddNewArtefactBloc {
   final ArtefactRepository artefactRepository;
@@ -45,7 +44,8 @@ class AddNewArtefactBloc {
   /// upload photo to cloud, return a retrieval path
   Future<Artefact> addNewArtefact(Family family) async {
     final id = DateTime.now().millisecondsSinceEpoch.toString();
-    final url = await cloudStorageService.uploadPhotoAt("${family.id}/", "artefact_$id", photo);
+    final url = await cloudStorageService.uploadPhotoAt(
+        "${family.id}/", "artefact_$id", photo);
     Artefact newArtefact = Artefact(
       id: id,
       name: name,
